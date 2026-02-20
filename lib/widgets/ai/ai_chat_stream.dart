@@ -719,8 +719,7 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
                           stream: _messageStream,
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
-                              return Skeletonizer.zone(
-                                  child: Bone.multiText());
+                              return Skeletonizer.zone(child: Bone.multiText());
                             }
 
                             final messages = snapshot.data!;
