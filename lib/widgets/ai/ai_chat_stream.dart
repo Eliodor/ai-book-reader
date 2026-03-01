@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:anx_reader/config/shared_preference_provider.dart';
+import 'package:anx_reader/enums/hint_key.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/main.dart';
 import 'package:anx_reader/providers/ai_chat.dart';
@@ -8,12 +9,14 @@ import 'package:anx_reader/providers/ai_history.dart';
 import 'package:anx_reader/service/ai/ai_services.dart';
 import 'package:anx_reader/service/ai/ai_history.dart';
 import 'package:anx_reader/service/ai/index.dart';
+import 'package:anx_reader/utils/env_var.dart';
 import 'package:anx_reader/utils/toast/common.dart';
 import 'package:anx_reader/utils/ai_reasoning_parser.dart';
 import 'package:anx_reader/widgets/ai/tool_step_tile.dart';
 import 'package:anx_reader/widgets/ai/tool_tiles/apply_book_tags_step_tile.dart';
 import 'package:anx_reader/widgets/ai/tool_tiles/mindmap_step_tile.dart';
 import 'package:anx_reader/widgets/ai/tool_tiles/organize_bookshelf_step_tile.dart';
+import 'package:anx_reader/widgets/common/anx_button.dart';
 import 'package:anx_reader/widgets/common/container/filled_container.dart';
 import 'package:anx_reader/widgets/delete_confirm.dart';
 import 'package:anx_reader/widgets/markdown/styled_markdown.dart';
@@ -705,40 +708,98 @@ class AiChatStreamState extends ConsumerState<AiChatStream> {
       drawer: Drawer(
         child: _buildHistoryDrawer(context),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: _messageStream != null
-                ? StreamBuilder<List<ChatMessage>>(
-                    stream: _messageStream,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Skeletonizer.zone(child: Bone.multiText());
-                      }
+      body: EnvVar.isAppStore &&
+              Prefs().shouldShowHint(HintKey.aiDataSharingConsent)
+          ? _buildDataSharingConsent(context)
+          : Column(
+              children: [
+                Expanded(
+                  child: _messageStream != null
+                      ? StreamBuilder<List<ChatMessage>>(
+                          stream: _messageStream,
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return Skeletonizer.zone(child: Bone.multiText());
+                            }
 
-                      final messages = snapshot.data!;
-                      if (messages.isEmpty) {
-                        return buildEmptyState();
-                      }
+                            final messages = snapshot.data!;
+                            if (messages.isEmpty) {
+                              return buildEmptyState();
+                            }
 
-                      return _buildMessageList(messages);
-                    },
-                  )
-                : ref.watch(aiChatProvider).when(
-                      data: (messages) {
-                        if (messages.isEmpty) {
-                          return buildEmptyState();
-                        }
+                            return _buildMessageList(messages);
+                          },
+                        )
+                      : ref.watch(aiChatProvider).when(
+                            data: (messages) {
+                              if (messages.isEmpty) {
+                                return buildEmptyState();
+                              }
 
-                        return _buildMessageList(messages);
-                      },
-                      loading: () => Skeletonizer.zone(child: Bone.multiText()),
-                      error: (error, stack) =>
-                          Center(child: Text('error: $error')),
+                              return _buildMessageList(messages);
+                            },
+                            loading: () =>
+                                Skeletonizer.zone(child: Bone.multiText()),
+                            error: (error, stack) =>
+                                Center(child: Text('error: $error')),
+                          ),
+                ),
+                inputBox,
+              ],
+            ),
+    );
+  }
+
+  Widget _buildDataSharingConsent(BuildContext context) {
+    final theme = Theme.of(context);
+    final maxWidth = MediaQuery.of(context).size.width * 0.9;
+    final constrainedWidth = maxWidth > 500 ? 500.0 : maxWidth;
+
+    return Container(
+      color: theme.colorScheme.surface,
+      child: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: constrainedWidth),
+            child: FilledContainer(
+              padding: const EdgeInsets.all(24),
+              radius: 20,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.privacy_tip_outlined,
+                    size: 56,
+                    color: theme.colorScheme.primary,
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    L10n.of(context).aiDataSharingTitle,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    L10n.of(context).aiDataSharingContent,
+                    style: theme.textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  AnxButton(
+                    onPressed: () {
+                      Prefs().setShowHint(HintKey.aiDataSharingConsent, false);
+                      setState(() {});
+                    },
+                    child: Text(L10n.of(context).aiDataSharingAgree),
+                  ),
+                ],
+              ),
+            ),
           ),
-          inputBox,
-        ],
+        ),
       ),
     );
   }
