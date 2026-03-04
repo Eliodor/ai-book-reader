@@ -5,11 +5,17 @@
 - Feat(ai): Support multiple API keys per provider with round-robin rotation
 - Feat(ai): Add provider test connection with streaming preview
 - Fix(ai): Fix test connection using default provider instead of current provider
+- Feat(ai): Add AI chat display mode settings with adaptive, split, and popup options
+- Feat(ai): Add resizable AI panel with drag to resize, sizes persisted
+- Feat(ai): Add AI panel position settings (bottom/right) for non-popup modes
 
 - Feat(ai): 新增 AI 供应商配置中心，支持 OpenAI 兼容、Claude 和 Gemini 协议
 - Feat(ai): 支持每个供应商配置多个 API Key，自动轮询使用
 - Feat(ai): 新增供应商连接测试，支持流式预览
 - Fix(ai): 修复测试连接时使用默认供应商而非当前供应商的问题
+- Feat(ai): 新增 AI 对话显示模式设置，支持自适应、分屏和弹出三种模式
+- Feat(ai): 新增可调整尺寸的 AI 面板，支持拖动调整大小，尺寸自动保存
+- Feat(ai): 新增 AI 面板位置设置（非弹出模式下可选择底部或右侧）
 
 ## 1.12.0
 - Feat(tts): Add OpenAI-compatible TTS service support (#653)
