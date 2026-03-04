@@ -102,6 +102,11 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
   bool _selectionClearLocked = false;
   bool _selectionClearPending = false;
 
+  // Scroll wheel debounce
+  Timer? _scrollDebounceTimer;
+  double _accumulatedScrollDelta = 0;
+  static const double _scrollThreshold = 50.0;
+
   // to know anytime if we are on top of navigation stack
   bool get _isTopOfNavigationStack =>
       ModalRoute.of(context)?.isCurrent ?? false;
@@ -849,11 +854,19 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
       return;
     }
     if (event is PointerScrollEvent) {
-      if (event.scrollDelta.dy > 0) {
-        nextPage();
-      } else {
-        prevPage();
-      }
+      _accumulatedScrollDelta += event.scrollDelta.dy;
+
+      _scrollDebounceTimer?.cancel();
+      _scrollDebounceTimer = Timer(const Duration(milliseconds: 80), () {
+        if (_accumulatedScrollDelta.abs() >= _scrollThreshold) {
+          if (_accumulatedScrollDelta > 0) {
+            nextPage();
+          } else {
+            prevPage();
+          }
+        }
+        _accumulatedScrollDelta = 0;
+      });
     }
   }
 
@@ -903,6 +916,7 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
 
   @override
   void dispose() {
+    _scrollDebounceTimer?.cancel();
     _animationController?.dispose();
     saveReadingProgress();
     removeOverlay();

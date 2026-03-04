@@ -140,5 +140,6 @@ Future<void> initializeDesktopWindow() async {
     await WindowManager.instance.setPosition(validatedOffset);
   }
 
+  await WindowManager.instance.setPreventClose(true);
   await WindowManager.instance.focus();
 }

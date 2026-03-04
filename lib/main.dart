@@ -104,6 +104,15 @@ class _MyAppState extends ConsumerState<MyApp>
   }
 
   @override
+  Future<void> onWindowClose() async {
+    await Server().stop();
+    await webViewEnvironment?.dispose();
+    webViewEnvironment = null;
+    await DBHelper.close();
+    await windowManager.destroy();
+  }
+
+  @override
   Future<void> onWindowMoved() async {
     await _updateWindowInfo();
   }

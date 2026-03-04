@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:anx_reader/models/book.dart';
 import 'package:anx_reader/page/home_page.dart';
@@ -132,6 +133,13 @@ class _HeadlessSearchSession {
   bool get isActive => _webView != null;
 
   Future<void> ensureInitialized() async {
+    if (Platform.isWindows && webViewEnvironment == null) {
+      throw StateError(
+        'WebViewEnvironment is not initialized. '
+        'WebView2 Runtime may not be installed.',
+      );
+    }
+
     final ready = _readyCompleter;
     if (_webView != null &&
         _controller != null &&

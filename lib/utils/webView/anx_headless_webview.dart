@@ -43,6 +43,13 @@ class AnxHeadlessWebView {
       // ignore
     }
 
+    if (Platform.isWindows && webViewEnvironment == null) {
+      AnxLog.severe(
+          'AnxHeadlessWebView: webViewEnvironment is null on Windows, falling back to Overlay');
+      _runOverlay();
+      return;
+    }
+
     if (useOverlay) {
       _runOverlay();
     } else {
