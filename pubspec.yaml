@@ -2,7 +2,7 @@ name: anx_reader
 description: "An e-book reader."
 publish_to: 'none'
 
-version: 1.12.0+6316
+version: 1.13.0+6316
 
 environment:
   sdk: '>=3.5.2 <4.0.0'
@@ -136,8 +136,8 @@ dependencies:
 #       url: https://github.com/Anxcye/langchain_dart.git
 #       ref: bb06c17ca667a906e3e37154b0bda95023d0c9bd
 #       path: packages/openai_dart
-dependency_overrides:
-  analyzer: ^8.0.0
+# dependency_overrides:
+#   analyzer: ^8.0.0
 
 
 dev_dependencies:
