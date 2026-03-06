@@ -453,7 +453,7 @@
   "noBookmarks": "Закладки отсутствуют",
   "noBookmarksTip": "Потяните вниз или нажмите на иконку закладки в правом верхнем углу, чтобы добавить закладку.",
   "settingsAdvancedJavascript": "JavaScript",
-  "settingsAdvancedEnableJavascriptForEpub": "Разрешить JavaScript в Epub",
+  "settingsAdvancedEnableJavascriptForEpub": "Разрешить JS-script в Epub",
   "readingSettingsMargin": "Поля",
   "updateViaGithub": "Через GitHub",
   "updateViaOfficialWebsite": "Через официальный сайт",
