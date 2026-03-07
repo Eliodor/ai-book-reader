@@ -228,6 +228,12 @@ const setSelectionHandler = (view, doc, index) => {
     });
   }
   else if (navigator.platform.includes('Win')) {
+    // Prevent the default WebView2 context menu (back, reload, save as, print)
+    // from appearing on right-click inside the book content frame.
+    doc.addEventListener('contextmenu', e => {
+      e.preventDefault();
+    });
+
     if (navigator.maxTouchPoints > 0) {
       // In Edge, the longpress by touch generates following touch event sequence:
       // pointerover -> enter -> down -> move(n) -> cancel -> out -> leave

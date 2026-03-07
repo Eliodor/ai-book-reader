@@ -1,6 +1,7 @@
 # Changelog
 
 ## 1.13.0
+- Fix(reader): Disable WebView2 right-click context menu (back, reload, save as, print) on Windows (#746)
 - Fix(reader): Fix images with large inline max-width overflowing column width and appearing on wrong page (#742)
 - Fix(ai): Fix type cast error when using Gemini AI with tools (#747)
 - Feat(tts): Add floating action button in reader for quick TTS controls (previous, pause/resume, next, stop) (#723)
@@ -16,6 +17,7 @@
 - Feat(ai): Add quick model switcher in AI chat input bar (tune icon button)
 - Feat(ai): Add model picker in provider detail page with showMenu dropdown after fetching
 
+- Fix(reader): 修复 Windows 端右键触发 WebView2 系统上下文菜单（返回、刷新、另存为、打印）的问题 (#746)
 - Fix(reader): 修复图片内嵌大 max-width 导致宽度超出栏宽而显示到下一页的问题 (#742)
 - Fix(ai): 修复使用 Gemini AI 工具时的类型转换错误 (#747)
 
