@@ -869,5 +869,9 @@
   "settingsAiChatDisplayModePopup": "Fenêtre contextuelle",
   "settingsAiPanelPosition": "Position du Panneau",
   "settingsAiPanelPositionBottom": "Bas",
-  "settingsAiPanelPositionRight": "Droite"
+  "settingsAiPanelPositionRight": "Droite",
+  "aiModelSwitchTitle": "Changer de modèle",
+  "aiModelEnterManually": "Entrez le nom du modèle",
+  "aiModelOrSelectBelow": "Ou sélectionner dans la liste :",
+  "aiChatFontSize": "Taille de police"
 }

@@ -869,5 +869,9 @@
   "settingsAiChatDisplayModePopup": "彈",
   "settingsAiPanelPosition": "版面位",
   "settingsAiPanelPositionBottom": "底",
-  "settingsAiPanelPositionRight": "右"
+  "settingsAiPanelPositionRight": "右",
+  "aiModelSwitchTitle": "換模型",
+  "aiModelEnterManually": "輸入模型名",
+  "aiModelOrSelectBelow": "或選下列：",
+  "aiChatFontSize": "字大小"
 }

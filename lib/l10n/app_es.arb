@@ -869,5 +869,9 @@
   "settingsAiChatDisplayModePopup": "Ventana Emergente",
   "settingsAiPanelPosition": "Posición del Panel",
   "settingsAiPanelPositionBottom": "Abajo",
-  "settingsAiPanelPositionRight": "Derecha"
+  "settingsAiPanelPositionRight": "Derecha",
+  "aiModelSwitchTitle": "Cambiar modelo",
+  "aiModelEnterManually": "Ingrese nombre del modelo",
+  "aiModelOrSelectBelow": "O seleccione de la lista:",
+  "aiChatFontSize": "Tamaño de fuente"
 }

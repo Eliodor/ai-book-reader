@@ -869,5 +869,9 @@
   "settingsAiChatDisplayModePopup": "Popup",
   "settingsAiPanelPosition": "Posizione Pannello",
   "settingsAiPanelPositionBottom": "Basso",
-  "settingsAiPanelPositionRight": "Destra"
+  "settingsAiPanelPositionRight": "Destra",
+  "aiModelSwitchTitle": "Cambia modello",
+  "aiModelEnterManually": "Inserisci nome modello",
+  "aiModelOrSelectBelow": "O seleziona dalla lista:",
+  "aiChatFontSize": "Dimensione font"
 }

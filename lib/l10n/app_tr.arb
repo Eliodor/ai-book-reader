@@ -869,5 +869,9 @@
    "settingsAiChatDisplayModePopup": "Açılır",
    "settingsAiPanelPosition": "Panel Konumu",
    "settingsAiPanelPositionBottom": "Alt",
-   "settingsAiPanelPositionRight": "Sağ"
+   "settingsAiPanelPositionRight": "Sağ",
+   "aiModelSwitchTitle": "Modeli değiştir",
+   "aiModelEnterManually": "Model adı girin",
+   "aiModelOrSelectBelow": "Veya listeden seçin:",
+   "aiChatFontSize": "Yazı boyutu"
 }

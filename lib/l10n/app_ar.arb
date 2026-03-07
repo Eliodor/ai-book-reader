@@ -869,5 +869,9 @@
    "settingsAiChatDisplayModePopup": "منبثق",
    "settingsAiPanelPosition": "موضع اللوحة",
    "settingsAiPanelPositionBottom": "أسفل",
-   "settingsAiPanelPositionRight": "يمين"
+   "settingsAiPanelPositionRight": "يمين",
+   "aiModelSwitchTitle": "تغيير النموذج",
+   "aiModelEnterManually": "أدخل اسم النموذج",
+   "aiModelOrSelectBelow": "أو اختر من القائمة:",
+   "aiChatFontSize": "حجم الخط"
 }

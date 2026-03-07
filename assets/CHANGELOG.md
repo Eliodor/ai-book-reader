@@ -11,6 +11,9 @@
 - Feat(ai): Add AI chat display mode settings with adaptive, split, and popup options
 - Feat(ai): Add resizable AI panel with drag to resize, sizes persisted
 - Feat(ai): Add AI panel position settings (bottom/right) for non-popup modes
+- Feat(ai): Add font size setting for AI chat via three-dot menu
+- Feat(ai): Add quick model switcher in AI chat input bar (tune icon button)
+- Feat(ai): Add model picker in provider detail page with showMenu dropdown after fetching
 
 - Fix(reader): 修复图片内嵌大 max-width 导致宽度超出栏宽而显示到下一页的问题 (#742)
 
@@ -23,6 +26,9 @@
 - Feat(ai): 新增 AI 对话显示模式设置，支持自适应、分屏和弹出三种模式
 - Feat(ai): 新增可调整尺寸的 AI 面板，支持拖动调整大小，尺寸自动保存
 - Feat(ai): 新增 AI 面板位置设置（非弹出模式下可选择底部或右侧）
+- Feat(ai): 新增 AI 对话字体大小设置，通过三点菜单访问
+- Feat(ai): 新增 AI 聊天输入栏快速切换模型按钮（调谐图标）
+- Feat(ai): 供应商详情页新增模型选择器，获取后通过下拉菜单显示
 
 ## 1.12.0
 - Feat(tts): Add OpenAI-compatible TTS service support (#653)

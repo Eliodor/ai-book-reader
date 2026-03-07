@@ -869,5 +869,9 @@
    "settingsAiChatDisplayModePopup": "ポップアップ",
    "settingsAiPanelPosition": "パネル位置",
    "settingsAiPanelPositionBottom": "下",
-   "settingsAiPanelPositionRight": "右"
+   "settingsAiPanelPositionRight": "右",
+   "aiModelSwitchTitle": "モデル切替",
+   "aiModelEnterManually": "モデル名を入力",
+   "aiModelOrSelectBelow": "またはリストから選択：",
+   "aiChatFontSize": "フォントサイズ"
 }

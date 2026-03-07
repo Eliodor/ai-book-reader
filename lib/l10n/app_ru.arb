@@ -872,5 +872,9 @@
    "settingsAiChatDisplayModePopup": "Всплывающее",
    "settingsAiPanelPosition": "Положение панели",
    "settingsAiPanelPositionBottom": "Снизу",
-   "settingsAiPanelPositionRight": "Справа"
+   "settingsAiPanelPositionRight": "Справа",
+   "aiModelSwitchTitle": "Сменить модель",
+   "aiModelEnterManually": "Введите название модели",
+   "aiModelOrSelectBelow": "Или выберите из списка:",
+   "aiChatFontSize": "Размер шрифта"
 }

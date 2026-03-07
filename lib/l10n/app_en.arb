@@ -869,5 +869,9 @@
   "settingsAiChatDisplayModePopup": "Popup",
   "settingsAiPanelPosition": "Panel Position",
   "settingsAiPanelPositionBottom": "Bottom",
-  "settingsAiPanelPositionRight": "Right"
+  "settingsAiPanelPositionRight": "Right",
+  "aiChatFontSize": "Font Size",
+  "aiModelSwitchTitle": "Switch Model",
+  "aiModelEnterManually": "Enter model name",
+  "aiModelOrSelectBelow": "Or select from list:"
 }

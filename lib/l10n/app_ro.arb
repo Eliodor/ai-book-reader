@@ -866,8 +866,12 @@
    "settingsAiChatDisplayModeSplit": "Împărțit",
    "settingsAiChatDisplayModePopup": "Pop-up",
    "settingsAiPanelPosition": "Poziția Panoului",
-  "settingsAiPanelPositionBottom": "Jos",
-  "settingsAiPanelPositionRight": "Dreapta",
-  "commonAddSuccess": "Adăugat cu succes",
-  "commonSaveSuccess": "Salvat cu succes"
+   "settingsAiPanelPositionBottom": "Jos",
+   "settingsAiPanelPositionRight": "Dreapta",
+   "aiModelSwitchTitle": "Schimbă modelul",
+   "aiModelEnterManually": "Introdu numele modelului",
+   "aiModelOrSelectBelow": "Sau selectează din listă:",
+   "aiChatFontSize": "Dimensiune font",
+   "commonAddSuccess": "Adăugat cu succes",
+   "commonSaveSuccess": "Salvat cu succes"
 }

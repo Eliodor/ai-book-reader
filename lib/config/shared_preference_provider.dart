@@ -970,6 +970,15 @@ class Prefs extends ChangeNotifier {
     return prefs.getInt('maxAiCacheCount') ?? 300;
   }
 
+  set aiChatFontSize(double size) {
+    prefs.setDouble('aiChatFontSize', size);
+    notifyListeners();
+  }
+
+  double get aiChatFontSize {
+    return prefs.getDouble('aiChatFontSize') ?? 14.0;
+  }
+
   set volumeKeyTurnPage(bool status) {
     prefs.setBool('volumeKeyTurnPage', status);
     notifyListeners();
