@@ -1,6 +1,8 @@
 # Changelog
 
 ## 1.13.0
+- Feat(tts): Add floating action button in reader for quick TTS controls (previous, pause/resume, next, stop) (#723)
+- Fix(tts): Fix crash when SystemTts speak() receives null text from WebView
 - Feat(ai): Add AI Provider Configuration Center with support for OpenAI-compatible, Claude, and Gemini protocols
 - Feat(ai): Support multiple API keys per provider with round-robin rotation
 - Feat(ai): Add provider test connection with streaming preview
@@ -9,6 +11,8 @@
 - Feat(ai): Add resizable AI panel with drag to resize, sizes persisted
 - Feat(ai): Add AI panel position settings (bottom/right) for non-popup modes
 
+- Feat(tts): 新增阅读界面朗读快捷操作悬浮按钮（上一句、暂停/继续、下一句、停止）(#723)
+- Fix(tts): 修复 SystemTts 从 WebView 获取文本为空时的崩溃问题
 - Feat(ai): 新增 AI 供应商配置中心，支持 OpenAI 兼容、Claude 和 Gemini 协议
 - Feat(ai): 支持每个供应商配置多个 API Key，自动轮询使用
 - Feat(ai): 新增供应商连接测试，支持流式预览

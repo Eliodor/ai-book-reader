@@ -26,6 +26,7 @@ import 'package:anx_reader/widgets/ai/ai_stream.dart';
 import 'package:anx_reader/widgets/reading_page/notes_widget.dart';
 import 'package:anx_reader/models/reading_time.dart';
 import 'package:anx_reader/widgets/reading_page/progress_widget.dart';
+import 'package:anx_reader/widgets/reading_page/tts_fab.dart';
 import 'package:anx_reader/widgets/reading_page/tts_widget.dart';
 import 'package:anx_reader/widgets/reading_page/style_widget.dart';
 import 'package:anx_reader/widgets/reading_page/toc_widget.dart';
@@ -972,6 +973,15 @@ class ReadingPageState extends ConsumerState<ReadingPage>
                     ],
                   ),
                   controller,
+                  // TTS floating action button: always in the tree when toolbar
+                  // is hidden; TtsFab handles its own show/hide internally so
+                  // its State (expanded flag) is never destroyed mid-session.
+                  if (bottomBarOffstage)
+                    const Positioned(
+                      right: 16,
+                      bottom: 24,
+                      child: TtsFab(),
+                    ),
                 ],
               ),
             ),
