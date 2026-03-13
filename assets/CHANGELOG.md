@@ -3,6 +3,7 @@
 ## 1.13.0
 - Fix(reader): Disable WebView2 right-click context menu (back, reload, save as, print) on Windows (#746)
 - Fix(reader): Fix images with large inline max-width overflowing column width and appearing on wrong page (#742)
+- Fix(reader): Fix epub heading color not following theme color when useBookStyles is disabled (#749)
 - Fix(ai): Fix type cast error when using Gemini AI with tools (#747)
 - Feat(tts): Add floating action button in reader for quick TTS controls (previous, pause/resume, next, stop) (#723)
 - Fix(tts): Fix crash when SystemTts speak() receives null text from WebView
@@ -19,6 +20,7 @@
 
 - Fix(reader): 修复 Windows 端右键触发 WebView2 系统上下文菜单（返回、刷新、另存为、打印）的问题 (#746)
 - Fix(reader): 修复图片内嵌大 max-width 导致宽度超出栏宽而显示到下一页的问题 (#742)
+- Fix(reader): 修复禁用书籍自带样式时 epub 标题颜色不跟随主题色的问题，智能识别黑色标题并进行覆盖 (#749)
 - Fix(ai): 修复使用 Gemini AI 工具时的类型转换错误 (#747)
 
 - Feat(tts): 新增阅读界面朗读快捷操作悬浮按钮（上一句、暂停/继续、下一句、停止）(#723)
