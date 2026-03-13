@@ -16,6 +16,7 @@
 - Fix(l10n): Update Russian translation in app_ru.arb (#774) Thanks @Xapitonov
 - Fix(l10n): Update full_description.txt (#775) Thanks @Xapitonov
 - Docs: Add CLAUDE.md for AI assistant guidance (#792) Thanks @Anxcye
+- Fix(toc): Show full chapter titles in TOC by wrapping long text instead of truncating with ellipsis (#751)
 - L10n: Complete Romanian translation (#714) Thanks @Steinhagen
 
 - Feat(tts): 在文本选择工具栏新增朗读选项，支持从选中文本开始 TTS (#794) 感谢 @deskangel
@@ -33,6 +34,7 @@
 - Fix(l10n): 更新俄语翻译 app_ru.arb (#774) 感谢 @Xapitonov
 - Fix(l10n): 更新 full_description.txt (#775) 感谢 @Xapitonov
 - Docs: 添加 CLAUDE.md 为 AI 助手提供指导 (#792) 感谢 @Anxcye
+- Fix(toc): 目录中过长的章节标题现在会自动换行显示完整内容，不再以省略号截断 (#751)
 - L10n: 完成罗马尼亚语翻译 (#714) 感谢 @Steinhagen
 
 ## 1.13.0
