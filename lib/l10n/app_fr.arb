@@ -440,6 +440,8 @@
   "readingPageStyleDayMode": "Jour",
   "readingPageStyleNightMode": "Nuit",
   "readingPageStyleDeleteNightImage": "Supprimer l'image de nuit",
+  "readingPageStyleBgimgBlur": "Flou",
+  "readingPageStyleBgimgOpacity": "Opacité",
   "readingPageVerticleMargin": "Marge Verticale",
   "readingPageRightMargin": "Marge Droite",
   "readingPageLeftMargin": "Marge Gauche",

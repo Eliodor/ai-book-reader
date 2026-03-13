@@ -523,13 +523,9 @@ const getCSS = ({ fontSize,
 
   const writingModeCSS = writingMode === 'auto' ? '' : `writing-mode: ${writingMode} !important;`
 
-  const backgroundImageCSS = !backgroundImage || flow || backgroundImage === 'none' ? 'background: none !important;' :
-    `background-image: url('${backgroundImage}') !important;
-    background-size: 100% 100% !important;
-    background-repeat: repeat !important;
-    background-attachment: scroll !important; 
-    background-position: center center !important;
-    background-clip: content-box !important;`
+  // Background images are rendered by the paginator layer so blur/opacity
+  // controls apply consistently across the whole reading surface.
+  const backgroundImageCSS = 'background: none !important;'
 
 
   // Some CSS selectors are inspired by https://github.com/readest/foliate-js
@@ -1531,6 +1527,8 @@ const setStyle = (oldStyle) => {
   reader.view.renderer.setAttribute('max-column-count', style.maxColumnCount)
   reader.view.renderer.setAttribute('column-threshold', `${style.columnThreshold}px`)
   reader.view.renderer.setAttribute('bgimg-url', style.backgroundImage)
+  reader.view.renderer.setAttribute('bgimg-blur', style.bgimgBlur ?? 0)
+  reader.view.renderer.setAttribute('bgimg-opacity', style.bgimgOpacity ?? 1)
 
   turn.animated ? reader.view.renderer.setAttribute('animated', 'true')
     : reader.view.renderer.removeAttribute('animated')

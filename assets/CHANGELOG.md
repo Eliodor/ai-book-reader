@@ -1,6 +1,8 @@
 # Changelog
 
 ## 1.14.0
+- Feat(reader): Add background image blur and opacity controls in reading settings (#753)
+- Fix(reader): Fix background image effects not applying and switch reader background fill mode to cover (#753)
 - Fix(reader): Fix RangeError crash when read theme color is null/invalid (#759)
 - Feat(tts): Add Narrator option to text selection toolbar to start TTS from selected text (#794) Thanks @deskangel
 - Feat(tts): Add click to pause/resume TTS playback on currently reading text (#794) Thanks @deskangel
@@ -19,6 +21,8 @@
 - Fix(toc): Show full chapter titles in TOC by wrapping long text instead of truncating with ellipsis (#751)
 - L10n: Complete Romanian translation (#714) Thanks @Steinhagen
 
+- Feat(reader): 阅读设置新增背景图模糊度和透明度调节 (#753)
+- Fix(reader): 修复背景图效果不生效的问题，并将阅读器背景图填充方式调整为 cover (#753)
 - Feat(tts): 在文本选择工具栏新增朗读选项，支持从选中文本开始 TTS (#794) 感谢 @deskangel
 - Fix(reader): 修复阅读主题颜色为空/无效时的 RangeError 崩溃 (#759)
 - Feat(tts): 新增点击正在朗读的文本以暂停/继续 TTS 播放 (#794) 感谢 @deskangel

@@ -442,6 +442,8 @@
   "readingPageStyleDayMode": "Zi",
   "readingPageStyleNightMode": "Noapte",
   "readingPageStyleDeleteNightImage": "Șterge imaginea de noapte",
+  "readingPageStyleBgimgBlur": "Blur",
+  "readingPageStyleBgimgOpacity": "Opacitate",
   "readingPageVerticleMargin": "Vertical Margin",
   "readingPageRightMargin": "Right Margin",
   "readingPageLeftMargin": "Left Margin",

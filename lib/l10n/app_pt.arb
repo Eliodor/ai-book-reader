@@ -440,6 +440,8 @@
   "readingPageStyleDayMode": "Dia",
   "readingPageStyleNightMode": "Noite",
   "readingPageStyleDeleteNightImage": "Excluir imagem noturna",
+  "readingPageStyleBgimgBlur": "Desfoque",
+  "readingPageStyleBgimgOpacity": "Opacidade",
   "readingPageVerticleMargin": "Margem Vertical",
   "readingPageRightMargin": "Margem Direita",
   "readingPageLeftMargin": "Margem Esquerda",

@@ -440,6 +440,8 @@
   "readingPageStyleDayMode": "نهار",
   "readingPageStyleNightMode": "ليل",
   "readingPageStyleDeleteNightImage": "حذف الصورة الليلية",
+  "readingPageStyleBgimgBlur": "ضبابية",
+  "readingPageStyleBgimgOpacity": "الشفافية",
   "readingPageVerticleMargin": "الهامش الرأسي",
   "readingPageRightMargin": "الهامش الصحيح",
   "readingPageLeftMargin": "الهامش الأيسر",

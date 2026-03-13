@@ -442,6 +442,8 @@
   "readingPageStyleDayMode": "Gündüz",
   "readingPageStyleNightMode": "Gece",
   "readingPageStyleDeleteNightImage": "Gece görüntüsünü sil",
+  "readingPageStyleBgimgBlur": "Bulanıklaştırma",
+  "readingPageStyleBgimgOpacity": "Opaklık",
   "readingPageVerticleMargin": "Dikey marj",
   "readingPageRightMargin": "Sağ marj",
   "readingPageLeftMargin": "Sol marj",

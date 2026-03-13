@@ -440,6 +440,8 @@
   "readingPageStyleDayMode": "낮",
   "readingPageStyleNightMode": "밤",
   "readingPageStyleDeleteNightImage": "야간 이미지 삭제",
+  "readingPageStyleBgimgBlur": "흐림",
+  "readingPageStyleBgimgOpacity": "불투명도",
   "readingPageVerticleMargin": "세로 여백",
   "readingPageRightMargin": "오른쪽 여백",
   "readingPageLeftMargin": "왼쪽 여백",

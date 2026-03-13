@@ -440,6 +440,8 @@
   "readingPageStyleDayMode": "日間",
   "readingPageStyleNightMode": "夜間",
   "readingPageStyleDeleteNightImage": "刪除夜間圖片",
+  "readingPageStyleBgimgBlur": "虛化",
+  "readingPageStyleBgimgOpacity": "透明度",
   "readingPageVerticleMargin": "垂直邊距",
   "readingPageRightMargin": "右邊距",
   "readingPageLeftMargin": "左邊距",

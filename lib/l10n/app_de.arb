@@ -440,6 +440,8 @@
   "readingPageStyleDayMode": "Tag",
   "readingPageStyleNightMode": "Nacht",
   "readingPageStyleDeleteNightImage": "Nachtbild löschen",
+  "readingPageStyleBgimgBlur": "Weichzeichner",
+  "readingPageStyleBgimgOpacity": "Deckkraft",
   "readingPageVerticleMargin": "Vertikaler Rand",
   "readingPageRightMargin": "Rechter Rand",
   "readingPageLeftMargin": "Linker Rand",

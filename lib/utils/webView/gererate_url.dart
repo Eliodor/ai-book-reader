@@ -87,6 +87,8 @@ String generateUrl(
     'writingMode': Prefs().writingMode.code,
     'textAlign': Prefs().textAlignment.code,
     'backgroundImage': bgimgUrl,
+    'bgimgBlur': Prefs().bgimg.blur,
+    'bgimgOpacity': Prefs().bgimg.opacity,
     'allowScript': Prefs().enableJsForEpub,
     'customCSS': Prefs().customCSS,
     'customCSSEnabled': Prefs().customCSSEnabled,

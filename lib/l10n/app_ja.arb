@@ -440,6 +440,8 @@
   "readingPageStyleDayMode": "昼",
   "readingPageStyleNightMode": "夜",
   "readingPageStyleDeleteNightImage": "夜間画像を削除",
+  "readingPageStyleBgimgBlur": "ぼかし",
+  "readingPageStyleBgimgOpacity": "不透明度",
   "readingPageVerticleMargin": "縦マージン",
   "readingPageRightMargin": "右マージン",
   "readingPageLeftMargin": "左マージン",

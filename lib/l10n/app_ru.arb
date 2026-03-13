@@ -442,6 +442,8 @@
   "readingPageStyleDayMode": "День",
   "readingPageStyleNightMode": "Ночь",
   "readingPageStyleDeleteNightImage": "Удалить ночное изображение",
+  "readingPageStyleBgimgBlur": "Размытие",
+  "readingPageStyleBgimgOpacity": "Прозрачность",
   "readingPageVerticleMargin": "Вертикальные поля",
   "readingPageRightMargin": "Правое поле",
   "readingPageLeftMargin": "Левое поле",
