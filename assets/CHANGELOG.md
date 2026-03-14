@@ -36,6 +36,7 @@
 - Fix(reader): 修复窗口关闭时的清理流程，正确停止服务器、释放 WebView2、关闭数据库并销毁窗口
 - Fix(ai): 修复 AI 崩溃问题，为 Windows 上空 webViewEnvironment 添加防护
 - Fix(reader): 添加滚动防抖机制，优化翻页体验
+- Fix(reader): 修复 Android 10+ 设备图片保存权限问题，移除不必要的存储权限请求 (#793)
 - Fix(l10n): 更新俄语翻译 app_ru.arb (#774) 感谢 @Xapitonov
 - Fix(l10n): 更新 full_description.txt (#775) 感谢 @Xapitonov
 - Docs: 添加 CLAUDE.md 为 AI 助手提供指导 (#792) 感谢 @Anxcye
