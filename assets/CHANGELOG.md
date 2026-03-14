@@ -21,29 +21,6 @@
 - Docs: Add CLAUDE.md for AI assistant guidance (#792) Thanks @Anxcye
 - Fix(toc): Show full chapter titles in TOC by wrapping long text instead of truncating with ellipsis (#751)
 - L10n: Complete Romanian translation (#714) Thanks @Steinhagen
-
-- Feat(reader): 阅读设置新增背景图模糊度和透明度调节 (#753)
-- Fix(reader): 修复背景图效果不生效的问题，并将阅读器背景图填充方式调整为 cover (#753)
-- Feat(tts): 在文本选择工具栏新增朗读选项，支持从选中文本开始 TTS (#794) 感谢 @deskangel
-- Fix(reader): 修复阅读主题颜色为空/无效时的 RangeError 崩溃 (#759)
-- Feat(tts): 新增点击正在朗读的文本以暂停/继续 TTS 播放 (#794) 感谢 @deskangel
-- Feat(reader): macOS 新增 Ctrl+[ 和 Ctrl+] 翻页快捷键，支持 Logitech Options+ 鼠标按键映射 (#794) 感谢 @deskangel
-- Feat(ai): 在 AI 服务层添加全局 AI 请求限流（RPM）
-- Fix(ai): 修复无法使用 AI 进行全文翻译的问题
-- Fix(tts): 修复在阅读界面切换 TTS 类型无效的问题 (#794) 感谢 @deskangel
-- Fix(tts): 修复调整音调或语速后朗读位置不正确的问题 (#794) 感谢 @deskangel
-- Fix(reader): 桌面端资源生命周期管理、WebView 稳定性及滚动体验优化 (#790) 感谢 @yi124773651
-- Fix(reader): 修复窗口关闭时的清理流程，正确停止服务器、释放 WebView2、关闭数据库并销毁窗口
-- Fix(ai): 修复 AI 崩溃问题，为 Windows 上空 webViewEnvironment 添加防护
-- Fix(reader): 添加滚动防抖机制，优化翻页体验
-- Fix(reader): 修复 Android 10+ 设备图片保存权限问题，移除不必要的存储权限请求 (#793)
-- Fix(l10n): 更新俄语翻译 app_ru.arb (#774) 感谢 @Xapitonov
-- Fix(l10n): 更新 full_description.txt (#775) 感谢 @Xapitonov
-- Docs: 添加 CLAUDE.md 为 AI 助手提供指导 (#792) 感谢 @Anxcye
-- Fix(toc): 目录中过长的章节标题现在会自动换行显示完整内容，不再以省略号截断 (#751)
-- L10n: 完成罗马尼亚语翻译 (#714) 感谢 @Steinhagen
-
-## 1.13.0
 - Fix(reader): Disable WebView2 right-click context menu (back, reload, save as, print) on Windows (#746)
 - Fix(reader): Fix images with large inline max-width overflowing column width and appearing on wrong page (#742)
 - Fix(reader): Fix epub heading color not following theme color when useBookStyles is disabled (#749)
@@ -65,7 +42,6 @@
 - Fix(reader): 修复图片内嵌大 max-width 导致宽度超出栏宽而显示到下一页的问题 (#742)
 - Fix(reader): 修复禁用书籍自带样式时 epub 标题颜色不跟随主题色的问题，智能识别黑色标题并进行覆盖 (#749)
 - Fix(ai): 修复使用 Gemini AI 工具时的类型转换错误 (#747)
-
 - Feat(tts): 新增阅读界面朗读快捷操作悬浮按钮（上一句、暂停/继续、下一句、停止）(#723)
 - Fix(tts): 修复 SystemTts 从 WebView 获取文本为空时的崩溃问题
 - Feat(ai): 新增 AI 供应商配置中心，支持 OpenAI 兼容、Claude 和 Gemini 协议
@@ -78,6 +54,24 @@
 - Feat(ai): 新增 AI 对话字体大小设置，通过三点菜单访问
 - Feat(ai): 新增 AI 聊天输入栏快速切换模型按钮（调谐图标）
 - Feat(ai): 供应商详情页新增模型选择器，获取后通过下拉菜单显示
+- Feat(reader): 阅读设置新增背景图模糊度和透明度调节 (#753)
+- Fix(reader): 修复背景图效果不生效的问题，并将阅读器背景图填充方式调整为 cover (#753)
+- Feat(tts): 在文本选择工具栏新增朗读选项，支持从选中文本开始 TTS (#794) 感谢 @deskangel
+- Fix(reader): 修复阅读主题颜色为空/无效时的 RangeError 崩溃 (#759)
+- Feat(tts): 新增点击正在朗读的文本以暂停/继续 TTS 播放 (#794) 感谢 @deskangel
+- Feat(reader): macOS 新增 Ctrl+[ 和 Ctrl+] 翻页快捷键，支持 Logitech Options+ 鼠标按键映射 (#794) 感谢 @deskangel
+- Feat(ai): 在 AI 服务层添加全局 AI 请求限流（RPM）
+- Fix(ai): 修复无法使用 AI 进行全文翻译的问题
+- Fix(tts): 修复在阅读界面切换 TTS 类型无效的问题 (#794) 感谢 @deskangel
+- Fix(tts): 修复调整音调或语速后朗读位置不正确的问题 (#794) 感谢 @deskangel
+- Fix(reader): 桌面端资源生命周期管理、WebView 稳定性及滚动体验优化 (#790) 感谢 @yi124773651
+- Fix(reader): 修复窗口关闭时的清理流程，正确停止服务器、释放 WebView2、关闭数据库并销毁窗口
+- Fix(ai): 修复 AI 崩溃问题，为 Windows 上空 webViewEnvironment 添加防护
+- Fix(reader): 添加滚动防抖机制，优化翻页体验
+- Fix(reader): 修复 Android 10+ 设备图片保存权限问题，移除不必要的存储权限请求 (#793)
+- Fix(l10n): 更新俄语翻译 app_ru.arb (#774) 感谢 @Xapitonov
+- Fix(toc): 目录中过长的章节标题现在会自动换行显示完整内容，不再以省略号截断 (#751)
+- L10n: 完成罗马尼亚语翻译 (#714) 感谢 @Steinhagen
 
 ## 1.12.0
 - Feat(tts): Add OpenAI-compatible TTS service support (#653)
