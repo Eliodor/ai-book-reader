@@ -15,6 +15,7 @@
 - Fix(reader): Fix window close cleanup to properly stop server, dispose WebView2, close database, and destroy window
 - Fix(ai): Fix AI crash prevention by adding guards for null webViewEnvironment on Windows
 - Fix(reader): Add scroll debounce mechanism for smoother page turning experience
+- Fix(reader): Fix image saving permission issue on Android 10+ devices by removing unnecessary storage permission requests (#793)
 - Fix(l10n): Update Russian translation in app_ru.arb (#774) Thanks @Xapitonov
 - Fix(l10n): Update full_description.txt (#775) Thanks @Xapitonov
 - Docs: Add CLAUDE.md for AI assistant guidance (#792) Thanks @Anxcye
