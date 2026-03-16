@@ -98,7 +98,7 @@
   "contextMenuNarrate": "Озвучить",
   "readingPageFullScreen": "Режим погружения",
   "readingPageScreenTimeout": "Время отключения экрана",
-  "readingPagePageTurningMethod": "Способ листания",
+  "readingPagePageTurningMethod": "Тип листания",
   "readingPageOpenExternalLinkTitle": "Открыть внешнюю ссылку",
   "readingPageOpenExternalLinkMessage": "Открыть следующую ссылку?",
   "readingPageOpenExternalLinkAction": "Открыть",
