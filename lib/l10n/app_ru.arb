@@ -550,7 +550,7 @@
   "readingPageShowActionLabels": "Show Action Labels",
   "readingPageShowActionLabelsTips": "Show text below icon-style action buttons such as the selection context menu",
   "pageTurnModeSimple": "Простой",
-  "pageTurnModeCustom": "Настраиваемый",
+  "pageTurnModeCustom": "Своё",
   "customPageTurnConfig": "Настраиваемое перелистывание",
   "pageTurnActionNone": "Нет",
   "pageTurnActionPrev": "Назад",
