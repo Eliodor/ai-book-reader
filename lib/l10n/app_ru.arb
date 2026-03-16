@@ -549,7 +549,7 @@
   "readingPageShowMenuOnHoverTips": "Автопоказ меню при наведении на верх/низ окна для удобства.",
   "readingPageShowActionLabels": "Show Action Labels",
   "readingPageShowActionLabelsTips": "Show text below icon-style action buttons such as the selection context menu",
-  "pageTurnModeSimple": "Простой",
+  "pageTurnModeSimple": "Простое",
   "pageTurnModeCustom": "Своё",
   "customPageTurnConfig": "Настраиваемое перелистывание",
   "pageTurnActionNone": "Нет",
