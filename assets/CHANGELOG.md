@@ -36,6 +36,7 @@
 - Fix(reader): Fix images with large inline max-width overflowing column width and appearing on wrong page (#742)
 - Fix(reader): Fix epub heading color not following theme color when useBookStyles is disabled (#749)
 - Fix(toc): Show full chapter titles in TOC by wrapping long text instead of truncating with ellipsis (#751)
+- Feat(reader): Support independent left/right margins and font size for header and footer reading info, with shared section-based configuration model (#791)
 - Fix(l10n): Update Russian translation in app_ru.arb (#774) Thanks @Xapitonov
 - Fix(l10n): Update full_description.txt (#775) Thanks @Xapitonov
 - L10n: Complete Romanian translation (#714) Thanks @Steinhagen
@@ -75,6 +76,7 @@
 - Fix(reader): 修复图片内嵌大 max-width 导致宽度超出栏宽而显示到下一页的问题 (#742)
 - Fix(reader): 修复禁用书籍自带样式时 epub 标题颜色不跟随主题色的问题，智能识别黑色标题并进行覆盖 (#749)
 - Fix(toc): 目录中过长的章节标题现在会自动换行显示完整内容，不再以省略号截断 (#751)
+- Feat(reader): 页眉和页脚阅读信息支持分别设置左右边距与字体大小，并重构为共享的分区配置模型 (#791)
 - Fix(l10n): 更新俄语翻译 app_ru.arb (#774) 感谢 @Xapitonov
 - L10n: 完成罗马尼亚语翻译 (#714) 感谢 @Steinhagen
 

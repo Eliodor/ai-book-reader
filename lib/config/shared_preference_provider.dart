@@ -9,6 +9,7 @@ import 'package:anx_reader/enums/convert_chinese_mode.dart';
 import 'package:anx_reader/enums/excerpt_share_template.dart';
 import 'package:anx_reader/enums/hint_key.dart';
 import 'package:anx_reader/enums/lang_list.dart';
+import 'package:anx_reader/enums/reading_info.dart';
 import 'package:anx_reader/enums/sort_field.dart';
 import 'package:anx_reader/enums/sort_order.dart';
 import 'package:anx_reader/enums/sync_protocol.dart';
@@ -1187,7 +1188,52 @@ class Prefs extends ChangeNotifier {
     if (readingInfoJson == null) {
       return ReadingInfoModel();
     }
-    return ReadingInfoModel.fromJson(jsonDecode(readingInfoJson));
+    final Map<String, dynamic> json =
+        Map<String, dynamic>.from(jsonDecode(readingInfoJson));
+    if (json.containsKey('header') || json.containsKey('footer')) {
+      return ReadingInfoModel.fromJson(json);
+    }
+
+    return ReadingInfoModel(
+      header: ReadingInfoSectionModel(
+        left: _decodeReadingInfoEnum(
+          json['headerLeft'],
+          ReadingInfoEnum.chapterTitle,
+        ),
+        center: _decodeReadingInfoEnum(
+          json['headerCenter'],
+          ReadingInfoEnum.none,
+        ),
+        right: _decodeReadingInfoEnum(
+          json['headerRight'],
+          ReadingInfoEnum.none,
+        ),
+        verticalMargin: prefs.getDouble('pageHeaderMargin') ??
+            MediaQuery.of(navigatorKey.currentContext!).padding.bottom,
+        leftMargin: prefs.getDouble('pageHeaderLeftMargin') ?? 20,
+        rightMargin: prefs.getDouble('pageHeaderRightMargin') ?? 20,
+        fontSize: prefs.getDouble('pageHeaderFontSize') ?? 10,
+      ),
+      footer: ReadingInfoSectionModel(
+        left: _decodeReadingInfoEnum(
+          json['footerLeft'],
+          ReadingInfoEnum.batteryAndTime,
+        ),
+        center: _decodeReadingInfoEnum(
+          json['footerCenter'],
+          ReadingInfoEnum.chapterProgress,
+        ),
+        right: _decodeReadingInfoEnum(
+          json['footerRight'],
+          ReadingInfoEnum.bookProgress,
+        ),
+        verticalMargin: prefs.getDouble('pageFooterMargin') ??
+            MediaQuery.of(navigatorKey.currentContext!).padding.bottom,
+        leftMargin: prefs.getDouble('pageFooterLeftMargin') ?? 20,
+        rightMargin: prefs.getDouble('pageFooterRightMargin') ?? 20,
+        fontSize: prefs.getDouble('pageFooterFontSize') ?? 10,
+      ),
+    );
   }
 
   set isSystemTts(bool status) {
@@ -1439,26 +1485,6 @@ class Prefs extends ChangeNotifier {
     notifyListeners();
   }
 
-  double get pageHeaderMargin {
-    return prefs.getDouble('pageHeaderMargin') ??
-        MediaQuery.of(navigatorKey.currentContext!).padding.bottom;
-  }
-
-  set pageHeaderMargin(double margin) {
-    prefs.setDouble('pageHeaderMargin', margin);
-    notifyListeners();
-  }
-
-  double get pageFooterMargin {
-    return prefs.getDouble('pageFooterMargin') ??
-        MediaQuery.of(navigatorKey.currentContext!).padding.bottom;
-  }
-
-  set pageFooterMargin(double margin) {
-    prefs.setDouble('pageFooterMargin', margin);
-    notifyListeners();
-  }
-
   String? get lastAppVersion {
     return prefs.getString('lastAppVersion');
   }
@@ -1600,4 +1626,17 @@ class Prefs extends ChangeNotifier {
     prefs.setDouble('aiPanelHeight', height);
     notifyListeners();
   }
+}
+
+ReadingInfoEnum _decodeReadingInfoEnum(
+  Object? value,
+  ReadingInfoEnum fallback,
+) {
+  if (value is! String) return fallback;
+  for (final item in ReadingInfoEnum.values) {
+    if (item.name == value) {
+      return item;
+    }
+  }
+  return fallback;
 }

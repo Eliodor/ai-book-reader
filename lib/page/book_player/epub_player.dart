@@ -1079,63 +1079,64 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
       return const SizedBox();
     }
 
-    TextStyle textStyle = TextStyle(
-      color: Color(int.parse('0x$textColor')).withAlpha(150),
-      fontSize: 10,
-    );
+    final readingInfoColor = Color(int.parse('0x$textColor')).withAlpha(150);
+    final iconColor = Color(int.parse('0x$textColor'));
 
-    Widget chapterTitleWidget = Text(
-      (chapterCurrentPage == 1 ? widget.book.title : chapterTitle),
-      style: textStyle,
-    );
+    Widget getWidget(ReadingInfoEnum readingInfoEnum, TextStyle textStyle) {
+      final batteryTextStyle = TextStyle(
+        color: iconColor,
+        fontSize: (textStyle.fontSize ?? 10) - 1,
+      );
+      final batteryIconSize = (textStyle.fontSize ?? 10) * 2.7;
 
-    Widget chapterProgressWidget = Text(
-      '$chapterCurrentPage/$chapterTotalPages',
-      style: textStyle,
-    );
+      final chapterTitleWidget = Text(
+        (chapterCurrentPage == 1 ? widget.book.title : chapterTitle),
+        style: textStyle,
+      );
 
-    Widget bookProgressWidget =
-        Text('${(percentage * 100).toStringAsFixed(2)}%', style: textStyle);
+      final chapterProgressWidget = Text(
+        '$chapterCurrentPage/$chapterTotalPages',
+        style: textStyle,
+      );
 
-    Widget timeWidget = MinuteClock(textStyle: textStyle);
+      final bookProgressWidget =
+          Text('${(percentage * 100).toStringAsFixed(2)}%', style: textStyle);
 
-    Widget batteryWidget = FutureBuilder(
-        future: Battery().batteryLevel,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Stack(
-              alignment: Alignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0.8, 2, 0),
-                  child: Text('${snapshot.data}',
-                      style: TextStyle(
-                        color: Color(int.parse('0x$textColor')),
-                        fontSize: 9,
-                      )),
-                ),
-                Icon(
-                  HeroIcons.battery_0,
-                  size: 27,
-                  color: Color(int.parse('0x$textColor')),
-                ),
-              ],
-            );
-          } else {
-            return const SizedBox();
-          }
-        });
+      final timeWidget = MinuteClock(textStyle: textStyle);
 
-    Widget batteryAndTimeWidget() => Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            batteryWidget,
-            const SizedBox(width: 5),
-            timeWidget,
-          ],
-        );
+      final batteryWidget = FutureBuilder(
+          future: Battery().batteryLevel,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                        0, (textStyle.fontSize ?? 10) * 0.08, 2, 0),
+                    child: Text('${snapshot.data}', style: batteryTextStyle),
+                  ),
+                  Icon(
+                    HeroIcons.battery_0,
+                    size: batteryIconSize,
+                    color: iconColor,
+                  ),
+                ],
+              );
+            } else {
+              return const SizedBox();
+            }
+          });
 
-    Widget getWidget(ReadingInfoEnum readingInfoEnum) {
+      Widget batteryAndTimeWidget() => Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              batteryWidget,
+              const SizedBox(width: 5),
+              timeWidget,
+            ],
+          );
+
       switch (readingInfoEnum) {
         case ReadingInfoEnum.chapterTitle:
           return chapterTitleWidget;
@@ -1154,40 +1155,56 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
       }
     }
 
+    final readingInfo = Prefs().readingInfo;
+
+    final headerTextStyle = TextStyle(
+      color: readingInfoColor,
+      fontSize: readingInfo.header.fontSize,
+    );
+    final footerTextStyle = TextStyle(
+      color: readingInfoColor,
+      fontSize: readingInfo.footer.fontSize,
+    );
+
     List<Widget> headerWidgets = [
-      getWidget(Prefs().readingInfo.headerLeft),
-      getWidget(Prefs().readingInfo.headerCenter),
-      getWidget(Prefs().readingInfo.headerRight),
+      getWidget(readingInfo.header.left, headerTextStyle),
+      getWidget(readingInfo.header.center, headerTextStyle),
+      getWidget(readingInfo.header.right, headerTextStyle),
     ];
 
     List<Widget> footerWidgets = [
-      getWidget(Prefs().readingInfo.footerLeft),
-      getWidget(Prefs().readingInfo.footerCenter),
-      getWidget(Prefs().readingInfo.footerRight),
+      getWidget(readingInfo.footer.left, footerTextStyle),
+      getWidget(readingInfo.footer.center, footerTextStyle),
+      getWidget(readingInfo.footer.right, footerTextStyle),
     ];
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: Prefs().pageHeaderMargin),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: headerWidgets,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(
+            top: readingInfo.header.verticalMargin,
+            left: readingInfo.header.leftMargin,
+            right: readingInfo.header.rightMargin,
           ),
-          const Spacer(),
-          Padding(
-            padding: EdgeInsets.only(bottom: Prefs().pageFooterMargin),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: footerWidgets,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: headerWidgets,
           ),
-        ],
-      ),
+        ),
+        const Spacer(),
+        Padding(
+          padding: EdgeInsets.only(
+            bottom: readingInfo.footer.verticalMargin,
+            left: readingInfo.footer.leftMargin,
+            right: readingInfo.footer.rightMargin,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: footerWidgets,
+          ),
+        ),
+      ],
     );
   }
 
