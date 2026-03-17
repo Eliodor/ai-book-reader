@@ -12,6 +12,7 @@
 - Feat(ai): Add global AI RPM rate limiting in AI service layer
 - Feat(ai): Add AI Provider Configuration Center with support for OpenAI-compatible, Claude, and Gemini protocols
 - Feat(ai): Support multiple API keys per provider with round-robin rotation
+- Feat(ai): Add provider-level reasoning_effort configuration with auto mode and advanced settings entry
 - Feat(ai): Add provider test connection with streaming preview
 - Feat(ai): Add AI chat display mode settings with adaptive, split, and popup options
 - Feat(ai): Add resizable AI panel with drag to resize, sizes persisted
@@ -54,6 +55,7 @@
 - Feat(ai): 在 AI 服务层添加全局 AI 请求限流（RPM）
 - Feat(ai): 新增 AI 供应商配置中心，支持 OpenAI 兼容、Claude 和 Gemini 协议
 - Feat(ai): 支持每个供应商配置多个 API Key，自动轮询使用
+- Feat(ai): 新增供应商级 reasoning_effort 配置，支持自动模式并收纳到高级设置中
 - Feat(ai): 新增供应商连接测试，支持流式预览
 - Feat(ai): 新增 AI 对话显示模式设置，支持自适应、分屏和弹出三种模式
 - Feat(ai): 新增可调整尺寸的 AI 面板，支持拖动调整大小，尺寸自动保存

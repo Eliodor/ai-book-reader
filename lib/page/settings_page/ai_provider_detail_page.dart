@@ -1,3 +1,4 @@
+import 'package:anx_reader/enums/ai_reasoning_effort.dart';
 import 'package:anx_reader/l10n/generated/L10n.dart';
 import 'package:anx_reader/models/ai_provider.dart';
 import 'package:anx_reader/providers/ai_providers.dart';
@@ -32,6 +33,7 @@ class _AiProviderDetailPageState extends ConsumerState<AiProviderDetailPage> {
   late TextEditingController _modelController;
 
   AiProtocol _selectedProtocol = AiProtocol.openai;
+  AiReasoningEffort _reasoningEffort = AiReasoningEffort.auto;
   List<AiApiKey> _apiKeys = [];
   bool _isModified = false;
   bool _isFetchingModels = false;
@@ -51,6 +53,7 @@ class _AiProviderDetailPageState extends ConsumerState<AiProviderDetailPage> {
     _urlController = TextEditingController(text: provider?.url ?? '');
     _modelController = TextEditingController(text: provider?.model ?? '');
     _selectedProtocol = provider?.protocol ?? AiProtocol.openai;
+    _reasoningEffort = provider?.reasoningEffort ?? AiReasoningEffort.auto;
     _apiKeys = provider?.apiKeys.toList() ?? [];
 
     _nameController.addListener(() => setState(() => _isModified = true));
@@ -170,6 +173,9 @@ class _AiProviderDetailPageState extends ConsumerState<AiProviderDetailPage> {
             ),
             const SizedBox(height: 24),
 
+            _buildAdvancedSettingsCard(context),
+            const SizedBox(height: 16),
+
             // API Keys Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -240,6 +246,117 @@ class _AiProviderDetailPageState extends ConsumerState<AiProviderDetailPage> {
               ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildAdvancedSettingsCard(BuildContext context) {
+    final l10n = L10n.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final accent = colorScheme.secondary;
+    final summary = switch (_reasoningEffort) {
+      AiReasoningEffort.auto => l10n.settingsAiProviderReasoningEffortAuto,
+      AiReasoningEffort.low => l10n.settingsAiProviderReasoningEffortLow,
+      AiReasoningEffort.medium => l10n.settingsAiProviderReasoningEffortMedium,
+      AiReasoningEffort.high => l10n.settingsAiProviderReasoningEffortHigh,
+    };
+
+    return FilledContainer(
+      child: ExpansionTile(
+        tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        childrenPadding: const EdgeInsets.all(16),
+        shape: const Border(),
+        collapsedShape: const Border(),
+        iconColor: accent,
+        collapsedIconColor: accent.withValues(alpha: 0.82),
+        title: Row(
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.14),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                Icons.tune_rounded,
+                size: 18,
+                color: accent,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.settingsAdvanced,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        
+        children: [
+          DropdownButtonFormField<AiReasoningEffort>(
+            initialValue: _reasoningEffort,
+            decoration: InputDecoration(
+              labelText: l10n.settingsAiProviderReasoningEffort,
+              border: const OutlineInputBorder(),
+            ),
+            items: [
+              DropdownMenuItem(
+                value: AiReasoningEffort.auto,
+                child: Text(l10n.settingsAiProviderReasoningEffortAuto),
+              ),
+              DropdownMenuItem(
+                value: AiReasoningEffort.low,
+                child: Text(l10n.settingsAiProviderReasoningEffortLow),
+              ),
+              DropdownMenuItem(
+                value: AiReasoningEffort.medium,
+                child: Text(l10n.settingsAiProviderReasoningEffortMedium),
+              ),
+              DropdownMenuItem(
+                value: AiReasoningEffort.high,
+                child: Text(l10n.settingsAiProviderReasoningEffortHigh),
+              ),
+            ],
+            onChanged: (value) {
+              if (value == null) return;
+              setState(() {
+                _reasoningEffort = value;
+                _isModified = true;
+              });
+            },
+          ),
+          const SizedBox(height: 10),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.info_outline_rounded,
+                size: 16,
+                color: colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  l10n.settingsAiProviderReasoningEffortHelp,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                    height: 1.35,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -513,6 +630,7 @@ class _AiProviderDetailPageState extends ConsumerState<AiProviderDetailPage> {
           : false,
       apiKeys: _apiKeys,
       model: _modelController.text,
+      reasoningEffort: _reasoningEffort,
       keyIndex: 0,
       createdAt: widget.providerId != null
           ? ref
@@ -558,6 +676,7 @@ class _AiProviderDetailPageState extends ConsumerState<AiProviderDetailPage> {
             : false,
         apiKeys: _apiKeys,
         model: _modelController.text,
+        reasoningEffort: _reasoningEffort,
         keyIndex: 0,
         createdAt: widget.providerId != null
             ? ref

@@ -1,3 +1,4 @@
+import 'package:anx_reader/enums/ai_reasoning_effort.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'ai_provider.freezed.dart';
@@ -35,6 +36,8 @@ abstract class AiProvider with _$AiProvider {
     bool isBuiltin, // Whether this is a built-in provider (cannot be deleted)
     @Default([]) List<AiApiKey> apiKeys, // List of API keys
     @Default('') String model, // Current selected model
+    @Default(AiReasoningEffort.auto)
+    AiReasoningEffort reasoningEffort, // OpenAI reasoning effort
     @Default(0) int keyIndex, // Current round-robin key index
     DateTime? createdAt, // Creation time
     DateTime? updatedAt, // Last update time

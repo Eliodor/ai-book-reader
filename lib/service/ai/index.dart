@@ -99,6 +99,7 @@ Stream<String> _generateStream({
             model: provider.model,
             apiKey: apiKey,
             url: provider.url,
+            reasoningEffort: provider.reasoningEffort,
           );
 
           AnxLog.info(
@@ -163,6 +164,7 @@ Stream<String> _generateStream({
               model: provider.model,
               apiKey: apiKey,
               url: provider.url,
+              reasoningEffort: provider.reasoningEffort,
             );
 
             AnxLog.info(
