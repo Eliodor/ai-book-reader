@@ -287,6 +287,8 @@
   "settingsAiCacheClear": "Clear cache",
   "aiServiceNotConfigured": "Please configure the AI service in settins page.",
   "aiChat": "Chat",
+  "aiThinking": "Thinking",
+  "aiThinkingHint": "Thought for a moment",
   "aiDataSharingTitle": "Third-Party AI Service Notice",
   "aiDataSharingContent": "Your chat messages and selected text will be sent to your chosen AI service provider (such as OpenAI, Claude, Gemini, DeepSeek, etc.) for processing. Each service provider has its own privacy policy.",
   "aiDataSharingAgree": "I Understand and Agree",

@@ -287,6 +287,8 @@
   "settingsAiCacheClear": "캐시 지우기",
   "aiServiceNotConfigured": "설정 페이지에서 AI 서비스를 구성해주세요",
   "aiChat": "채팅",
+  "aiThinking": "생각 과정",
+  "aiThinkingHint": "잠시 생각했어요",
   "aiDataSharingTitle": "제3자 AI 서비스 알림",
   "aiDataSharingContent": "채팅 메시지와 선택한 텍스트가 설정한 제3자 AI 서비스 제공업체(OpenAI, Claude, Gemini, DeepSeek 등)로 전송되어 처리됩니다. 각 서비스 제공업체는 자체 개인정보 보호정책을 가지고 있습니다.",
   "aiDataSharingAgree": "이해하고 동의합니다",

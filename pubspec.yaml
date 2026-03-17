@@ -130,14 +130,28 @@ dependencies:
   haptic_feedback: ^0.6.4+2
   in_app_purchase_android: ^0.4.0+8
 
-# dependency_overrides:
-#   openai_dart:
-## git:
-#       url: https://github.com/Anxcye/langchain_dart.git
-#       ref: bb06c17ca667a906e3e37154b0bda95023d0c9bd
-#       path: packages/openai_dart
-# dependency_overrides:
-#   analyzer: ^8.0.0
+dependency_overrides:
+  langchain:
+    git:
+      url: https://github.com/Anxcye/langchain_dart.git
+      ref: 310fb6b3
+      path: packages/langchain
+  langchain_core:
+    git:
+      url: https://github.com/Anxcye/langchain_dart.git
+      ref: 310fb6b3
+      path: packages/langchain_core
+  langchain_openai:
+    git:
+      url: https://github.com/Anxcye/langchain_dart.git
+      ref: 310fb6b3
+      path: packages/langchain_openai
+  langchain_anthropic:
+    git:
+      url: https://github.com/Anxcye/langchain_dart.git
+      ref: 310fb6b3
+      path: packages/langchain_anthropic
+#  analyzer: ^8.0.0
 
 
 dev_dependencies:

@@ -287,6 +287,8 @@
   "settingsAiCacheClear": "清空缓存",
   "aiServiceNotConfigured": "需要先完成设置中的AI配置",
   "aiChat": "AI 对话",
+  "aiThinking": "思考过程",
+  "aiThinkingHint": "思考了一会儿",
   "aiDataSharingTitle": "第三方 AI 服务提示",
   "aiDataSharingContent": "您的聊天内容和选中的文本将被发送给您选择的 AI 服务提供商（如 OpenAI、Claude、Gemini、DeepSeek 等）进行处理。各服务提供商有各自的隐私政策。",
   "aiDataSharingAgree": "我已了解并同意",

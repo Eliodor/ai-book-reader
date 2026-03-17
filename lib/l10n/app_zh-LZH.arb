@@ -287,6 +287,8 @@
   "settingsAiCacheClear": "清空緩存",
   "aiServiceNotConfigured": "需先完成設定中之AI配置",
   "aiChat": "AI 對話",
+  "aiThinking": "思考之程",
+  "aiThinkingHint": "少頃而思",
   "aiDataSharingTitle": "第三方 AI 服務提示",
   "aiDataSharingContent": "汝之聊天內容與所選文本將送至汝所擇之 AI 服務提供者（如 OpenAI、Claude、Gemini、DeepSeek 等）以為處理。各服務提供者各有其隱私政策。",
   "aiDataSharingAgree": "吾已知悉並同意",

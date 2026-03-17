@@ -287,6 +287,8 @@
   "settingsAiCacheClear": "Önbelleği temizle",
   "aiServiceNotConfigured": "Lütfen ayarlar sayfasında Yapay Zeka servisini yapılandırın.",
   "aiChat": "Sohbet",
+  "aiThinking": "Düşünme süreci",
+  "aiThinkingHint": "Bir süre düşündü",
   "aiDataSharingTitle": "Üçüncü taraf yapay zeka hizmeti bildirimi",
   "aiDataSharingContent": "Sohbet mesajlarınız ve seçilen metin, yapılandırdığınız üçüncü taraf yapay zeka hizmeti sağlayıcısına (OpenAI, Claude, Gemini, DeepSeek vb.) işlenmek üzere gönderilecektir. Her hizmet sağlayıcının kendi gizlilik politikası vardır.",
   "aiDataSharingAgree": "Anlıyorum ve kabul ediyorum",

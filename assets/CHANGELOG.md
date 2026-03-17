@@ -1,6 +1,7 @@
 # Changelog
 
 ## 1.14.0
+- Feat(ai): Support separate AI reasoning content with lightweight collapsible thinking UI in chat and stream views (#787)
 - Feat(reader): Add background image fit mode setting with cover and stretch options
 - Feat(appearance): Add setting to toggle action button labels visibility in selection context menu
 - Feat(reader): Add background image blur and opacity controls in reading settings (#753)
@@ -42,6 +43,7 @@
 - Fix(l10n): Update full_description.txt (#775) Thanks @Xapitonov
 - L10n: Complete Romanian translation (#714) Thanks @Steinhagen
 
+- Feat(ai): AI 支持单独的思考内容字段，并在聊天与流式界面中以轻量可折叠方式展示思考过程 (#787)
 - Feat(appearance): 新增设置项，可开关选中文本菜单等操作按钮的底部文字提示
 - Feat(reader): 新增背景图缩放模式设置，支持 cover 和 stretch 两种模式
 - Feat(reader): 阅读设置新增背景图模糊度和透明度调节 (#753)

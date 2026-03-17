@@ -287,6 +287,8 @@
   "settingsAiCacheClear": "Limpar cache",
   "aiServiceNotConfigured": "Configure o serviço de IA na página de configurações.",
   "aiChat": "Chat",
+  "aiThinking": "Raciocínio",
+  "aiThinkingHint": "Pensou por um instante",
   "aiDataSharingTitle": "Aviso de serviço de IA de terceiros",
   "aiDataSharingContent": "Suas mensagens de chat e o texto selecionado serão enviados ao provedor de serviços de IA de terceiros que você configurou (como OpenAI, Claude, Gemini, DeepSeek, etc.) para processamento. Cada provedor de serviços tem sua própria política de privacidade.",
   "aiDataSharingAgree": "Eu entendo e concordo",

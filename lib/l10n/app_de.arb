@@ -287,6 +287,8 @@
   "settingsAiCacheClear": "Cache leeren",
   "aiServiceNotConfigured": "Bitte konfigurieren Sie den KI-Dienst auf der Einstellungsseite.",
   "aiChat": "Chat",
+  "aiThinking": "Denkprozess",
+  "aiThinkingHint": "Hat kurz nachgedacht",
   "aiDataSharingTitle": "Hinweis zu KI-Diensten Dritter",
   "aiDataSharingContent": "Ihre Chat-Nachrichten und der ausgewählte Text werden an den von Ihnen konfigurierten KI-Dienstanbieter (wie OpenAI, Claude, Gemini, DeepSeek usw.) zur Verarbeitung gesendet. Jeder Dienstanbieter hat seine eigene Datenschutzrichtlinie.",
   "aiDataSharingAgree": "Ich verstehe und stimme zu",

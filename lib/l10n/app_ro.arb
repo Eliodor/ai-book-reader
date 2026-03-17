@@ -287,6 +287,8 @@
   "settingsAiCacheClear": "Clear cache",
   "aiServiceNotConfigured": "Please configure the AI service in settins page.",
   "aiChat": "Chat",
+  "aiThinking": "Procesul de gândire",
+  "aiThinkingHint": "S-a gândit puțin",
   "aiDataSharingTitle": "Notificare serviciu AI terță parte",
   "aiDataSharingContent": "Mesajele dvs. de chat și textul selectat vor fi trimise către furnizorul de servicii AI terță parte pe care l-ați configurat (cum ar fi OpenAI, Claude, Gemini, DeepSeek etc.) pentru procesare. Fiecare furnizor de servicii are propria sa politică de confidențialitate.",
   "aiDataSharingAgree": "Înțeleg și sunt de acord",

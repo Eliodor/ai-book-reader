@@ -330,6 +330,12 @@ String _mapError(Object error) {
 List<ChatMessage> _sanitizeMessagesForPrompt(List<ChatMessage> messages) {
   return messages.map((message) {
     if (message is AIChatMessage) {
+      if (message.reasoningContent.isNotEmpty) {
+        return AIChatMessage(
+          content: message.content,
+          toolCalls: message.toolCalls,
+        );
+      }
       final plainText = reasoningContentToPlainText(message.content);
       if (plainText == message.content) {
         return message;

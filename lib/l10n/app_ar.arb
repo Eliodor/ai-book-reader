@@ -287,6 +287,8 @@
   "settingsAiCacheClear": "مسح ذاكرة التخزين المؤقت",
   "aiServiceNotConfigured": "يرجى تكوين خدمة الذكاء الاصطناعي في صفحة الإعدادات.",
   "aiChat": "دردشة",
+  "aiThinking": "عملية التفكير",
+  "aiThinkingHint": "فكّر قليلًا",
   "aiDataSharingTitle": "إشعار خدمة الذكاء الاصطناعي من طرف ثالث",
   "aiDataSharingContent": "سيتم إرسال رسائل الدردشة والنص المحدد إلى مزود خدمة الذكاء الاصطناعي الذي قمت بتكوينه (مثل OpenAI وClaude وGemini وDeepSeek وما إلى ذلك) لمعالجتها. كل مزود خدمة لديه سياسة خصوصية خاصة به.",
   "aiDataSharingAgree": "أفهم وأوافق",
