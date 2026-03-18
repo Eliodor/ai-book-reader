@@ -808,7 +808,6 @@
   "translateAzureApiKeyDescription": "Azure Bilişsel Hizmetler API Anahtarı",
   "translateGoogleApiKeyDescription": "Google Cloud Translation API Anahtarı",
   "translateAzureRegionDescription": "Azure Bölgesi (örn. global, westus)",
-  "translateMicrosoftLegacy": "Microsoft (01.03.2026'da kaldırılacak)",
   "migrationInProgress": "Veriler Taşınıyor...",
   "migrationComplete": "Taşıma Tamamlandı",
   "migrationFailed": "Taşıma Başarısız",

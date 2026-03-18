@@ -808,7 +808,6 @@
   "translateAzureApiKeyDescription": "Cheie API Azure Cognitive Services",
   "translateGoogleApiKeyDescription": "Cheie API Google Cloud Translation",
   "translateAzureRegionDescription": "Regiune Azure (ex. global, westus)",
-  "translateMicrosoftLegacy": "Microsoft (Va fi eliminat pe 01.03.2026)",
   "migrationInProgress": "Migrarea datelor...",
   "migrationComplete": "Migrare finalizată",
   "migrationFailed": "Migrare eșuată",

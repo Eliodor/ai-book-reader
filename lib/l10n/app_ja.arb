@@ -806,7 +806,6 @@
   "translateAzureApiKeyDescription": "Azure Cognitive Services API キー",
   "translateGoogleApiKeyDescription": "Google Cloud Translation API キー",
   "translateAzureRegionDescription": "Azure リージョン (例: global, westus)",
-  "translateMicrosoftLegacy": "Microsoft (2026-03-01 に削除予定)",
   "migrationInProgress": "データを移行中...",
   "migrationComplete": "移行完了",
   "migrationFailed": "移行に失敗しました",

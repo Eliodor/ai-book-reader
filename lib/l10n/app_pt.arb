@@ -806,7 +806,6 @@
   "translateAzureApiKeyDescription": "Chave API Azure Cognitive Services",
   "translateGoogleApiKeyDescription": "Chave API Google Cloud Translation",
   "translateAzureRegionDescription": "Região Azure (ex: global, westus)",
-  "translateMicrosoftLegacy": "Microsoft (Será removido em 01/03/2026)",
   "migrationInProgress": "Migrando dados...",
   "migrationComplete": "Migração concluída",
   "migrationFailed": "Migração falhou",

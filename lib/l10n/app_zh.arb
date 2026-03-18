@@ -806,7 +806,6 @@
   "translateAzureApiKeyDescription": "Azure 认知服务 API 密钥",
   "translateGoogleApiKeyDescription": "Google Cloud Translation API 密钥",
   "translateAzureRegionDescription": "Azure 区域 (例如 global, westus)",
-  "translateMicrosoftLegacy": "Microsoft (将于2026-03-01移除)",
   "migrationInProgress": "正在迁移数据...",
   "migrationComplete": "迁移完成",
   "migrationFailed": "迁移失败",

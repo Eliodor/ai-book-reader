@@ -616,8 +616,13 @@ class Prefs extends ChangeNotifier {
   }
 
   TranslateService get fullTextTranslateService {
-    return getTranslateService(
-        prefs.getString('fullTextTranslateService') ?? 'microsoft');
+    final serviceName =
+        prefs.getString('fullTextTranslateService') ?? 'microsoftApi';
+    if (serviceName == 'microsoft') {
+      prefs.setString('fullTextTranslateService', 'microsoftApi');
+      return TranslateService.microsoftApi;
+    }
+    return getTranslateService(serviceName);
   }
 
   set fullTextTranslateFrom(LangListEnum from) {

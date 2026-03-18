@@ -806,7 +806,6 @@
   "translateAzureApiKeyDescription": "مفتاح واجهة برمجة تطبيقات خدمات Azure المعرفية",
   "translateGoogleApiKeyDescription": "مفتاح واجهة برمجة تطبيقات Google Cloud Translation",
   "translateAzureRegionDescription": "منطقة Azure (مثل global, westus)",
-  "translateMicrosoftLegacy": "Microsoft (ستتم إزالتها في 2026-03-01)",
   "migrationInProgress": "تجري هجرة البيانات...",
   "migrationComplete": "اكتملت الهجرة",
   "migrationFailed": "فشلت الهجرة",

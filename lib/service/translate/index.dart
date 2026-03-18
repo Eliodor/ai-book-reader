@@ -7,7 +7,6 @@ import 'package:anx_reader/service/config/config_item.dart';
 import 'package:anx_reader/service/translate/ai.dart';
 import 'package:anx_reader/service/translate/deepl.dart';
 import 'package:anx_reader/service/translate/google_api.dart';
-import 'package:anx_reader/service/translate/microsoft.dart';
 import 'package:anx_reader/service/translate/microsoft_api.dart';
 import 'package:anx_reader/service/translate/web_view.dart';
 import 'package:anx_reader/utils/env_var.dart';
@@ -21,8 +20,7 @@ enum TranslateService {
   microsoftApi,
   googleApi,
   deepl,
-  ai,
-  microsoft;
+  ai;
 
   TranslateServiceProvider get provider {
     switch (this) {
@@ -38,8 +36,6 @@ enum TranslateService {
         return DeepLTranslateProvider();
       case TranslateService.ai:
         return AiTranslateProvider();
-      case TranslateService.microsoft:
-        return MicrosoftTranslateProvider();
     }
   }
 
@@ -55,6 +51,10 @@ enum TranslateService {
 }
 
 TranslateService getTranslateService(String name) {
+  if (name == 'microsoft') {
+    return TranslateService.microsoftApi;
+  }
+
   try {
     return TranslateService.values.firstWhere((e) => e.name == name);
   } catch (e) {
