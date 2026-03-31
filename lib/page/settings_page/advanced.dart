@@ -14,6 +14,7 @@ import 'package:anx_reader/widgets/settings/settings_tile.dart';
 import 'package:anx_reader/widgets/settings/settings_title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:anx_reader/main.dart';
 
 class AdvancedSetting extends StatefulWidget {
@@ -162,6 +163,28 @@ class _AdvancedSettingState extends State<AdvancedSetting> {
                 Prefs().enableJsForEpub = value;
                 setState(() {});
               },
+            ),
+          ],
+        ),
+        SettingsSection(
+          title: Text(L10n.of(context).settingsAdvancedNetwork),
+          tiles: [
+            SettingsTile.switchTile(
+              title: Text(L10n.of(context).settingsAdvancedHttpProxyEnabled),
+              leading: const Icon(Icons.wifi_tethering),
+              initialValue: Prefs().httpProxyEnabled,
+              onToggle: (value) {
+                Prefs().httpProxyEnabled = value;
+                setState(() {});
+              },
+            ),
+            SettingsTile.navigation(
+              title: Text(L10n.of(context).settingsAdvancedHttpProxyConfig),
+              leading: const Icon(Icons.http),
+              value: Text(Prefs().httpProxyHost.isEmpty
+                  ? L10n.of(context).settingsAdvancedHttpProxyNotConfigured
+                  : '${Prefs().httpProxyHost}:${Prefs().httpProxyPort}'),
+              onPressed: _showHttpProxyDialog,
             ),
           ],
         ),
@@ -323,6 +346,102 @@ class _AdvancedSettingState extends State<AdvancedSetting> {
         AnxToast.show(L10n.of(context).md5CalculationError(e.toString()));
       }
     }
+  }
+
+  Future<void> _showHttpProxyDialog(BuildContext context) async {
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return _HttpProxyDialog(
+          onSaved: () {
+            setState(() {});
+          },
+        );
+      },
+    );
+  }
+}
+
+class _HttpProxyDialog extends StatefulWidget {
+  final VoidCallback onSaved;
+
+  const _HttpProxyDialog({required this.onSaved});
+
+  @override
+  State<_HttpProxyDialog> createState() => _HttpProxyDialogState();
+}
+
+class _HttpProxyDialogState extends State<_HttpProxyDialog> {
+  late final TextEditingController hostController;
+  late final TextEditingController portController;
+
+  @override
+  void initState() {
+    super.initState();
+    hostController = TextEditingController(text: Prefs().httpProxyHost);
+    portController =
+        TextEditingController(text: Prefs().httpProxyPort.toString());
+  }
+
+  @override
+  void dispose() {
+    hostController.dispose();
+    portController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(L10n.of(context).settingsAdvancedHttpProxyConfig),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: hostController,
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: L10n.of(context).settingsAdvancedHttpProxyHost,
+              hintText: L10n.of(context).settingsAdvancedHttpProxyHostHint,
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: portController,
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: L10n.of(context).settingsAdvancedHttpProxyPort,
+              hintText: L10n.of(context).settingsAdvancedHttpProxyPortHint,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(L10n.of(context).commonCancel),
+        ),
+        TextButton(
+          onPressed: () {
+            final host = hostController.text.trim();
+            final port = int.tryParse(portController.text.trim());
+            if (host.isEmpty || port == null || port <= 0 || port > 65535) {
+              AnxToast.show(
+                  L10n.of(context).settingsAdvancedHttpProxyInvalidInput);
+              return;
+            }
+
+            Prefs().httpProxyHost = host;
+            Prefs().httpProxyPort = port;
+            widget.onSaved();
+            Navigator.of(context).pop();
+          },
+          child: Text(L10n.of(context).commonSave),
+        ),
+      ],
+    );
   }
 }
 
