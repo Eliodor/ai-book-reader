@@ -329,7 +329,7 @@
   "settingsAdvancedHttpProxyPort": "代理端口",
   "settingsAdvancedHttpProxyPortHint": "例如 7890",
   "settingsAdvancedHttpProxyNotConfigured": "未配置",
-  "settingsAdvancedHttpProxyInvalidInput": "配置信息不完整",
+  "settingsAdvancedHttpProxyInvalidInput": "代理地址或端口无效",
   "settingsAdvancedHttpProxyTestUrl": "测试网址",
   "settingsAdvancedHttpProxyTest": "测试连接",
   "settingsAdvancedHttpProxyTesting": "正在测试...",

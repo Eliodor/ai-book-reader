@@ -398,13 +398,26 @@ class _HttpProxyDialogState extends State<_HttpProxyDialog> {
   }
 
   Future<void> _testConnection() async {
-    final host = hostController.text.trim();
+    var host = hostController.text.trim();
     final port = int.tryParse(portController.text.trim());
     final testUrl = testUrlController.text.trim();
 
     if (host.isEmpty || port == null || port <= 0 || port > 65535) {
       AnxToast.show(L10n.of(context).settingsAdvancedHttpProxyInvalidInput);
       return;
+    }
+
+    final hostLower = host.toLowerCase();
+    if (hostLower.startsWith('https://') ||
+        hostLower.startsWith('socks5://') ||
+        hostLower.startsWith('socks4://') ||
+        hostLower.startsWith('socks://')) {
+      AnxToast.show(L10n.of(context).settingsAdvancedHttpProxyInvalidInput);
+      return;
+    }
+
+    if (hostLower.startsWith('http://')) {
+      host = host.substring(7);
     }
 
     if (testUrl.isEmpty) {
@@ -473,13 +486,27 @@ class _HttpProxyDialogState extends State<_HttpProxyDialog> {
         ),
         TextButton(
           onPressed: () {
-            final host = hostController.text.trim();
+            var host = hostController.text.trim();
             final port = int.tryParse(portController.text.trim());
             final testUrl = testUrlController.text.trim();
             if (host.isEmpty || port == null || port <= 0 || port > 65535) {
               AnxToast.show(
                   L10n.of(context).settingsAdvancedHttpProxyInvalidInput);
               return;
+            }
+
+            final hostLower = host.toLowerCase();
+            if (hostLower.startsWith('https://') ||
+                hostLower.startsWith('socks5://') ||
+                hostLower.startsWith('socks4://') ||
+                hostLower.startsWith('socks://')) {
+              AnxToast.show(
+                  L10n.of(context).settingsAdvancedHttpProxyInvalidInput);
+              return;
+            }
+
+            if (hostLower.startsWith('http://')) {
+              host = host.substring(7);
             }
 
             Prefs().httpProxyHost = host;
