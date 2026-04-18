@@ -174,6 +174,8 @@ const handleSelection = (view, doc, index) => {
 const AUTO_PAGE_LOG_PREFIX = '[ANX_AUTO_PAGE]';
 const AUTO_PAGE_DELAY_MS = 1000;
 const AUTO_PAGE_SCREEN_BOTTOM_THRESHOLD = 0.9;
+const AUTO_PAGE_POST_NEXT_RECHECK_INTERVAL_MS = 120;
+const AUTO_PAGE_POST_NEXT_RECHECK_MAX_ATTEMPTS = 12;
 
 const logAutoPage = (event, payload = {}) => {
   let payloadText = '';
@@ -192,6 +194,9 @@ const getAutoPageState = (view) => {
       triggeredPages: new Set(),
       pendingFromPageKey: null,
       pendingTimer: null,
+      postNextRecheckTimer: null,
+      postNextRecheckAttempts: 0,
+      awaitingPageAdvanceFromKey: null,
       lastPageKey: null,
     };
   }
@@ -204,12 +209,21 @@ const clearAutoPageTimer = (state) => {
   state.pendingTimer = null;
 };
 
+const clearAutoPagePostNextRecheck = (state) => {
+  if (!state.postNextRecheckTimer) return;
+  clearTimeout(state.postNextRecheckTimer);
+  state.postNextRecheckTimer = null;
+};
+
 const startAutoPageSession = (view, reason) => {
   const state = getAutoPageState(view);
   clearAutoPageTimer(state);
+  clearAutoPagePostNextRecheck(state);
   state.sessionId += 1;
   state.triggeredPages.clear();
   state.pendingFromPageKey = null;
+  state.postNextRecheckAttempts = 0;
+  state.awaitingPageAdvanceFromKey = null;
   state.lastPageKey = null;
   logAutoPage('session-start', { reason, sessionId: state.sessionId });
   return state;
@@ -218,8 +232,11 @@ const startAutoPageSession = (view, reason) => {
 const stopAutoPageSession = (view, reason) => {
   const state = getAutoPageState(view);
   clearAutoPageTimer(state);
+  clearAutoPagePostNextRecheck(state);
   state.triggeredPages.clear();
   state.pendingFromPageKey = null;
+  state.postNextRecheckAttempts = 0;
+  state.awaitingPageAdvanceFromKey = null;
   state.lastPageKey = null;
   logAutoPage('session-stop', { reason, sessionId: state.sessionId });
 };
@@ -446,6 +463,20 @@ const setSelectionHandler = (view, doc, index) => {
           to: pageKey,
           sessionId: state.sessionId,
         });
+        if (
+          state.awaitingPageAdvanceFromKey
+          && state.awaitingPageAdvanceFromKey !== pageKey
+        ) {
+          logAutoPage('page-advance-confirmed', {
+            index,
+            sessionId: state.sessionId,
+            fromPageKey: state.awaitingPageAdvanceFromKey,
+            toPageKey: pageKey,
+          });
+          state.awaitingPageAdvanceFromKey = null;
+          state.postNextRecheckAttempts = 0;
+          clearAutoPagePostNextRecheck(state);
+        }
         state.lastPageKey = pageKey;
       }
 
@@ -494,6 +525,8 @@ const setSelectionHandler = (view, doc, index) => {
         alreadyTriggeredThisPage: state.triggeredPages.has(pageKey),
         pendingFromPageKey: state.pendingFromPageKey,
         hasPendingTimer: !!state.pendingTimer,
+        awaitingPageAdvanceFromKey: state.awaitingPageAdvanceFromKey,
+        postNextRecheckAttempts: state.postNextRecheckAttempts,
       });
 
       if (!reachedCurrentPageBottom && state.pendingFromPageKey === pageKey) {
@@ -510,13 +543,23 @@ const setSelectionHandler = (view, doc, index) => {
       }
 
       if (reachedCurrentPageBottom) {
-        if (state.pendingFromPageKey === pageKey) {
+        if (state.pendingFromPageKey === pageKey && state.pendingTimer) {
           logAutoPage('skip-pending-same-page', {
             index,
             sessionId: state.sessionId,
             pageKey,
+            reason: 'pending-timer-active',
           });
           return;
+        }
+        if (state.pendingFromPageKey === pageKey && !state.pendingTimer) {
+          logAutoPage('pending-stale-cleared', {
+            index,
+            sessionId: state.sessionId,
+            pageKey,
+            reason: 'pending-page-marker-without-timer',
+          });
+          state.pendingFromPageKey = null;
         }
         if (state.triggeredPages.has(pageKey)) {
           logAutoPage('skip-already-triggered-page', {
@@ -529,6 +572,9 @@ const setSelectionHandler = (view, doc, index) => {
 
         state.triggeredPages.add(pageKey);
         state.pendingFromPageKey = pageKey;
+        clearAutoPagePostNextRecheck(state);
+        state.awaitingPageAdvanceFromKey = null;
+        state.postNextRecheckAttempts = 0;
         clearAutoPageTimer(state);
         const scheduledSessionId = state.sessionId;
         state.pendingTimer = setTimeout(async () => {
@@ -554,11 +600,84 @@ const setSelectionHandler = (view, doc, index) => {
               globalThis.originalScrollLeft = latestContainer.scrollLeft;
             }
           } finally {
+            if (state.pendingFromPageKey === pageKey) {
+              state.pendingFromPageKey = null;
+              logAutoPage('pending-clear-after-next', {
+                index,
+                sessionId: state.sessionId,
+                fromPageKey: pageKey,
+              });
+            }
             logAutoPage('next-page-finished', {
               index,
               sessionId: state.sessionId,
               fromPageKey: pageKey,
             });
+            state.awaitingPageAdvanceFromKey = pageKey;
+            state.postNextRecheckAttempts = 0;
+            clearAutoPagePostNextRecheck(state);
+            logAutoPage('post-next-selection-recheck-start', {
+              index,
+              sessionId: state.sessionId,
+              fromPageKey: pageKey,
+              intervalMs: AUTO_PAGE_POST_NEXT_RECHECK_INTERVAL_MS,
+              maxAttempts: AUTO_PAGE_POST_NEXT_RECHECK_MAX_ATTEMPTS,
+            });
+            const runPostNextSelectionRecheck = () => {
+              state.postNextRecheckTimer = null;
+              if (scheduledSessionId !== state.sessionId) {
+                logAutoPage('post-next-selection-recheck-stop', {
+                  index,
+                  scheduledSessionId,
+                  currentSessionId: state.sessionId,
+                  fromPageKey: pageKey,
+                  reason: 'session-changed',
+                });
+                return;
+              }
+              if (state.awaitingPageAdvanceFromKey !== pageKey) {
+                logAutoPage('post-next-selection-recheck-stop', {
+                  index,
+                  sessionId: state.sessionId,
+                  fromPageKey: pageKey,
+                  reason: 'page-advance-confirmed',
+                });
+                return;
+              }
+              state.postNextRecheckAttempts += 1;
+              const attempt = state.postNextRecheckAttempts;
+              try {
+                doc.dispatchEvent(new Event('selectionchange'));
+                logAutoPage('post-next-selection-recheck-dispatched', {
+                  index,
+                  sessionId: state.sessionId,
+                  fromPageKey: pageKey,
+                  attempt,
+                });
+              } catch (error) {
+                logAutoPage('post-next-selection-recheck-failed', {
+                  index,
+                  sessionId: state.sessionId,
+                  fromPageKey: pageKey,
+                  attempt,
+                  error: String(error),
+                });
+              }
+              if (attempt >= AUTO_PAGE_POST_NEXT_RECHECK_MAX_ATTEMPTS) {
+                logAutoPage('post-next-selection-recheck-exhausted', {
+                  index,
+                  sessionId: state.sessionId,
+                  fromPageKey: pageKey,
+                  attempts: attempt,
+                });
+                return;
+              }
+              state.postNextRecheckTimer = setTimeout(
+                runPostNextSelectionRecheck,
+                AUTO_PAGE_POST_NEXT_RECHECK_INTERVAL_MS,
+              );
+            };
+            state.postNextRecheckTimer = setTimeout(runPostNextSelectionRecheck, 80);
           }
         }, AUTO_PAGE_DELAY_MS);
 
