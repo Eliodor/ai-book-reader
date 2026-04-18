@@ -171,6 +171,61 @@ const handleSelection = (view, doc, index) => {
   });
 };
 
+const AUTO_PAGE_LOG_PREFIX = '[ANX_AUTO_PAGE]';
+const AUTO_PAGE_DELAY_MS = 320;
+const AUTO_PAGE_BOTTOM_THRESHOLD = 0.96;
+
+const logAutoPage = (event, payload = {}) => {
+  console.log(`${AUTO_PAGE_LOG_PREFIX} ${event}`, payload);
+};
+
+const getAutoPageState = (view) => {
+  if (!view.__anxAutoPageState) {
+    view.__anxAutoPageState = {
+      sessionId: 0,
+      triggeredPages: new Set(),
+      pendingFromPageKey: null,
+      pendingTimer: null,
+      lastPageKey: null,
+    };
+  }
+  return view.__anxAutoPageState;
+};
+
+const clearAutoPageTimer = (state) => {
+  if (!state.pendingTimer) return;
+  clearTimeout(state.pendingTimer);
+  state.pendingTimer = null;
+};
+
+const startAutoPageSession = (view, reason) => {
+  const state = getAutoPageState(view);
+  clearAutoPageTimer(state);
+  state.sessionId += 1;
+  state.triggeredPages.clear();
+  state.pendingFromPageKey = null;
+  state.lastPageKey = null;
+  logAutoPage('session-start', { reason, sessionId: state.sessionId });
+  return state;
+};
+
+const stopAutoPageSession = (view, reason) => {
+  const state = getAutoPageState(view);
+  clearAutoPageTimer(state);
+  state.triggeredPages.clear();
+  state.pendingFromPageKey = null;
+  state.lastPageKey = null;
+  logAutoPage('session-stop', { reason, sessionId: state.sessionId });
+};
+
+const getAutoPageLocationKey = (lastLocation, index) => {
+  if (!lastLocation) return `index:${index}:none`;
+  const cfi = lastLocation.cfi ?? '';
+  const current = lastLocation.location?.current ?? '';
+  const chapter = lastLocation.chapterLocation?.current ?? '';
+  return `index:${index}|cfi:${cfi}|loc:${current}|chapter:${chapter}`;
+};
+
 const setSelectionHandler = (view, doc, index) => {
   let hasActiveSelection = false;
   let lastPointerUpRange = null;
@@ -192,6 +247,7 @@ const setSelectionHandler = (view, doc, index) => {
     lastPointerUpRange = null;
     doc.__anxSelectionClearedAt = Date.now();
     doc.__anxSuppressClick = true;
+    stopAutoPageSession(view, 'selection-cleared');
     callFlutter('onSelectionCleared');
   };
 
@@ -346,6 +402,11 @@ const setSelectionHandler = (view, doc, index) => {
       const container = view.shadowRoot.querySelector('foliate-paginator').shadowRoot.querySelector("#container");
       if (!container) return;
       globalThis.originalScrollLeft = container.scrollLeft;
+      startAutoPageSession(view, 'selectstart');
+      logAutoPage('selectstart', {
+        index,
+        scrollLeft: container.scrollLeft,
+      });
     });
 
 
@@ -356,21 +417,129 @@ const setSelectionHandler = (view, doc, index) => {
 
       const selRange = getSelectionRange(doc.getSelection())
       if (!selRange) return
-
-      if (globalThis.pageDebounceTimer) {
-        clearTimeout(globalThis.pageDebounceTimer);
-        globalThis.pageDebounceTimer = null;
+      if (!lastLocation.range) {
+        logAutoPage('skip-no-last-location-range', { index });
+        return;
       }
 
       const container = view.shadowRoot.querySelector('foliate-paginator').shadowRoot.querySelector("#container");
+      if (!container) {
+        logAutoPage('skip-no-container', { index });
+        return;
+      }
 
-      if (selRange.compareBoundaryPoints(Range.END_TO_END, lastLocation.range) >= 0) {
-        globalThis.pageDebounceTimer = setTimeout(async () => {
-          await view.next();
-          globalThis.originalScrollLeft = container.scrollLeft;
-          globalThis.pageDebounceTimer = null;
-        }, 1000);
-        return
+      const state = getAutoPageState(view);
+      if (state.sessionId === 0) {
+        startAutoPageSession(view, 'implicit-selectionchange');
+      }
+
+      const pageKey = getAutoPageLocationKey(lastLocation, index);
+      if (state.lastPageKey !== pageKey) {
+        logAutoPage('page-changed', {
+          from: state.lastPageKey,
+          to: pageKey,
+          sessionId: state.sessionId,
+        });
+        state.lastPageKey = pageKey;
+      }
+
+      if (state.pendingFromPageKey && state.pendingFromPageKey !== pageKey) {
+        logAutoPage('pending-page-advanced', {
+          from: state.pendingFromPageKey,
+          to: pageKey,
+          sessionId: state.sessionId,
+        });
+        state.pendingFromPageKey = null;
+      }
+
+      let compareToPageEnd = -1;
+      try {
+        compareToPageEnd = selRange.compareBoundaryPoints(Range.END_TO_END, lastLocation.range);
+      } catch (error) {
+        logAutoPage('skip-compare-boundary-failed', {
+          index,
+          error: String(error),
+        });
+        return;
+      }
+      const rangeReachedPageEnd = compareToPageEnd >= 0;
+      const selectionPos = getPosition(selRange);
+      const reachedScreenBottom = selectionPos.bottom >= AUTO_PAGE_BOTTOM_THRESHOLD;
+      const reachedCurrentPageBottom = rangeReachedPageEnd && reachedScreenBottom;
+
+      logAutoPage('selection-eval', {
+        index,
+        sessionId: state.sessionId,
+        pageKey,
+        compareToPageEnd,
+        rangeReachedPageEnd,
+        selectionBottom: Number(selectionPos.bottom.toFixed(4)),
+        reachedScreenBottom,
+        reachedCurrentPageBottom,
+        alreadyTriggeredThisPage: state.triggeredPages.has(pageKey),
+        pendingFromPageKey: state.pendingFromPageKey,
+      });
+
+      if (reachedCurrentPageBottom) {
+        if (state.pendingFromPageKey === pageKey) {
+          logAutoPage('skip-pending-same-page', {
+            index,
+            sessionId: state.sessionId,
+            pageKey,
+          });
+          return;
+        }
+        if (state.triggeredPages.has(pageKey)) {
+          logAutoPage('skip-already-triggered-page', {
+            index,
+            sessionId: state.sessionId,
+            pageKey,
+          });
+          return;
+        }
+
+        state.triggeredPages.add(pageKey);
+        state.pendingFromPageKey = pageKey;
+        clearAutoPageTimer(state);
+        const scheduledSessionId = state.sessionId;
+        state.pendingTimer = setTimeout(async () => {
+          state.pendingTimer = null;
+          if (scheduledSessionId !== state.sessionId) {
+            logAutoPage('skip-stale-timer', {
+              index,
+              scheduledSessionId,
+              currentSessionId: state.sessionId,
+              pageKey,
+            });
+            return;
+          }
+          logAutoPage('next-page-trigger', {
+            index,
+            sessionId: state.sessionId,
+            fromPageKey: pageKey,
+          });
+          try {
+            await view.next();
+            const latestContainer = view.shadowRoot.querySelector('foliate-paginator').shadowRoot.querySelector("#container");
+            if (latestContainer) {
+              globalThis.originalScrollLeft = latestContainer.scrollLeft;
+            }
+          } finally {
+            logAutoPage('next-page-finished', {
+              index,
+              sessionId: state.sessionId,
+              fromPageKey: pageKey,
+            });
+          }
+        }, AUTO_PAGE_DELAY_MS);
+
+        logAutoPage('next-page-scheduled', {
+          index,
+          sessionId: state.sessionId,
+          pageKey,
+          delayMs: AUTO_PAGE_DELAY_MS,
+        });
+        return;
       }
 
       const preventScroll = () => {
@@ -379,6 +548,12 @@ const setSelectionHandler = (view, doc, index) => {
 
         if (view.lastLocation.range.startContainer === selRange.endContainer) {
           container.scrollLeft = globalThis.originalScrollLeft;
+          logAutoPage('prevent-scroll-restore', {
+            index,
+            sessionId: getAutoPageState(view).sessionId,
+            pageKey: getAutoPageLocationKey(view.lastLocation, index),
+            restoredScrollLeft: globalThis.originalScrollLeft,
+          });
         }
       };
 
