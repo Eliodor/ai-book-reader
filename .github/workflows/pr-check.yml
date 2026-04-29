@@ -2,13 +2,18 @@ name: PR Check
 
 on:
   pull_request: {}
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull request number to test
+        required: false
+        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: pr-check-${{ github.event.pull_request.number || github.ref }}
+  group: pr-check-${{ github.event.pull_request.number || inputs.pr_number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -18,7 +23,14 @@ jobs:
 
     steps:
       - name: Checkout repository
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.pr_number == '' }}
         uses: actions/checkout@v4
+
+      - name: Checkout pull request
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.pr_number != '' }}
+        uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ inputs.pr_number }}/merge
 
       - name: Read Flutter version
         id: flutter_version
