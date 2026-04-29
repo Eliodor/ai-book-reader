@@ -385,8 +385,7 @@ class _HttpProxyDialogState extends State<_HttpProxyDialog> {
     hostController = TextEditingController(text: Prefs().httpProxyHost);
     portController =
         TextEditingController(text: Prefs().httpProxyPort.toString());
-    testUrlController =
-        TextEditingController(text: Prefs().httpProxyTestUrl);
+    testUrlController = TextEditingController(text: Prefs().httpProxyTestUrl);
   }
 
   @override
@@ -427,8 +426,7 @@ class _HttpProxyDialogState extends State<_HttpProxyDialog> {
 
     AnxToast.show(L10n.of(context).settingsAdvancedHttpProxyTesting);
 
-    final success =
-        await AnxHttpProxyOverrides.testProxy(host, port, testUrl);
+    final success = await AnxHttpProxyOverrides.testProxy(host, port, testUrl);
 
     if (!mounted) return;
 

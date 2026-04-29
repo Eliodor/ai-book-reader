@@ -27,8 +27,7 @@ class AnxHttpProxyOverrides extends HttpOverrides {
     return client;
   }
 
-  static Future<bool> testProxy(
-      String host, int port, String testUrl) async {
+  static Future<bool> testProxy(String host, int port, String testUrl) async {
     try {
       final uri = Uri.parse(testUrl);
       final client = HttpClient();
