@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:anx_reader/enums/excerpt_share_template.dart';
-import 'package:anx_reader/models/font_model.dart';
+import 'package:ai_book_reader/enums/excerpt_share_template.dart';
+import 'package:ai_book_reader/models/font_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mongol/mongol.dart';
 

@@ -1,9 +1,9 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/widgets/common/color_picker_sheet.dart';
-import 'package:anx_reader/widgets/delete_confirm.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/widgets/common/color_picker_sheet.dart';
+import 'package:ai_book_reader/widgets/delete_confirm.dart';
 import 'package:flutter/material.dart';
-import 'package:anx_reader/utils/color/hash_color.dart';
+import 'package:ai_book_reader/utils/color/hash_color.dart';
 
 class TagChip extends StatelessWidget {
   const TagChip({

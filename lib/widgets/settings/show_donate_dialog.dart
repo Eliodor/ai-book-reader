@@ -1,4 +1,4 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';

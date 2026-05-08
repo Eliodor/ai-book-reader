@@ -1,4 +1,4 @@
-import 'package:anx_reader/models/ai_provider.dart';
+import 'package:ai_book_reader/models/ai_provider.dart';
 
 /// Helper class for API key rotation logic
 class AiKeyRotator {

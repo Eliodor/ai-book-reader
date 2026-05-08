@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
-import 'package:anx_reader/utils/toast/common.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/main.dart';
+import 'package:ai_book_reader/utils/get_path/get_base_path.dart';
+import 'package:ai_book_reader/utils/toast/common.dart';
 import 'package:file_picker/file_picker.dart';
 
 Future<void> importFont() async {

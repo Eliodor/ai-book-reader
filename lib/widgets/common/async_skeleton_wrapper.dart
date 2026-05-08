@@ -1,4 +1,4 @@
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';

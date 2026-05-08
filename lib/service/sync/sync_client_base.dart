@@ -1,4 +1,4 @@
-import 'package:anx_reader/models/remote_file.dart';
+import 'package:ai_book_reader/models/remote_file.dart';
 import 'package:dio/dio.dart';
 
 abstract class SyncClientBase {

@@ -1,7 +1,7 @@
-import 'package:anx_reader/dao/book.dart';
-import 'package:anx_reader/dao/book_note.dart';
-import 'package:anx_reader/dao/reading_time.dart';
-import 'package:anx_reader/models/book.dart';
+import 'package:ai_book_reader/dao/book.dart';
+import 'package:ai_book_reader/dao/book_note.dart';
+import 'package:ai_book_reader/dao/reading_time.dart';
+import 'package:ai_book_reader/models/book.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notes_statistics.g.dart';

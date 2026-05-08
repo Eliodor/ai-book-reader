@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:anx_reader/service/iap/base_iap_service.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:ai_book_reader/service/iap/base_iap_service.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
 import 'package:asn1lib/asn1lib.dart';
 // import 'package:http/http.dart' as http;
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -22,7 +22,7 @@ class AppStoreIAPService extends BaseIAPService {
         };
   final InAppPurchase _inAppPurchase;
   Map<String, dynamic> _parsedReceipt;
-  final String _productId = 'anx_reader_lifetime';
+  final String _productId = 'ai_book_reader_lifetime';
 
   /// Track if receipt refresh has failed, so we can fall back to cache
   bool _receiptRefreshFailed = false;

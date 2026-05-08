@@ -1,6 +1,6 @@
 import 'dart:ui';
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
 import 'package:screen_retriever/screen_retriever.dart';
 import 'package:window_manager/window_manager.dart';
 

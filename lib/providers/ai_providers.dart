@@ -1,6 +1,6 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/models/ai_provider.dart';
-import 'package:anx_reader/service/ai/ai_services.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/models/ai_provider.dart';
+import 'package:ai_book_reader/service/ai/ai_services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 

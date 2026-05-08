@@ -1,7 +1,7 @@
-import 'package:anx_reader/dao/book.dart';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/models/current_notes_detail.dart';
-import 'package:anx_reader/providers/notes_statistics.dart';
+import 'package:ai_book_reader/dao/book.dart';
+import 'package:ai_book_reader/models/book.dart';
+import 'package:ai_book_reader/models/current_notes_detail.dart';
+import 'package:ai_book_reader/providers/notes_statistics.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notes_page_current_book.g.dart';

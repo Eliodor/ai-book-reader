@@ -1,9 +1,9 @@
-import 'package:anx_reader/dao/reading_time.dart';
-import 'package:anx_reader/enums/chart_mode.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/models/statistic_data_model.dart';
+import 'package:ai_book_reader/dao/reading_time.dart';
+import 'package:ai_book_reader/enums/chart_mode.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/main.dart';
+import 'package:ai_book_reader/models/book.dart';
+import 'package:ai_book_reader/models/statistic_data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/utils/get_path/get_cache_dir.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/utils/get_path/get_cache_dir.dart';
 import 'package:langchain_core/chat_models.dart';
 
 class AiChatHistoryEntry {

@@ -1,16 +1,16 @@
 import 'dart:core';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/lang_list.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/service/config/config_item.dart';
-import 'package:anx_reader/service/translate/ai.dart';
-import 'package:anx_reader/service/translate/deepl.dart';
-import 'package:anx_reader/service/translate/google_api.dart';
-import 'package:anx_reader/service/translate/microsoft_api.dart';
-import 'package:anx_reader/service/translate/web_view.dart';
-import 'package:anx_reader/utils/env_var.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/enums/lang_list.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/service/config/config_item.dart';
+import 'package:ai_book_reader/service/translate/ai.dart';
+import 'package:ai_book_reader/service/translate/deepl.dart';
+import 'package:ai_book_reader/service/translate/google_api.dart';
+import 'package:ai_book_reader/service/translate/microsoft_api.dart';
+import 'package:ai_book_reader/service/translate/web_view.dart';
+import 'package:ai_book_reader/utils/env_var.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

@@ -1,14 +1,14 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/convert_chinese_mode.dart';
-import 'package:anx_reader/enums/reading_info.dart';
-import 'package:anx_reader/enums/translation_mode.dart';
-import 'package:anx_reader/enums/writing_mode.dart';
-import 'package:anx_reader/enums/code_highlight_theme.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/models/reading_info.dart';
-import 'package:anx_reader/page/reading_page.dart';
-import 'package:anx_reader/page/settings_page/subpage/fonts.dart';
-import 'package:anx_reader/widgets/common/anx_segmented_button.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/enums/convert_chinese_mode.dart';
+import 'package:ai_book_reader/enums/reading_info.dart';
+import 'package:ai_book_reader/enums/translation_mode.dart';
+import 'package:ai_book_reader/enums/writing_mode.dart';
+import 'package:ai_book_reader/enums/code_highlight_theme.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/models/reading_info.dart';
+import 'package:ai_book_reader/page/reading_page.dart';
+import 'package:ai_book_reader/page/settings_page/subpage/fonts.dart';
+import 'package:ai_book_reader/widgets/common/anx_segmented_button.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 

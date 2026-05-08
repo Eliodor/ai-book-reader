@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
 import 'package:flutter/material.dart';
 
 class AnxError {

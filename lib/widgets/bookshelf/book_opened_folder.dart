@@ -1,9 +1,9 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/providers/book_list.dart';
-import 'package:anx_reader/providers/tb_groups.dart';
-import 'package:anx_reader/widgets/bookshelf/book_item.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/models/book.dart';
+import 'package:ai_book_reader/providers/book_list.dart';
+import 'package:ai_book_reader/providers/tb_groups.dart';
+import 'package:ai_book_reader/widgets/bookshelf/book_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

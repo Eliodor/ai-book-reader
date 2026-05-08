@@ -1,11 +1,11 @@
 # Project-level configuration.
 cmake_minimum_required(VERSION 3.14)
 set(CMAKE_SYSTEM_VERSION "10.0.22621.0")
-project(anx_reader LANGUAGES CXX)
+project(ai_book_reader LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
-set(BINARY_NAME "anx_reader")
+set(BINARY_NAME "ai_book_reader")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.

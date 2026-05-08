@@ -1,15 +1,15 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
 import 'dart:async';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/models/search_note_group.dart';
-import 'package:anx_reader/providers/search.dart';
-import 'package:anx_reader/service/book.dart';
-import 'package:anx_reader/utils/error_handler.dart';
-import 'package:anx_reader/widgets/book_notes/book_note_tile.dart';
-import 'package:anx_reader/widgets/bookshelf/book_item.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/models/book.dart';
+import 'package:ai_book_reader/models/search_note_group.dart';
+import 'package:ai_book_reader/providers/search.dart';
+import 'package:ai_book_reader/service/book.dart';
+import 'package:ai_book_reader/utils/error_handler.dart';
+import 'package:ai_book_reader/widgets/book_notes/book_note_tile.dart';
+import 'package:ai_book_reader/widgets/bookshelf/book_item.dart';
+import 'package:ai_book_reader/widgets/common/container/filled_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

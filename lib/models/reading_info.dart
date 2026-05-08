@@ -1,4 +1,4 @@
-import 'package:anx_reader/enums/reading_info.dart';
+import 'package:ai_book_reader/enums/reading_info.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'reading_info.freezed.dart';

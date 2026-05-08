@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:anx_reader/utils/log/common.dart';
-import 'package:anx_reader/utils/platform_utils.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
+import 'package:ai_book_reader/utils/platform_utils.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// Callback for migration progress updates
@@ -48,7 +48,7 @@ Future<MigrationCheckResult> checkMigrationNeeded() async {
     }
 
     // Also check for log file
-    final oldLogFile = File('$oldPath${Platform.pathSeparator}anx_reader.log');
+    final oldLogFile = File('$oldPath${Platform.pathSeparator}ai_book_reader.log');
     if (oldLogFile.existsSync()) {
       oldHasData = true;
     }
@@ -121,11 +121,11 @@ Future<bool> performMigration({
     }
 
     // Also copy the log file if it exists
-    onProgress?.call('anx_reader.log', 6, totalItems);
-    final oldLogFile = File('$oldPath${Platform.pathSeparator}anx_reader.log');
+    onProgress?.call('ai_book_reader.log', 6, totalItems);
+    final oldLogFile = File('$oldPath${Platform.pathSeparator}ai_book_reader.log');
     if (oldLogFile.existsSync()) {
       final newLogFile =
-          File('$newPath${Platform.pathSeparator}anx_reader.log');
+          File('$newPath${Platform.pathSeparator}ai_book_reader.log');
       await oldLogFile.copy(newLogFile.path);
       AnxLog.info('Migration: Copied log file successfully');
     }

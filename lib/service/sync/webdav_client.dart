@@ -1,10 +1,10 @@
 import 'dart:io' as io;
 
-import 'package:anx_reader/models/remote_file.dart';
-import 'package:anx_reader/service/sync/sync_client_base.dart';
-import 'package:anx_reader/utils/get_path/get_temp_dir.dart';
-import 'package:anx_reader/utils/log/common.dart';
-import 'package:anx_reader/utils/platform_utils.dart';
+import 'package:ai_book_reader/models/remote_file.dart';
+import 'package:ai_book_reader/service/sync/sync_client_base.dart';
+import 'package:ai_book_reader/utils/get_path/get_temp_dir.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
+import 'package:ai_book_reader/utils/platform_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:webdav_client/webdav_client.dart';
 

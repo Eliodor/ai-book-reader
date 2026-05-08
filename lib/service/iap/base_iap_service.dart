@@ -1,4 +1,4 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
 import 'package:flutter/widgets.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 

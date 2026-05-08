@@ -1,4 +1,4 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:vibration/vibration.dart';
 import 'package:vibration/vibration_presets.dart';

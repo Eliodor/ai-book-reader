@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/models/ai_provider.dart';
-import 'package:anx_reader/providers/current_reading.dart';
-import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/models/ai_provider.dart';
+import 'package:ai_book_reader/providers/current_reading.dart';
+import 'package:ai_book_reader/service/ai/tools/ai_tool_registry.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:langchain_anthropic/langchain_anthropic.dart';
 import 'package:langchain_core/chat_models.dart';

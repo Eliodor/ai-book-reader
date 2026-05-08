@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/dao/book.dart';
-import 'package:anx_reader/models/import_file_check.dart';
-import 'package:anx_reader/models/md5_calculating_result.dart';
-import 'package:anx_reader/models/md5_statistics.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:ai_book_reader/models/book.dart';
+import 'package:ai_book_reader/dao/book.dart';
+import 'package:ai_book_reader/models/import_file_check.dart';
+import 'package:ai_book_reader/models/md5_calculating_result.dart';
+import 'package:ai_book_reader/models/md5_statistics.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
 import 'package:crypto/crypto.dart';
 
 class MD5Service {

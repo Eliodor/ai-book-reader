@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/providers/tb_groups.dart';
-import 'package:anx_reader/service/ai/tools/models/bookshelf_organize_plan.dart';
-import 'package:anx_reader/service/ai/tools/models/bookshelf_organize_plan_group.dart';
-import 'package:anx_reader/service/bookshelf/bookshelf_organize_service.dart';
-import 'package:anx_reader/utils/ai_reasoning_parser.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/widgets/ai/tool_tiles/tool_tile_base.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/providers/tb_groups.dart';
+import 'package:ai_book_reader/service/ai/tools/models/bookshelf_organize_plan.dart';
+import 'package:ai_book_reader/service/ai/tools/models/bookshelf_organize_plan_group.dart';
+import 'package:ai_book_reader/service/bookshelf/bookshelf_organize_service.dart';
+import 'package:ai_book_reader/utils/ai_reasoning_parser.dart';
+import 'package:ai_book_reader/utils/toast/common.dart';
+import 'package:ai_book_reader/widgets/ai/tool_tiles/tool_tile_base.dart';
+import 'package:ai_book_reader/widgets/common/container/filled_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';

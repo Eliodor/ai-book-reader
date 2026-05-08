@@ -1,5 +1,5 @@
-name: anx_reader
-description: "An e-book reader."
+name: ai_book_reader
+description: "AI Book Reader - novel translator and reader powered by LLMs."
 publish_to: 'none'
 
 version: 1.15.0+6324

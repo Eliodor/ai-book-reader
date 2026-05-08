@@ -1,7 +1,7 @@
-import 'package:anx_reader/enums/sync_protocol.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/service/sync/sync_connection_tester.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/enums/sync_protocol.dart';
+import 'package:ai_book_reader/main.dart';
+import 'package:ai_book_reader/service/sync/sync_connection_tester.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
 import 'package:flutter/material.dart';
 
 class SyncTestHelper {

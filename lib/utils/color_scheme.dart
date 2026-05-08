@@ -1,4 +1,4 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
 import 'package:chinese_font_library/chinese_font_library.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';

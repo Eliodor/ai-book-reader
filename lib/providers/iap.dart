@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/models/iap_state.dart';
-import 'package:anx_reader/service/iap/iap_service.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/models/iap_state.dart';
+import 'package:ai_book_reader/service/iap/iap_service.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

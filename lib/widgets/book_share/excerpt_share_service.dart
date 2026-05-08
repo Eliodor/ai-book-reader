@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:anx_reader/widgets/book_share/excerpt_share_bottom_sheet.dart';
+import 'package:ai_book_reader/widgets/book_share/excerpt_share_bottom_sheet.dart';
 
 class ExcerptShareService {
   static Future<void> showShareExcerpt({

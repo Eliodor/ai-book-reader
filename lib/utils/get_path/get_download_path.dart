@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:anx_reader/utils/platform_utils.dart';
+import 'package:ai_book_reader/utils/platform_utils.dart';
 
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:permission_handler/permission_handler.dart';

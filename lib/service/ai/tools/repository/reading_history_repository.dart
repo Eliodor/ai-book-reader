@@ -1,8 +1,8 @@
-import 'package:anx_reader/dao/book.dart';
-import 'package:anx_reader/dao/reading_time.dart';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/models/reading_time.dart';
-import 'package:anx_reader/utils/date/convert_seconds.dart';
+import 'package:ai_book_reader/dao/book.dart';
+import 'package:ai_book_reader/dao/reading_time.dart';
+import 'package:ai_book_reader/models/book.dart';
+import 'package:ai_book_reader/models/reading_time.dart';
+import 'package:ai_book_reader/utils/date/convert_seconds.dart';
 
 class ReadingHistoryRecord {
   ReadingHistoryRecord({

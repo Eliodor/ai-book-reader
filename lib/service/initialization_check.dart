@@ -1,11 +1,11 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/version_check_type.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/utils/app_version.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/enums/version_check_type.dart';
+import 'package:ai_book_reader/main.dart';
+import 'package:ai_book_reader/utils/app_version.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:anx_reader/page/onboarding_screen.dart';
-import 'package:anx_reader/page/changelog_screen.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:ai_book_reader/page/onboarding_screen.dart';
+import 'package:ai_book_reader/page/changelog_screen.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
 import 'package:flutter/material.dart';
 
 class InitializationCheck {

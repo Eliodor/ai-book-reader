@@ -1,5 +1,5 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/page/settings_page/developer/vibration_test_page.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/page/settings_page/developer/vibration_test_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

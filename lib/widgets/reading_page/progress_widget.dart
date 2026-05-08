@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/page/book_player/epub_player.dart';
-import 'package:anx_reader/page/reading_page.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/page/book_player/epub_player.dart';
+import 'package:ai_book_reader/page/reading_page.dart';
 import 'package:flutter/material.dart';
 
 class ProgressWidget extends StatefulWidget {

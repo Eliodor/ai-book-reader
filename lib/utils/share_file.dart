@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/widgets/show_loading.dart';
+import 'package:ai_book_reader/main.dart';
+import 'package:ai_book_reader/widgets/show_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:share_plus/share_plus.dart';

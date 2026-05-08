@@ -1,8 +1,8 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/hint_key.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/enums/hint_key.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/utils/toast/common.dart';
+import 'package:ai_book_reader/widgets/common/container/filled_container.dart';
 import 'package:flutter/material.dart';
 
 class HintBanner extends StatefulWidget {

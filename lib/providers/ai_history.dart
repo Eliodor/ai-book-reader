@@ -1,4 +1,4 @@
-import 'package:anx_reader/service/ai/ai_history.dart';
+import 'package:ai_book_reader/service/ai/ai_history.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final aiHistoryProvider = StateNotifierProvider<AiHistoryNotifier,

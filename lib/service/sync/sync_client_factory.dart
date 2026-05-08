@@ -1,7 +1,7 @@
-import 'package:anx_reader/enums/sync_protocol.dart';
-import 'package:anx_reader/service/sync/sync_client_base.dart';
-import 'package:anx_reader/service/sync/webdav_client.dart';
-import 'package:anx_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/enums/sync_protocol.dart';
+import 'package:ai_book_reader/service/sync/sync_client_base.dart';
+import 'package:ai_book_reader/service/sync/webdav_client.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
 
 class SyncClientFactory {
   static final SyncClientFactory _instance = SyncClientFactory._internal();

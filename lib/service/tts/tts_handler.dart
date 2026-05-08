@@ -1,7 +1,7 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/page/reading_page.dart';
-import 'package:anx_reader/service/tts/base_tts.dart';
-import 'package:anx_reader/service/tts/tts_factory.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/page/reading_page.dart';
+import 'package:ai_book_reader/service/tts/base_tts.dart';
+import 'package:ai_book_reader/service/tts/tts_factory.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:anx_reader/service/tts/models/tts_voice.dart';
+import 'package:ai_book_reader/service/tts/models/tts_voice.dart';
 
 // https://help.aliyun.com/zh/isi/developer-reference/overview-of-speech-synthesis#5186fe1abb7ag
 const List<TtsVoice> aliyunVoices = [

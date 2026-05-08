@@ -1,4 +1,4 @@
-import 'package:anx_reader/models/book.dart';
+import 'package:ai_book_reader/models/book.dart';
 
 class ImportFileCheck {
   final String filePath;

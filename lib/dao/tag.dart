@@ -1,5 +1,5 @@
-import 'package:anx_reader/dao/base_dao.dart';
-import 'package:anx_reader/models/tag.dart';
+import 'package:ai_book_reader/dao/base_dao.dart';
+import 'package:ai_book_reader/models/tag.dart';
 
 const _stylesTable = 'tb_styles';
 const _tagSentinel = 1.0;

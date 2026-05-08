@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
-import 'package:anx_reader/service/ai/tools/input/bookshelf_organize_input.dart';
-import 'package:anx_reader/service/ai/tools/repository/books_repository.dart';
-import 'package:anx_reader/service/ai/tools/repository/groups_repository.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/models/book.dart';
+import 'package:ai_book_reader/service/ai/tools/ai_tool_registry.dart';
+import 'package:ai_book_reader/service/ai/tools/input/bookshelf_organize_input.dart';
+import 'package:ai_book_reader/service/ai/tools/repository/books_repository.dart';
+import 'package:ai_book_reader/service/ai/tools/repository/groups_repository.dart';
 
 import 'base_tool.dart';
 

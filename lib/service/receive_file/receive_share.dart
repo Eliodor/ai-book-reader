@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/service/book.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:ai_book_reader/main.dart';
+import 'package:ai_book_reader/service/book.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_handler/share_handler.dart';
 

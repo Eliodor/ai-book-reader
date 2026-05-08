@@ -1,4 +1,4 @@
-package com.anxcye.anx_reader
+package io.github.eliodor.aibookreader
 
 import android.content.pm.PackageManager
 import android.content.Intent
@@ -51,6 +51,6 @@ class MainActivity : AudioServiceActivity() {
     }
 
     companion object {
-        private const val INSTALL_INFO_CHANNEL = "com.anxcye.anx_reader/install_info"
+        private const val INSTALL_INFO_CHANNEL = "io.github.eliodor.aibookreader/install_info"
     }
 }

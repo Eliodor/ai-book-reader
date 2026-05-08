@@ -1,14 +1,14 @@
-import 'package:anx_reader/utils/platform_utils.dart';
+import 'package:ai_book_reader/utils/platform_utils.dart';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/page_turn_mode.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/page/reading_page.dart';
-import 'package:anx_reader/utils/ui/status_bar.dart';
-import 'package:anx_reader/widgets/common/anx_segmented_button.dart';
-import 'package:anx_reader/widgets/reading_page/more_settings/page_turning/diagram.dart';
-import 'package:anx_reader/widgets/reading_page/more_settings/page_turning/page_turn_dropdown.dart';
-import 'package:anx_reader/widgets/reading_page/more_settings/page_turning/types_and_icons.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/enums/page_turn_mode.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/page/reading_page.dart';
+import 'package:ai_book_reader/utils/ui/status_bar.dart';
+import 'package:ai_book_reader/widgets/common/anx_segmented_button.dart';
+import 'package:ai_book_reader/widgets/reading_page/more_settings/page_turning/diagram.dart';
+import 'package:ai_book_reader/widgets/reading_page/more_settings/page_turning/page_turn_dropdown.dart';
+import 'package:ai_book_reader/widgets/reading_page/more_settings/page_turning/types_and_icons.dart';
 import 'package:flutter/material.dart';
 
 class OtherSettings extends StatefulWidget {

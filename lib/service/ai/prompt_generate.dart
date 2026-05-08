@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/ai_prompts.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/enums/ai_prompts.dart';
 import 'package:langchain_core/chat_models.dart';
 import 'package:langchain_core/prompts.dart';
 

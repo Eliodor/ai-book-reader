@@ -1,10 +1,10 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/models/iap_state.dart';
-import 'package:anx_reader/service/iap/iap_service.dart';
-import 'package:anx_reader/providers/iap.dart';
-import 'package:anx_reader/utils/log/common.dart';
-import 'package:anx_reader/utils/platform_utils.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/models/iap_state.dart';
+import 'package:ai_book_reader/service/iap/iap_service.dart';
+import 'package:ai_book_reader/providers/iap.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
+import 'package:ai_book_reader/utils/platform_utils.dart';
+import 'package:ai_book_reader/widgets/common/container/filled_container.dart';
 // import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

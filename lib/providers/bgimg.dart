@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:anx_reader/enums/bgimg_alignment.dart';
-import 'package:anx_reader/enums/bgimg_type.dart';
-import 'package:anx_reader/models/bgimg.dart';
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:ai_book_reader/enums/bgimg_alignment.dart';
+import 'package:ai_book_reader/enums/bgimg_type.dart';
+import 'package:ai_book_reader/models/bgimg.dart';
+import 'package:ai_book_reader/utils/get_path/get_base_path.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

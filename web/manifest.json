@@ -1,11 +1,11 @@
 {
-    "name": "anx_reader",
-    "short_name": "anx_reader",
+    "name": "AI Book Reader",
+    "short_name": "AI Book Reader",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",
     "theme_color": "#hexcode",
-    "description": "A new Flutter project.",
+    "description": "AI Book Reader - novel translator and reader powered by LLMs.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -1,11 +1,11 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/book_sync_status.dart';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/providers/sync_status.dart';
-import 'package:anx_reader/service/book.dart';
-import 'package:anx_reader/widgets/bookshelf/book_bottom_sheet.dart';
-import 'package:anx_reader/widgets/bookshelf/book_cover.dart';
-import 'package:anx_reader/widgets/bookshelf/book_sync_status_icon.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/enums/book_sync_status.dart';
+import 'package:ai_book_reader/models/book.dart';
+import 'package:ai_book_reader/providers/sync_status.dart';
+import 'package:ai_book_reader/service/book.dart';
+import 'package:ai_book_reader/widgets/bookshelf/book_bottom_sheet.dart';
+import 'package:ai_book_reader/widgets/bookshelf/book_cover.dart';
+import 'package:ai_book_reader/widgets/bookshelf/book_sync_status_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:anx_reader/utils/ai_reasoning_parser.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:ai_book_reader/utils/ai_reasoning_parser.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
 import 'package:langchain/langchain.dart';
 
 class CancelableLangchainRunner {

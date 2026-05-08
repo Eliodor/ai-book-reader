@@ -1,5 +1,5 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/service/config/config_item.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/service/config/config_item.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 

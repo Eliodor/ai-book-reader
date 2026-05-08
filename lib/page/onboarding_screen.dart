@@ -1,8 +1,8 @@
-import 'package:anx_reader/page/settings_page/appearance.dart';
+import 'package:ai_book_reader/page/settings_page/appearance.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
 import 'package:provider/provider.dart';
 
 /// Onboarding screen for first-time users

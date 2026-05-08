@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/service/ai/tools/ai_tool_registry.dart';
-import 'package:anx_reader/service/ai/tools/input/reading_history_input.dart';
-import 'package:anx_reader/service/ai/tools/repository/reading_history_repository.dart';
-import 'package:anx_reader/utils/date/convert_seconds.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/service/ai/tools/ai_tool_registry.dart';
+import 'package:ai_book_reader/service/ai/tools/input/reading_history_input.dart';
+import 'package:ai_book_reader/service/ai/tools/repository/reading_history_repository.dart';
+import 'package:ai_book_reader/utils/date/convert_seconds.dart';
 
 import 'base_tool.dart';
 

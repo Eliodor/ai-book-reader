@@ -1,13 +1,13 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/models/book.dart';
-import 'package:anx_reader/page/book_notes_page.dart';
-import 'package:anx_reader/providers/notes_page_current_book.dart';
-import 'package:anx_reader/providers/notes_statistics.dart';
-import 'package:anx_reader/utils/date/convert_seconds.dart';
-import 'package:anx_reader/widgets/bookshelf/book_cover.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
-import 'package:anx_reader/widgets/highlight_digit.dart';
-import 'package:anx_reader/widgets/tips/notes_tips.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/models/book.dart';
+import 'package:ai_book_reader/page/book_notes_page.dart';
+import 'package:ai_book_reader/providers/notes_page_current_book.dart';
+import 'package:ai_book_reader/providers/notes_statistics.dart';
+import 'package:ai_book_reader/utils/date/convert_seconds.dart';
+import 'package:ai_book_reader/widgets/bookshelf/book_cover.dart';
+import 'package:ai_book_reader/widgets/common/container/filled_container.dart';
+import 'package:ai_book_reader/widgets/highlight_digit.dart';
+import 'package:ai_book_reader/widgets/tips/notes_tips.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

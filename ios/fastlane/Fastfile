@@ -34,8 +34,8 @@ platform :ios do
 
 
     # get_certificates
-    # get_provisioning_profile(app_identifier: "com.anxcye.anxReader")
-    # get_provisioning_profile(app_identifier: "com.anxcye.anxReader.shareExtension")
+    # get_provisioning_profile(app_identifier: "io.github.eliodor.aibookreader")
+    # get_provisioning_profile(app_identifier: "io.github.eliodor.aibookreader.shareExtension")
   
     if is_ci
       create_keychain(
@@ -86,8 +86,8 @@ platform :ios do
       export_options: {
         teamID: "28W956D5K8",
         provisioningProfiles: {
-          "com.anxcye.anxReader" => "match AppStore com.anxcye.anxReader",
-          "com.anxcye.anxReader.shareExtension" => "match AppStore com.anxcye.anxReader.shareExtension"
+          "io.github.eliodor.aibookreader" => "match AppStore io.github.eliodor.aibookreader",
+          "io.github.eliodor.aibookreader.shareExtension" => "match AppStore io.github.eliodor.aibookreader.shareExtension"
         }
       }
     )

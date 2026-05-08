@@ -708,16 +708,16 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 28W956D5K8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Anx Reader";
+				INFOPLIST_KEY_CFBundleDisplayName = "AI Book Reader";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.books";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.anxcye.anxReader;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.eliodor.aibookreader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.anxcye.anxReader";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore io.github.eliodor.aibookreader";
 				SWIFT_ENABLE_EXPLICIT_MODULES = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -734,7 +734,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.anxcye.anxReader.RunnerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.eliodor.aibookreader.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -752,7 +752,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.anxcye.anxReader.RunnerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.eliodor.aibookreader.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
@@ -768,7 +768,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.anxcye.anxReader.RunnerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.eliodor.aibookreader.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
@@ -902,14 +902,14 @@
 				DEVELOPMENT_TEAM = 28W956D5K8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Anx Reader";
+				INFOPLIST_KEY_CFBundleDisplayName = "AI Book Reader";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.books";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.anxcye.anxReader;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.eliodor.aibookreader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ENABLE_EXPLICIT_MODULES = NO;
@@ -936,17 +936,17 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 28W956D5K8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Anx Reader";
+				INFOPLIST_KEY_CFBundleDisplayName = "AI Book Reader";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.books";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.anxcye.anxReader;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.eliodor.aibookreader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.anxcye.anxReader";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore io.github.eliodor.aibookreader";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_ENABLE_EXPLICIT_MODULES = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -988,7 +988,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.anxcye.anxReader.shareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.eliodor.aibookreader.shareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -1034,10 +1034,10 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.anxcye.anxReader.shareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.eliodor.aibookreader.shareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.anxcye.anxReader.shareExtension";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore io.github.eliodor.aibookreader.shareExtension";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1078,10 +1078,10 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.anxcye.anxReader.shareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.eliodor.aibookreader.shareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.anxcye.anxReader.shareExtension";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore io.github.eliodor.aibookreader.shareExtension";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

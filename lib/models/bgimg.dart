@@ -1,7 +1,7 @@
-import 'package:anx_reader/enums/bgimg_alignment.dart';
-import 'package:anx_reader/enums/bgimg_theme_mode.dart';
-import 'package:anx_reader/enums/bgimg_type.dart';
-import 'package:anx_reader/service/book_player/book_player_server.dart';
+import 'package:ai_book_reader/enums/bgimg_alignment.dart';
+import 'package:ai_book_reader/enums/bgimg_theme_mode.dart';
+import 'package:ai_book_reader/enums/bgimg_type.dart';
+import 'package:ai_book_reader/service/book_player/book_player_server.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'bgimg.freezed.dart';

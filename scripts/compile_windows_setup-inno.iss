@@ -4,10 +4,12 @@
 ; Copy app/assets/packaging/logo-256.ico to D:\inno\logo-256.ico
 ; #define MyAppVersion "1.0.0"
 
-#define MyAppName "AnxReader"
-#define MyAppPublisher "Anxcye"
-#define MyAppURL "https://github.com/Anxcye/Anx-Reader"
-#define MyAppExeName "anx_reader.exe"
+#define MyAppName "AI Book Reader"
+#define MyAppPublisher "Eliodor"
+#define MyAppURL "https://github.com/Eliodor/AIBookReader"
+#define MyAppExeName "ai_book_reader.exe"
+; TODO: regenerate this GUID before first public Windows installer release
+; (Inno Setup IDE: Tools | Generate GUID, or any uuidgen)
 #define MyAppId "{{32610E5D-B613-420A-B68F-A57E2102BCE3}}"
 
 

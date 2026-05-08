@@ -1,4 +1,4 @@
-import 'package:anx_reader/dao/reading_time.dart';
+import 'package:ai_book_reader/dao/reading_time.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'total_reading_time.g.dart';

@@ -1,8 +1,8 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/models/font_model.dart';
-import 'package:anx_reader/utils/font_parser.dart';
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/main.dart';
+import 'package:ai_book_reader/models/font_model.dart';
+import 'package:ai_book_reader/utils/font_parser.dart';
+import 'package:ai_book_reader/utils/get_path/get_base_path.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'dart:io';

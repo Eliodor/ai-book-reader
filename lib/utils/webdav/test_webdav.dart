@@ -1,12 +1,12 @@
-import 'package:anx_reader/enums/sync_direction.dart';
-import 'package:anx_reader/enums/sync_trigger.dart';
-import 'package:anx_reader/enums/sync_protocol.dart';
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/providers/sync.dart';
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/service/sync/sync_connection_tester.dart';
-import 'package:anx_reader/utils/toast/common.dart';
+import 'package:ai_book_reader/enums/sync_direction.dart';
+import 'package:ai_book_reader/enums/sync_trigger.dart';
+import 'package:ai_book_reader/enums/sync_protocol.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/providers/sync.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/main.dart';
+import 'package:ai_book_reader/service/sync/sync_connection_tester.dart';
+import 'package:ai_book_reader/utils/toast/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

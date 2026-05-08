@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/utils/ai_reasoning_parser.dart';
-import 'package:anx_reader/widgets/ai/tool_tiles/tool_tile_base.dart';
-import 'package:anx_reader/widgets/common/container/filled_container.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/utils/ai_reasoning_parser.dart';
+import 'package:ai_book_reader/widgets/ai/tool_tiles/tool_tile_base.dart';
+import 'package:ai_book_reader/widgets/common/container/filled_container.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';

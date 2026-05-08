@@ -1,8 +1,8 @@
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/enums/sync_protocol.dart';
-import 'package:anx_reader/main.dart';
-import 'package:anx_reader/service/sync/sync_client_factory.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/enums/sync_protocol.dart';
+import 'package:ai_book_reader/main.dart';
+import 'package:ai_book_reader/service/sync/sync_client_factory.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
 
 /// Utility class for testing sync connections
 class SyncConnectionTester {

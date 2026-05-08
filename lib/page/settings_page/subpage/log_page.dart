@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:anx_reader/l10n/generated/L10n.dart';
-import 'package:anx_reader/utils/save_file_to_download.dart';
-import 'package:anx_reader/utils/get_path/log_file.dart';
-import 'package:anx_reader/utils/toast/common.dart';
-import 'package:anx_reader/utils/log/common.dart';
+import 'package:ai_book_reader/l10n/generated/L10n.dart';
+import 'package:ai_book_reader/utils/save_file_to_download.dart';
+import 'package:ai_book_reader/utils/get_path/log_file.dart';
+import 'package:ai_book_reader/utils/toast/common.dart';
+import 'package:ai_book_reader/utils/log/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

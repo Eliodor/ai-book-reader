@@ -1,4 +1,4 @@
-import 'package:anx_reader/utils/get_path/get_base_path.dart';
+import 'package:ai_book_reader/utils/get_path/get_base_path.dart';
 
 class Book {
   int id;

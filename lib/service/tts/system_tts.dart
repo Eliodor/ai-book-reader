@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:anx_reader/utils/platform_utils.dart';
+import 'package:ai_book_reader/utils/platform_utils.dart';
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/page/reading_page.dart';
-import 'package:anx_reader/service/tts/base_tts.dart';
-import 'package:anx_reader/service/tts/models/tts_voice.dart';
-import 'package:anx_reader/service/tts/tts_service.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/page/reading_page.dart';
+import 'package:ai_book_reader/service/tts/base_tts.dart';
+import 'package:ai_book_reader/service/tts/models/tts_voice.dart';
+import 'package:ai_book_reader/service/tts/tts_service.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';

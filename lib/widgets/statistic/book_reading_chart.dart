@@ -1,4 +1,4 @@
-import 'package:anx_reader/utils/date/convert_seconds.dart';
+import 'package:ai_book_reader/utils/date/convert_seconds.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

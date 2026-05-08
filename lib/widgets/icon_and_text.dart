@@ -1,4 +1,4 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
 import 'package:flutter/material.dart';
 
 class IconAndText extends StatelessWidget {

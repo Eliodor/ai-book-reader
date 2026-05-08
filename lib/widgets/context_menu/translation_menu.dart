@@ -1,7 +1,7 @@
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/enums/lang_list.dart';
-import 'package:anx_reader/service/translate/index.dart';
-import 'package:anx_reader/widgets/common/axis_flex.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/enums/lang_list.dart';
+import 'package:ai_book_reader/service/translate/index.dart';
+import 'package:ai_book_reader/widgets/common/axis_flex.dart';
 import 'package:flutter/material.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'dart:async';

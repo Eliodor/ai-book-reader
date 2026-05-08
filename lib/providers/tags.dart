@@ -1,6 +1,6 @@
-import 'package:anx_reader/dao/tag.dart';
-import 'package:anx_reader/models/tag.dart';
-import 'package:anx_reader/utils/color/rgb.dart';
+import 'package:ai_book_reader/dao/tag.dart';
+import 'package:ai_book_reader/models/tag.dart';
+import 'package:ai_book_reader/utils/color/rgb.dart';
 import 'package:flutter/material.dart';
 import 'package:lpinyin/lpinyin.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

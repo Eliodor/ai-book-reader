@@ -1,16 +1,16 @@
 import 'dart:math' as math;
 
-import 'package:anx_reader/config/shared_preference_provider.dart';
-import 'package:anx_reader/page/reading_page.dart';
-import 'package:anx_reader/widgets/common/axis_flex.dart';
-import 'package:anx_reader/widgets/context_menu/excerpt_menu.dart';
-import 'package:anx_reader/widgets/context_menu/reader_note_menu.dart';
-import 'package:anx_reader/widgets/context_menu/translation_menu.dart';
+import 'package:ai_book_reader/config/shared_preference_provider.dart';
+import 'package:ai_book_reader/page/reading_page.dart';
+import 'package:ai_book_reader/widgets/common/axis_flex.dart';
+import 'package:ai_book_reader/widgets/context_menu/excerpt_menu.dart';
+import 'package:ai_book_reader/widgets/context_menu/reader_note_menu.dart';
+import 'package:ai_book_reader/widgets/context_menu/translation_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
-import 'package:anx_reader/dao/book_note.dart';
-import 'package:anx_reader/models/book_note.dart';
+import 'package:ai_book_reader/dao/book_note.dart';
+import 'package:ai_book_reader/models/book_note.dart';
 
 Future<void> showContextMenu(
     BuildContext context,
