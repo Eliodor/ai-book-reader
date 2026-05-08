@@ -13,7 +13,7 @@ import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 // Current app database version
-const int currentDbVersion = 7;
+const int currentDbVersion = 8;
 
 const createBookSQL = '''
 CREATE TABLE tb_books (
@@ -95,6 +95,23 @@ CREATE TABLE tb_groups (
   update_time TEXT,
   FOREIGN KEY (parent_id) REFERENCES tb_groups(id)
 )
+''';
+
+const createGlossaryTermSQL = '''
+CREATE TABLE tb_glossary_terms (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  book_id INTEGER NOT NULL,
+  term_source TEXT NOT NULL,
+  term_target TEXT NOT NULL,
+  source_chapter_id INTEGER,
+  create_time TEXT NOT NULL,
+  update_time TEXT NOT NULL,
+  UNIQUE (book_id, term_source)
+)
+''';
+
+const createGlossaryTermIndexSQL = '''
+CREATE INDEX idx_glossary_book_id ON tb_glossary_terms (book_id)
 ''';
 
 class DBHelper {
@@ -425,6 +442,12 @@ class DBHelper {
             VALUES (?, '...', 0, datetime('now'), datetime('now'))
           ''', [groupId]);
         }
+        continue case7;
+      case7:
+      case 7:
+        // create glossary terms table for the LLM translation pipeline port
+        await db.execute(createGlossaryTermSQL);
+        await db.execute(createGlossaryTermIndexSQL);
     }
 
     if (oldVersion != 0 && Prefs().webdavStatus) {
