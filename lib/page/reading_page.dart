@@ -23,6 +23,7 @@ import 'package:ai_book_reader/utils/toast/common.dart';
 import 'package:ai_book_reader/utils/ui/status_bar.dart';
 import 'package:ai_book_reader/widgets/ai/ai_chat_stream.dart';
 import 'package:ai_book_reader/widgets/ai/ai_stream.dart';
+import 'package:ai_book_reader/widgets/reading_page/chapter_parsing_indicator.dart';
 import 'package:ai_book_reader/widgets/reading_page/notes_widget.dart';
 import 'package:ai_book_reader/models/reading_time.dart';
 import 'package:ai_book_reader/widgets/reading_page/progress_widget.dart';
@@ -825,12 +826,19 @@ class ReadingPageState extends ConsumerState<ReadingPage>
                     420,
                   ),
                   child: SafeArea(
-                    child: TocWidget(
-                      epubPlayerKey: epubPlayerKey,
-                      hideAppBarAndBottomBar: showOrHideAppBarAndBottomBar,
-                      closeDrawer: () {
-                        _scaffoldKey.currentState?.closeDrawer();
-                      },
+                    child: Column(
+                      children: [
+                        ChapterParsingIndicator(bookId: _book.id),
+                        Expanded(
+                          child: TocWidget(
+                            epubPlayerKey: epubPlayerKey,
+                            hideAppBarAndBottomBar: showOrHideAppBarAndBottomBar,
+                            closeDrawer: () {
+                              _scaffoldKey.currentState?.closeDrawer();
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

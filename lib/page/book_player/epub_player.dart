@@ -26,8 +26,10 @@ import 'package:ai_book_reader/providers/book_list.dart';
 import 'package:ai_book_reader/providers/book_toc.dart';
 import 'package:ai_book_reader/providers/bookmark.dart';
 import 'package:ai_book_reader/providers/chapter_content_bridge.dart';
+import 'package:ai_book_reader/providers/chapter_parsing.dart';
 import 'package:ai_book_reader/providers/current_reading.dart';
 import 'package:ai_book_reader/service/book_player/book_player_server.dart';
+import 'package:ai_book_reader/service/pipeline/chapter_parser_service.dart';
 import 'package:ai_book_reader/providers/toc_search.dart';
 import 'package:ai_book_reader/service/tts/base_tts.dart';
 import 'package:ai_book_reader/service/tts/models/tts_sentence.dart';
@@ -108,6 +110,11 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
   Timer? _scrollDebounceTimer;
   double _accumulatedScrollDelta = 0;
   static const double _scrollThreshold = 50.0;
+
+  // First-open chapter parser. Guarded so foliate-js firing onSetToc multiple
+  // times (e.g. on refreshToc) does not relaunch the parse pass.
+  bool _chapterParsingTriggered = false;
+  final ChapterParserService _chapterParser = ChapterParserService();
 
   // to know anytime if we are on top of navigation stack
   bool get _isTopOfNavigationStack =>
@@ -438,9 +445,29 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
       return '';
     }
 
+    final encoded = jsonEncode(href);
+
+    // Polls until the foliate-js `reader` global is alive and its book is
+    // mounted, then forwards to `getChapterContentByHref`. Without this guard
+    // the JS lookup of `reader.X` throws `ReferenceError: reader is not
+    // defined` on books that emit onSetToc before the global has been
+    // installed (observed on Windows / fb2).
     final result = await webViewController.callAsyncJavaScript(
-      functionBody:
-          'return await getChapterContentByHref("${href.replaceAll('"', '\\"')}")',
+      functionBody: '''
+        const deadline = Date.now() + 8000;
+        while (Date.now() < deadline) {
+          const r = globalThis.reader;
+          if (r && r.view && r.view.book && r.view.book.sections) {
+            try {
+              return await getChapterContentByHref($encoded);
+            } catch (e) {
+              return '';
+            }
+          }
+          await new Promise(res => setTimeout(res, 100));
+        }
+        return '';
+      ''',
     );
 
     final value = result?.value;
@@ -471,6 +498,66 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
       fetchChapterByHref: (href, {int? maxCharacters}) =>
           _getChapterContentByHref(href, maxCharacters: maxCharacters),
     );
+  }
+
+  /// Fires once per book-open after foliate-js has delivered the TOC. If the
+  /// book has not been parsed before (no rows in `tb_source_chapters`), walks
+  /// the TOC and stores one row per chapter. Updates [chapterParsingProvider]
+  /// so the in-reader indicator can render progress.
+  void _maybeStartChapterParsing(List<TocItem> toc) {
+    if (_chapterParsingTriggered) return;
+    _chapterParsingTriggered = true;
+
+    if (toc.isEmpty) return;
+
+    if (!isParseableBookFormat(book.filePath)) {
+      AnxLog.info(
+        'Chapter parsing skipped: format not supported yet (${book.filePath})',
+      );
+      return;
+    }
+
+    final bookId = book.id;
+    final notifier = ref.read(chapterParsingProvider(bookId).notifier);
+
+    Future<void>(() async {
+      try {
+        final outcome = await _chapterParser.parseBookIfNeeded(
+          bookId: bookId,
+          toc: toc,
+          fetchChapterByHref: (href) => _getChapterContentByHref(href),
+          onProgress: (done, total) {
+            if (!mounted) return;
+            if (done == 0) {
+              notifier.start(total);
+            } else {
+              notifier.tick(done, total);
+            }
+          },
+        );
+        if (!mounted) return;
+        switch (outcome) {
+          case ChapterParsingSkipped(:final reason):
+            AnxLog.info('Chapter parsing skipped: $reason (book ${book.id})');
+            notifier.reset();
+          case ChapterParsingCompleted(:final total):
+            AnxLog.info(
+              'Chapter parsing completed: $total chapters (book ${book.id})',
+            );
+            notifier.markDone(total);
+          case ChapterParsingAborted(:final error, :final done, :final total):
+            AnxLog.severe(
+              'Chapter parsing aborted at $done / $total (book ${book.id}): $error',
+            );
+            notifier.fail(error, done: done, total: total);
+        }
+      } catch (error, stack) {
+        AnxLog.severe('Chapter parsing crashed: $error\n$stack');
+        if (mounted) {
+          notifier.fail(error, done: 0, total: toc.length);
+        }
+      }
+    });
   }
 
   Future<void> _handleExternalLink(dynamic rawLink) async {
@@ -682,6 +769,7 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
           List<dynamic> t = args[0];
           final toc = t.map((i) => TocItem.fromJson(i)).toList();
           ref.read(bookTocProvider.notifier).setToc(toc);
+          _maybeStartChapterParsing(toc);
         });
     controller.addJavaScriptHandler(
         handlerName: 'onSelectionEnd',

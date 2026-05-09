@@ -25,6 +25,7 @@ import 'package:ai_book_reader/widgets/common/color_picker_sheet.dart';
 import 'package:ai_book_reader/widgets/common/tag_chip.dart';
 import 'package:ai_book_reader/widgets/highlight_digit.dart';
 import 'package:ai_book_reader/widgets/hint/hint_banner.dart';
+import 'package:ai_book_reader/widgets/reading_page/chapter_parsing_status_card.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -741,30 +742,36 @@ class _BookDetailState extends ConsumerState<BookDetail> {
         fontWeight: FontWeight.bold,
       );
       return SingleChildScrollView(
-        child: SizedBox(
-            // height: 500,
-            width: MediaQuery.of(context).size.width,
-            child: FilledContainer(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${L10n.of(context).bookDetailImportDate}${widget.book.createTime.toString().substring(0, 10)}',
-                    style: textStyle,
-                  ),
-                  Text(
-                    '${L10n.of(context).bookDetailLastReadDate}${widget.book.updateTime.toString().substring(0, 10)}',
-                    style: textStyle,
-                  ),
-                  const Divider(),
-                  SizedBox(
-                    // height: 200,
-                    child: buildReadingDetail(),
-                  ),
-                ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ChapterParsingStatusCard(bookId: widget.book.id),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: FilledContainer(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${L10n.of(context).bookDetailImportDate}${widget.book.createTime.toString().substring(0, 10)}',
+                      style: textStyle,
+                    ),
+                    Text(
+                      '${L10n.of(context).bookDetailLastReadDate}${widget.book.updateTime.toString().substring(0, 10)}',
+                      style: textStyle,
+                    ),
+                    const Divider(),
+                    SizedBox(
+                      // height: 200,
+                      child: buildReadingDetail(),
+                    ),
+                  ],
+                ),
               ),
-            )),
+            ),
+          ],
+        ),
       );
     }
 
