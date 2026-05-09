@@ -16,3 +16,17 @@ Implemented the GlossaryTerm vertical slice end-to-end:
 Verified `flutter pub get` / `dart run build_runner build` clean, `flutter analyze` clean on the touched files, and the app launches on the Samsung SM S721B (id `R5CY604D5BV`). No UI yet — the slice exists only to confirm Anx's architecture cleanly absorbs new pipeline tables.
 
 Working tree left dirty per user instruction; agent does not run write-side git ops.
+
+## 2026-05-09 — Iteration 2: chapter tables + ChapterStatus (uncommitted)
+
+Second pipeline-table slice. `tb_source_chapters` and `tb_target_chapters` are now part of the schema, with the same shape as the Python `SourceChapter` / `TargetChapter` plus a `book_id` foreign-key column (one SQLite database, many books).
+
+- `lib/models/chapter_status.dart` — Dart enum mirroring Python `ChapterStatus` (only the values still used by the active pipeline: `newly`, `parsed`, `translated`, `analyzed`; legacy `cleaned` / `mined` not ported because the steps that produced them are deleted upstream).
+- `lib/models/source_chapter.dart`, `lib/models/target_chapter.dart` — final-field models, `toMap` + `fromDb`, identical pattern to `GlossaryTerm`. Target carries an explicit `source_chapter_id` FK so reordering on the source side cannot silently break alignment.
+- `lib/dao/source_chapter_dao.dart`, `lib/dao/target_chapter_dao.dart` — `BaseDao` subclasses with upsert (`save`), `selectByBookId`, `selectByStatus`, `updateStatus`, deletes.
+- `lib/dao/database.dart` — DB version bumped 8 → 9; new `case 8:` migration creates both tables with their unique constraints, FK on target → source (ON DELETE CASCADE), and `(book_id)` + `(book_id, status)` indexes on each.
+- `lib/providers/chapters.dart` — `@riverpod class SourceChapters` and `TargetChapters`, both parameterized on `bookId`. `chapters.g.dart` regenerated.
+
+Verified: `dart run build_runner build --delete-conflicting-outputs` clean, `flutter analyze` clean on the seven touched files, debug APK builds, installs on the Samsung SM S721B, schema confirmed by pulling `app_database.db` and reading it: `user_version=9`, both new tables present with the expected `CREATE TABLE` SQL and four chapter-related indexes.
+
+Known issue: on a fresh install (case 0 → 9), the upstream Anx `case 3:` migration logs an unhandled `Bad state: This can happen if an inner synchronized block is spawned outside the block it was started from` because it calls `bookDao.selectBooks().then(...)` while `onCreate` is still holding the database lock. This is pre-existing upstream code, fires only on first install (incremental 8 → 9 is unaffected), the schema commits correctly, and the app continues running. Out of scope for iteration 2.

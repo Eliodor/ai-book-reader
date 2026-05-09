@@ -13,7 +13,7 @@ import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 // Current app database version
-const int currentDbVersion = 8;
+const int currentDbVersion = 9;
 
 const createBookSQL = '''
 CREATE TABLE tb_books (
@@ -112,6 +112,54 @@ CREATE TABLE tb_glossary_terms (
 
 const createGlossaryTermIndexSQL = '''
 CREATE INDEX idx_glossary_book_id ON tb_glossary_terms (book_id)
+''';
+
+const createSourceChapterSQL = '''
+CREATE TABLE tb_source_chapters (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  book_id INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  order_index INTEGER NOT NULL,
+  content TEXT NOT NULL DEFAULT '',
+  status TEXT NOT NULL DEFAULT 'new',
+  meta TEXT NOT NULL DEFAULT '{}',
+  create_time TEXT NOT NULL,
+  update_time TEXT NOT NULL,
+  UNIQUE (book_id, order_index)
+)
+''';
+
+const createSourceChapterBookIndexSQL = '''
+CREATE INDEX idx_source_chapter_book_id ON tb_source_chapters (book_id)
+''';
+
+const createSourceChapterStatusIndexSQL = '''
+CREATE INDEX idx_source_chapter_status ON tb_source_chapters (book_id, status)
+''';
+
+const createTargetChapterSQL = '''
+CREATE TABLE tb_target_chapters (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  book_id INTEGER NOT NULL,
+  source_chapter_id INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  order_index INTEGER NOT NULL,
+  content TEXT NOT NULL DEFAULT '',
+  status TEXT NOT NULL DEFAULT 'new',
+  meta TEXT NOT NULL DEFAULT '{}',
+  create_time TEXT NOT NULL,
+  update_time TEXT NOT NULL,
+  UNIQUE (book_id, source_chapter_id),
+  FOREIGN KEY (source_chapter_id) REFERENCES tb_source_chapters(id) ON DELETE CASCADE
+)
+''';
+
+const createTargetChapterBookIndexSQL = '''
+CREATE INDEX idx_target_chapter_book_id ON tb_target_chapters (book_id)
+''';
+
+const createTargetChapterStatusIndexSQL = '''
+CREATE INDEX idx_target_chapter_status ON tb_target_chapters (book_id, status)
 ''';
 
 class DBHelper {
@@ -448,6 +496,16 @@ class DBHelper {
         // create glossary terms table for the LLM translation pipeline port
         await db.execute(createGlossaryTermSQL);
         await db.execute(createGlossaryTermIndexSQL);
+        continue case8;
+      case8:
+      case 8:
+        // create source/target chapter tables for the translation pipeline
+        await db.execute(createSourceChapterSQL);
+        await db.execute(createSourceChapterBookIndexSQL);
+        await db.execute(createSourceChapterStatusIndexSQL);
+        await db.execute(createTargetChapterSQL);
+        await db.execute(createTargetChapterBookIndexSQL);
+        await db.execute(createTargetChapterStatusIndexSQL);
     }
 
     if (oldVersion != 0 && Prefs().webdavStatus) {

@@ -49,6 +49,7 @@
 ## Прочие места
 
 - В коде встречаются комментарии и идентификаторы, упоминающие Anx по сути работы — оставить, т.к. это чужой исторический контекст; постепенно переписывать по мере правок.
+- ~~`lib/main.dart:203` — `MaterialApp.title: 'Anx Reader'`~~ — заменено на `'AI Book Reader'` 2026-05-09.
 - Иконки приложения (`assets/icon/`, `android/app/src/main/res/mipmap-*/`, `ios/Runner/Assets.xcassets/AppIcon.appiconset/`, `macos/Runner/Assets.xcassets/AppIcon.appiconset/`, `windows/runner/resources/app_icon.ico`, `web/icons/`) **остались от Anx Reader.** Для своего бренда сгенерировать через `flutter_launcher_icons` или вручную.
 - `assets/CHANGELOG.md` — копия чейнджлога Anx, актуальна для них, не для нас.
 - `LICENSE` — оставить как есть (MIT с копирайтом Anxcye); это требование MIT-лицензии при форке.

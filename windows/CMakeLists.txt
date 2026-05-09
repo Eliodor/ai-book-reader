@@ -58,6 +58,14 @@ add_subdirectory("runner")
 # them to the application.
 include(flutter/generated_plugins.cmake)
 
+# Workaround: flutter_tts pulls in <sphelper.h> from the Windows SDK which
+# triggers C5054 (deprecated comparison between unrelated enums) on newer
+# SDKs. Combined with the project's /WX it fails the build. Disable just
+# C5054 for this one plugin instead of dropping /WX globally.
+if(TARGET flutter_tts_plugin)
+  target_compile_options(flutter_tts_plugin PRIVATE /wd5054)
+endif()
+
 
 # === Installation ===
 # Support files are copied into place next to the executable, so that it can

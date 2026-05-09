@@ -125,7 +125,7 @@ Future<void> initializeDesktopWindow() async {
   );
   final isMaximized = Prefs().windowInfo.isMaximized;
 
-  WindowManager.instance.setTitle('Anx Reader');
+  WindowManager.instance.setTitle('AI Book Reader');
 
   if (isMaximized) {
     await WindowManager.instance.maximize();

@@ -15,10 +15,10 @@ Concrete file-to-file mapping from the Python reference repo (`D:\Projects\Novel
 
 | Python | Dart | Status | Notes |
 |---|---|---|---|
-| `ChapterStatus` enum | `lib/enums/chapter_status.dart` | TODO | Iteration 2. Mobile may collapse `CLEANED` / `MINED` / `ANALYZED` since cleaner+miner are deleted upstream. |
-| `SourceChapter` | `lib/models/source_chapter.dart` + table `tb_source_chapters` | TODO | Iteration 2. Foreign key to `tb_books.id`. |
-| `TargetChapter` | `lib/models/target_chapter.dart` + table `tb_target_chapters` | TODO | Iteration 2. Foreign key to `tb_books.id` (book scope) and matches source by `order_index`. |
-| `GlossaryTerm` (PK = `term_source`) | `lib/models/glossary_term.dart` + table `tb_glossary_terms` | **WIP — Iteration 1** | This session. On mobile we use a synthetic `INTEGER PRIMARY KEY AUTOINCREMENT` and a `UNIQUE` index on `(book_id, term_source)` so the same word can have different translations across books. |
+| `ChapterStatus` enum | `lib/models/chapter_status.dart` | **DONE — Iteration 2** | Only `newly`, `parsed`, `translated`, `analyzed` ported (active values); `cleaned` / `mined` dropped because the producing steps are deleted upstream and we have no legacy data to migrate. |
+| `SourceChapter` | `lib/models/source_chapter.dart` + table `tb_source_chapters` | **DONE — Iteration 2** | Carries `book_id` (one DB, many books); `UNIQUE (book_id, order_index)`; indexed on `(book_id)` and `(book_id, status)`. |
+| `TargetChapter` | `lib/models/target_chapter.dart` + table `tb_target_chapters` | **DONE — Iteration 2** | Explicit `source_chapter_id` FK with `ON DELETE CASCADE` (Python matched by `order_index` alone — fragile when source reorders). `UNIQUE (book_id, source_chapter_id)`. |
+| `GlossaryTerm` (PK = `term_source`) | `lib/models/glossary_term.dart` + table `tb_glossary_terms` | **DONE — Iteration 1** | Synthetic `INTEGER PRIMARY KEY AUTOINCREMENT`, `UNIQUE` on `(book_id, term_source)` so the same word can have different translations across books. |
 | `NgramAnalysis` | `lib/models/ngram_analysis.dart` + table `tb_ngrams` | TODO | Whether we keep this on-device at all is open — it's heavy. May only ship as in-Isolate scratch state, not persisted. |
 | `TermCandidate` | `lib/models/term_candidate.dart` + table `tb_term_candidates` | TODO | Iteration 7. |
 | `TermCandidateOccurrence` | `lib/models/term_candidate_occurrence.dart` + table `tb_term_candidate_occurrences` | TODO | Iteration 7. |
@@ -28,9 +28,9 @@ Concrete file-to-file mapping from the Python reference repo (`D:\Projects\Novel
 
 | Python | Dart | Status | Notes |
 |---|---|---|---|
-| `Repository.add_glossary_term`, `get_glossary_terms`, `update_glossary_term`, etc. | `lib/dao/glossary_term_dao.dart` | **WIP — Iteration 1** | Following the `BookNoteDao` template (`lib/dao/book_note.dart`). |
-| `Repository.add_source_chapter`, `get_source_chapters_by_status`, etc. | `lib/dao/source_chapter_dao.dart` | TODO | Iteration 2. |
-| `Repository.add_target_chapter`, etc. | `lib/dao/target_chapter_dao.dart` | TODO | Iteration 2. |
+| `Repository.add_glossary_term`, `get_glossary_terms`, `update_glossary_term`, etc. | `lib/dao/glossary_term_dao.dart` | **DONE — Iteration 1** | Following the `BookNoteDao` template (`lib/dao/book_note.dart`). |
+| `Repository.add_source_chapter`, `get_source_chapters_by_status`, etc. | `lib/dao/source_chapter_dao.dart` | **DONE — Iteration 2** | Upsert keyed on `(book_id, order_index)`; `selectByStatus` and `updateStatus` for the pipeline. |
+| `Repository.add_target_chapter`, etc. | `lib/dao/target_chapter_dao.dart` | **DONE — Iteration 2** | Upsert keyed on `source_chapter_id`. |
 | `Repository.add_term_candidate`, `promote_candidates_to_glossary`, etc. | `lib/dao/term_candidate_dao.dart` | TODO | Iteration 7-8. |
 
 The Repository god-class is intentionally *not* ported as a single class — Dart breaks it into one DAO per table.
