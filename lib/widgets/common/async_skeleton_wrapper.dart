@@ -1,4 +1,3 @@
-import 'package:ai_book_reader/utils/log/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -103,17 +102,26 @@ class AsyncSkeletonWrapper<T> extends StatelessWidget {
     );
   }
 
-  /// Attempts to create a default mock value for common types
+  /// Attempts to create a default mock value for common types. Throws when
+  /// the requested type isn't one of the well-known primitives — the caller
+  /// (see [build]) catches this and falls back to a `CircularProgressIndicator`
+  /// without logging, so unmodelled types are a quiet skeleton-skip rather
+  /// than a noisy error.
   static T _createDefaultMock<T>() {
-    // Handle common types
     if (T == int) return 1 as T;
     if (T == double) return 1.0 as T;
     if (T == String) return 'a ' * 5 as T;
     if (T == bool) return false as T;
-    AnxLog.severe('No default mock available for type $T');
-
-    throw Exception('No default mock available for type $T');
+    throw _NoDefaultMockException(T);
   }
+}
+
+class _NoDefaultMockException implements Exception {
+  const _NoDefaultMockException(this.type);
+  final Type type;
+
+  @override
+  String toString() => 'No default mock available for type $type';
 }
 
 /// Combines multiple AsyncValues into a single AsyncValue<List>.

@@ -25,6 +25,7 @@ import 'package:ai_book_reader/widgets/common/color_picker_sheet.dart';
 import 'package:ai_book_reader/widgets/common/tag_chip.dart';
 import 'package:ai_book_reader/widgets/highlight_digit.dart';
 import 'package:ai_book_reader/widgets/hint/hint_banner.dart';
+import 'package:ai_book_reader/widgets/book_detail/reference_translations_card.dart';
 import 'package:ai_book_reader/widgets/reading_page/chapter_parsing_status_card.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -746,6 +747,9 @@ class _BookDetailState extends ConsumerState<BookDetail> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ChapterParsingStatusCard(bookId: widget.book.id),
+            const SizedBox(height: 8),
+            ReferenceTranslationsCard(bookId: widget.book.id),
+            const SizedBox(height: 8),
             SizedBox(
               width: MediaQuery.of(context).size.width,
               child: FilledContainer(

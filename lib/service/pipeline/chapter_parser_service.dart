@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:ai_book_reader/dao/source_chapter_dao.dart';
 import 'package:ai_book_reader/models/chapter_status.dart';
 import 'package:ai_book_reader/models/source_chapter.dart';
-import 'package:ai_book_reader/models/toc_item.dart';
+import 'package:ai_book_reader/service/pipeline/book_file_parser.dart';
+import 'package:ai_book_reader/service/pipeline/chapter_merger.dart';
 import 'package:ai_book_reader/utils/log/common.dart';
 
 /// Outcome of a [ChapterParserService.parseBookIfNeeded] run.
@@ -30,30 +33,22 @@ class ChapterParsingAborted extends ChapterParsingOutcome {
   final int total;
 }
 
-/// First-open chapter parser. Walks the foliate-js TOC, fetches plain-text
-/// content of each chapter via the supplied [fetchChapterByHref] callback, and
-/// writes one row per chapter to `tb_source_chapters`.
+/// First-time chapter parser. Reads the original book file directly with
+/// [BookFileParser] (FB2 / EPUB), runs the result through [ChapterMerger]
+/// (sub-chapter aggregation + `chapter_number` extraction), and writes one
+/// row per chapter into `tb_source_chapters`.
 ///
-/// The service is deliberately decoupled from Riverpod and from the WebView:
-/// callers inject a [SourceChapterDao] and a chapter-fetch closure. Progress
-/// is reported via [onProgress]; the caller updates whatever provider it owns.
+/// No WebView, no foliate-js JS bridge. Idempotent: skips when source chapters
+/// for the book already exist with non-empty content.
 class ChapterParserService {
   ChapterParserService({SourceChapterDao? dao})
       : _dao = dao ?? sourceChapterDao;
 
   final SourceChapterDao _dao;
 
-  /// Parses the book if no source chapters exist yet for [bookId].
-  ///
-  /// Idempotent: if `tb_source_chapters` already has rows with non-empty
-  /// content for this book, returns [ChapterParsingSkipped] without touching
-  /// the DB. If every existing row has empty content (typical of an aborted
-  /// first run that hit `reader is not defined` before foliate-js was ready),
-  /// the rows are dropped and parsing re-runs.
   Future<ChapterParsingOutcome> parseBookIfNeeded({
     required int bookId,
-    required List<TocItem> toc,
-    required Future<String> Function(String href) fetchChapterByHref,
+    required File file,
     void Function(int done, int total)? onProgress,
   }) async {
     final existing = await _dao.countByBookId(bookId);
@@ -69,85 +64,65 @@ class ChapterParserService {
       await _dao.deleteByBookId(bookId);
     }
 
-    final flat = _flatten(toc);
-    if (flat.isEmpty) {
-      return const ChapterParsingSkipped('empty-toc');
+    if (!isParseableBookFormat(file.path)) {
+      return const ChapterParsingSkipped('unsupported-format');
     }
-
-    onProgress?.call(0, flat.length);
-
-    var done = 0;
-    for (var i = 0; i < flat.length; i++) {
-      final item = flat[i];
-      try {
-        final raw = await fetchChapterByHref(item.href);
-        final text = raw.trim();
-        await _dao.save(SourceChapter(
-          bookId: bookId,
-          title: item.label.trim().isEmpty
-              ? 'Chapter ${i + 1}'
-              : item.label.trim(),
-          orderIndex: i,
-          content: text,
-          status: ChapterStatus.parsed,
-        ));
-        done = i + 1;
-        onProgress?.call(done, flat.length);
-      } catch (error, stack) {
-        AnxLog.severe(
-          'Chapter parsing failed at index $i (href=${item.href}): $error\n$stack',
-        );
-        return ChapterParsingAborted(
-          error: error,
-          done: done,
-          total: flat.length,
-        );
-      }
-    }
-
-    final saved = await _dao.selectByBookId(bookId);
-    final hasAnyContent = saved.any((c) => c.content.trim().isNotEmpty);
-    if (!hasAnyContent) {
-      AnxLog.severe(
-        'Chapter parsing produced no content for book $bookId — '
-        'foliate-js likely was not ready. Rolling back so the next open retries.',
-      );
-      await _dao.deleteByBookId(bookId);
+    if (!await file.exists()) {
       return ChapterParsingAborted(
-        error: StateError('foliate-js returned empty content for every chapter'),
+        error: StateError('Book file does not exist: ${file.path}'),
         done: 0,
-        total: flat.length,
+        total: 0,
       );
     }
 
-    return ChapterParsingCompleted(total: flat.length);
-  }
-
-  /// Depth-first flatten preserving TOC order; nested headings become sibling
-  /// rows in `tb_source_chapters`. Items without an `href` are skipped because
-  /// foliate cannot fetch their content.
-  static List<TocItem> _flatten(List<TocItem> toc) {
-    final out = <TocItem>[];
-    void visit(TocItem item) {
-      if (item.href.isNotEmpty) {
-        out.add(item);
-      }
-      for (final sub in item.subitems) {
-        visit(sub);
-      }
+    final List<RawChapter> raws;
+    try {
+      raws = await BookFileParser.extractRawChapters(file);
+    } catch (error, stack) {
+      AnxLog.severe(
+        'ChapterParser: extraction failed for book $bookId: $error\n$stack',
+      );
+      return ChapterParsingAborted(error: error, done: 0, total: 0);
     }
 
-    for (final item in toc) {
-      visit(item);
+    if (raws.isEmpty) {
+      return const ChapterParsingSkipped('no-chapters');
     }
-    return out;
-  }
-}
 
-/// Returns true if [filePath] points at an EPUB or FB2 file. Other formats are
-/// out of scope for the iteration-3 parser (foliate-js can render them but the
-/// translation pipeline focuses on EPUB/FB2 first).
-bool isParseableBookFormat(String filePath) {
-  final lower = filePath.toLowerCase();
-  return lower.endsWith('.epub') || lower.endsWith('.fb2');
+    final merged = ChapterMerger.merge(raws);
+    onProgress?.call(0, merged.length);
+
+    final rows = <SourceChapter>[];
+    for (var i = 0; i < merged.length; i++) {
+      final m = merged[i];
+      rows.add(SourceChapter(
+        bookId: bookId,
+        title: m.title.isEmpty ? 'Chapter ${i + 1}' : m.title,
+        orderIndex: i,
+        chapterNumber: m.chapterNumber,
+        content: m.content,
+        status: ChapterStatus.parsed,
+        meta: m.metaJson,
+      ));
+    }
+
+    try {
+      await _dao.saveAll(rows);
+    } catch (error, stack) {
+      AnxLog.severe('Chapter parsing batch save failed: $error\n$stack');
+      return ChapterParsingAborted(
+        error: error,
+        done: 0,
+        total: merged.length,
+      );
+    }
+    onProgress?.call(merged.length, merged.length);
+    return ChapterParsingCompleted(total: merged.length);
+  }
+
+  /// Backfills `chapter_number` for source chapters that were saved before
+  /// the v10 migration. Idempotent. Returns the number of rows updated.
+  Future<int> backfillChapterNumbersForBook(int bookId) {
+    return _dao.backfillChapterNumbers(bookId);
+  }
 }

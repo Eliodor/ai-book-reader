@@ -13,7 +13,7 @@ import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 // Current app database version
-const int currentDbVersion = 9;
+const int currentDbVersion = 10;
 
 const createBookSQL = '''
 CREATE TABLE tb_books (
@@ -160,6 +160,60 @@ CREATE INDEX idx_target_chapter_book_id ON tb_target_chapters (book_id)
 
 const createTargetChapterStatusIndexSQL = '''
 CREATE INDEX idx_target_chapter_status ON tb_target_chapters (book_id, status)
+''';
+
+const addSourceChapterNumberSQL = '''
+ALTER TABLE tb_source_chapters ADD COLUMN chapter_number INTEGER
+''';
+
+const createSourceChapterNumberIndexSQL = '''
+CREATE INDEX idx_source_chapter_number ON tb_source_chapters (book_id, chapter_number)
+''';
+
+const createReferenceTranslationSQL = '''
+CREATE TABLE tb_reference_translations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  book_id INTEGER NOT NULL,
+  file_path TEXT NOT NULL,
+  file_name TEXT NOT NULL,
+  md5 TEXT,
+  part_order INTEGER NOT NULL,
+  parsing_status TEXT NOT NULL DEFAULT 'pending',
+  parsing_error TEXT,
+  meta TEXT NOT NULL DEFAULT '{}',
+  create_time TEXT NOT NULL,
+  update_time TEXT NOT NULL,
+  UNIQUE (book_id, part_order)
+)
+''';
+
+const createReferenceTranslationBookIndexSQL = '''
+CREATE INDEX idx_reference_translation_book_id ON tb_reference_translations (book_id)
+''';
+
+const createReferenceChapterSQL = '''
+CREATE TABLE tb_reference_chapters (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  reference_translation_id INTEGER NOT NULL,
+  book_id INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  order_index INTEGER NOT NULL,
+  chapter_number INTEGER,
+  content TEXT NOT NULL DEFAULT '',
+  meta TEXT NOT NULL DEFAULT '{}',
+  create_time TEXT NOT NULL,
+  update_time TEXT NOT NULL,
+  UNIQUE (reference_translation_id, order_index),
+  FOREIGN KEY (reference_translation_id) REFERENCES tb_reference_translations(id) ON DELETE CASCADE
+)
+''';
+
+const createReferenceChapterTranslationIndexSQL = '''
+CREATE INDEX idx_reference_chapter_translation_id ON tb_reference_chapters (reference_translation_id)
+''';
+
+const createReferenceChapterAlignmentIndexSQL = '''
+CREATE INDEX idx_reference_chapter_alignment ON tb_reference_chapters (book_id, chapter_number)
 ''';
 
 class DBHelper {
@@ -506,6 +560,17 @@ class DBHelper {
         await db.execute(createTargetChapterSQL);
         await db.execute(createTargetChapterBookIndexSQL);
         await db.execute(createTargetChapterStatusIndexSQL);
+        continue case9;
+      case9:
+      case 9:
+        // chapter_number column on source chapters + reference translation tables
+        await db.execute(addSourceChapterNumberSQL);
+        await db.execute(createSourceChapterNumberIndexSQL);
+        await db.execute(createReferenceTranslationSQL);
+        await db.execute(createReferenceTranslationBookIndexSQL);
+        await db.execute(createReferenceChapterSQL);
+        await db.execute(createReferenceChapterTranslationIndexSQL);
+        await db.execute(createReferenceChapterAlignmentIndexSQL);
     }
 
     if (oldVersion != 0 && Prefs().webdavStatus) {

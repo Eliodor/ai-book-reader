@@ -2,6 +2,48 @@
 
 Milestones in the AI Book Reader port. Format: `## YYYY-MM-DD — what shipped`.
 
+## 2026-05-10 — Iteration 3.5: reference translations + chapter-number alignment (uncommitted)
+
+User-attached human translations now live alongside the original book. On the book detail page a new card lets the user drop or pick `.epub` / `.fb2` files (multi-select; desktop drag-and-drop). Each part is parsed into its own table, chapters merged for sub-chapter formats (`1.1 / 1.2 / 1.3 → 1`), and aligned to the original by `chapter_number`.
+
+- `lib/dao/database.dart` — DB version 9 → 10. Migration `case 9:` adds `tb_source_chapters.chapter_number INTEGER`, the new `tb_reference_translations` and `tb_reference_chapters` tables, plus alignment / lookup indexes. No destructive UPDATE in the migration.
+- `lib/utils/chapter_number_extractor.dart` — pulls a numeric chapter id from a title (with optional content fallback), gated by the universal regex from [lib/models/chapter_split_presets.dart](lib/models/chapter_split_presets.dart) (`Default (mixed languages)`). No LLM, no Chinese-numeral conversion this iteration.
+- `lib/service/pipeline/chapter_merger.dart` — groups raw chapters by `chapter_number`, concatenates sub-chapter content (`\n\n`-joined), records `merged_from` in `meta` JSON.
+- `lib/service/pipeline/chapter_parser_service.dart` — now runs every fetched book through `ChapterMerger` before persisting; back-fills `chapter_number` for v9-era rows via `backfillChapterNumbersForBook`.
+- `lib/service/pipeline/reference_translation_parser_service.dart` — new headless `AnxHeadlessWebView` parser; `importing=false` URL flag; stub handlers for `onLoadEnd` / `renderAnnotations`; same poll-then-fetch JS as the in-reader parser.
+- `lib/models/reference_translation.dart`, `lib/models/reference_chapter.dart` + `lib/dao/reference_translation_dao.dart`, `lib/dao/reference_chapter_dao.dart` — DAOs follow `SourceChapterDao` template; `deleteById` is transactional (chapters then row); `selectAlignedWithSource(bookId)` exposes the JOIN for future glossary work.
+- `lib/providers/reference_translations.dart` — `@Riverpod(keepAlive: true)` on `bookId`; serialises Add operations into a single Future chain (one WebView at a time); deletes also remove the on-disk file.
+- `lib/widgets/book_detail/reference_translations_card.dart` — UI card with FilePicker, desktop-drop overlay, per-part status row (idle / running / parsed / failed), confirmation dialog on delete.
+- `lib/page/book_detail.dart` — card mounted in `buildMoreDetail` directly under `ChapterParsingStatusCard`.
+- `lib/l10n/app_en.arb` — 13 new keys for the section.
+
+Known limitations:
+- Books parsed before v10 only have `chapter_number` lazily back-filled; sub-chapter merge is **not** retroactive (would require a re-parse pass).
+- Chinese numerals (`第一章`) are detected by the chapter-rule regex but stay unaligned (no digit conversion).
+- Soft-delete of a book does not cascade-clean `tb_reference_translations` / chapters / files (matches the existing project pattern; standalone fix later).
+- Web drag-and-drop deferred (`desktop_drop` does not support Web).
+
+Verification done: `dart run build_runner build --delete-conflicting-outputs` clean; `flutter analyze` clean on every touched file; `flutter gen-l10n` regenerated `L10n` for all locales.
+
+First runtime smoke crashed on Windows ("Lost connection to device") right after foliate-js loaded `paginator.js` for the dropped reference file. Root cause: `HeadlessInAppWebView` on Windows has no rendering surface, and foliate-js with `importing=false` initialises its paginator and tries to render — WebView2 crashes natively.
+
+Second smoke run no longer crashed but the upload silently hung (UI stuck on "parsing"). Reason: Anx's existing Overlay fallback wraps the `InAppWebView` in `Offstage(offstage: true)`, which means Flutter never lays it out — so the native WebView2 host never starts. The first crash never surfaced because no rendering happened in the first place; on the second attempt nothing happened at all.
+
+Fix attempt #2 (Overlay path): parser was made to manage its own `OverlayEntry` (`Positioned(left: -10, top: -10, width: 1, height: 1)` + `IgnorePointer(Opacity(0.0, ...))`), so Flutter actually lays the WebView out and the native WebView2 initialises. With this in place the second WebView2 instance came up cleanly **but** still crashed natively the moment it loaded `paginator.js` — same crash pattern as run #1. Two parallel WebView2 hosts in the same process, both running the foliate-js paginator, are not stable on Windows.
+
+Fix #3 (final): drop WebView from the parsing slice entirely. New shared `lib/service/pipeline/book_file_parser.dart` parses both formats in pure Dart:
+
+- FB2 → `package:xml` walk over `<body>` / nested `<section>` elements; titles from `<title><p>...</p></title>`, content from sibling `<p>` text. Tiny built-in cp1251 lookup table for legacy encoding (FB2 spec allows it; modern files are UTF-8).
+- EPUB → `package:epub_decoder` resolves `META-INF/container.xml` → `.opf` → spine; per spine item the XHTML is parsed with `package:html` (`<h1>`/`<h2>`/`<title>` for chapter heading, all `<p>`/`<div>`/`<li>` text for body). Hand-rolled spine extraction was dropped in favour of the package — fewer edge cases.
+- `isParseableBookFormat(...)` moved to the new file; both source and reference parsers re-import it from there.
+- `xml` and `epub_decoder` added as direct dependencies in `pubspec.yaml`.
+
+The same Dart pipeline is now used for the **original** book parsing too. `ChapterParserService.parseBookIfNeeded` no longer takes a TOC + JS callback — it takes a `File` and runs `BookFileParser` + `ChapterMerger` itself. The trigger in `epub_player.dart` moved from the foliate-js `onSetToc` JavaScript handler to `initState` (`Future.microtask(_maybeStartChapterParsing)`), so parsing kicks off immediately when the reader opens, independent of WebView readiness.
+
+Net effect: no WebView is involved in any chapter-extraction path. Two parallel WebView2 hosts on Windows is no longer a failure mode. EPUB / FB2 are parsed deterministically in tens to hundreds of ms.
+
+This requires a full `flutter run` restart (not hot reload) because `pubspec.yaml` changed.
+
 ## 2026-05-08 — Iteration 1: discovery + GlossaryTerm slice (uncommitted)
 
 Onboarding pass on both codebases (Anx-derived AIBookReader and the read-only Python reference at `D:\Projects\NovelTranslator`). Authored `CLAUDE.md`, `tasks/migration_plan.md`, `tasks/active_context.md`, `docs/migration-map.md`.

@@ -904,5 +904,36 @@
   "aiChatFontSize": "Font Size",
   "aiModelSwitchTitle": "Switch Model",
   "aiModelEnterManually": "Enter model name",
-  "aiModelOrSelectBelow": "Or select from list:"
+  "aiModelOrSelectBelow": "Or select from list:",
+  "referenceTranslationsTitle": "Reference translations",
+  "referenceTranslationsHint": "Add an existing human translation of this book to help build a paired glossary.",
+  "referenceTranslationsAdd": "Add translation",
+  "referenceTranslationsAddAnother": "Add another part",
+  "referenceTranslationsDropHere": "Drop translation file here",
+  "referenceTranslationsParsing": "Parsing {done} / {total}",
+  "@referenceTranslationsParsing": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "referenceTranslationsParsed": "{count, plural, one{Parsed (1 chapter)} other{Parsed ({count} chapters)} }",
+  "@referenceTranslationsParsed": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "referenceTranslationsFailed": "Failed",
+  "referenceTranslationsPending": "Queued",
+  "referenceTranslationsDeleteTitle": "Delete part?",
+  "referenceTranslationsDeleteConfirm": "This part and all extracted chapters will be removed.",
+  "referenceTranslationsDeleteAction": "Delete",
+  "referenceTranslationsCancel": "Cancel",
+  "referenceTranslationsUnsupportedFormat": "Only .epub and .fb2 are supported as reference translations.",
+  "referenceTranslationsAddedHint": "{count, plural, one{Added 1 part for parsing} other{Added {count} parts for parsing} }",
+  "@referenceTranslationsAddedHint": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

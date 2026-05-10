@@ -19,7 +19,22 @@
     "settingsAdvancedHttpProxyTest",
     "settingsAdvancedHttpProxyTesting",
     "settingsAdvancedHttpProxyTestSuccess",
-    "settingsAdvancedHttpProxyTestFailed"
+    "settingsAdvancedHttpProxyTestFailed",
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
   ],
 
   "de": [
@@ -42,7 +57,22 @@
     "settingsAdvancedHttpProxyTest",
     "settingsAdvancedHttpProxyTesting",
     "settingsAdvancedHttpProxyTestSuccess",
-    "settingsAdvancedHttpProxyTestFailed"
+    "settingsAdvancedHttpProxyTestFailed",
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
   ],
 
   "es": [
@@ -65,7 +95,22 @@
     "settingsAdvancedHttpProxyTest",
     "settingsAdvancedHttpProxyTesting",
     "settingsAdvancedHttpProxyTestSuccess",
-    "settingsAdvancedHttpProxyTestFailed"
+    "settingsAdvancedHttpProxyTestFailed",
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
   ],
 
   "fr": [
@@ -88,7 +133,22 @@
     "settingsAdvancedHttpProxyTest",
     "settingsAdvancedHttpProxyTesting",
     "settingsAdvancedHttpProxyTestSuccess",
-    "settingsAdvancedHttpProxyTestFailed"
+    "settingsAdvancedHttpProxyTestFailed",
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
   ],
 
   "it": [
@@ -111,7 +171,22 @@
     "settingsAdvancedHttpProxyTest",
     "settingsAdvancedHttpProxyTesting",
     "settingsAdvancedHttpProxyTestSuccess",
-    "settingsAdvancedHttpProxyTestFailed"
+    "settingsAdvancedHttpProxyTestFailed",
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
   ],
 
   "ja": [
@@ -134,7 +209,22 @@
     "settingsAdvancedHttpProxyTest",
     "settingsAdvancedHttpProxyTesting",
     "settingsAdvancedHttpProxyTestSuccess",
-    "settingsAdvancedHttpProxyTestFailed"
+    "settingsAdvancedHttpProxyTestFailed",
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
   ],
 
   "ko": [
@@ -157,7 +247,22 @@
     "settingsAdvancedHttpProxyTest",
     "settingsAdvancedHttpProxyTesting",
     "settingsAdvancedHttpProxyTestSuccess",
-    "settingsAdvancedHttpProxyTestFailed"
+    "settingsAdvancedHttpProxyTestFailed",
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
   ],
 
   "pt": [
@@ -180,7 +285,22 @@
     "settingsAdvancedHttpProxyTest",
     "settingsAdvancedHttpProxyTesting",
     "settingsAdvancedHttpProxyTestSuccess",
-    "settingsAdvancedHttpProxyTestFailed"
+    "settingsAdvancedHttpProxyTestFailed",
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
   ],
 
   "ro": [
@@ -203,7 +323,22 @@
     "settingsAdvancedHttpProxyTest",
     "settingsAdvancedHttpProxyTesting",
     "settingsAdvancedHttpProxyTestSuccess",
-    "settingsAdvancedHttpProxyTestFailed"
+    "settingsAdvancedHttpProxyTestFailed",
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
   ],
 
   "ru": [
@@ -226,7 +361,22 @@
     "settingsAdvancedHttpProxyTest",
     "settingsAdvancedHttpProxyTesting",
     "settingsAdvancedHttpProxyTestSuccess",
-    "settingsAdvancedHttpProxyTestFailed"
+    "settingsAdvancedHttpProxyTestFailed",
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
   ],
 
   "tr": [
@@ -249,7 +399,22 @@
     "settingsAdvancedHttpProxyTest",
     "settingsAdvancedHttpProxyTesting",
     "settingsAdvancedHttpProxyTestSuccess",
-    "settingsAdvancedHttpProxyTestFailed"
+    "settingsAdvancedHttpProxyTestFailed",
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
   ],
 
   "zh": [
@@ -258,7 +423,40 @@
     "settingsAiProviderReasoningEffortAuto",
     "settingsAiProviderReasoningEffortLow",
     "settingsAiProviderReasoningEffortMedium",
-    "settingsAiProviderReasoningEffortHigh"
+    "settingsAiProviderReasoningEffortHigh",
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
+  ],
+
+  "zh_CN": [
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
   ],
 
   "zh_LZH": [
@@ -281,7 +479,22 @@
     "settingsAdvancedHttpProxyTest",
     "settingsAdvancedHttpProxyTesting",
     "settingsAdvancedHttpProxyTestSuccess",
-    "settingsAdvancedHttpProxyTestFailed"
+    "settingsAdvancedHttpProxyTestFailed",
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
   ],
 
   "zh_TW": [
@@ -304,6 +517,21 @@
     "settingsAdvancedHttpProxyTest",
     "settingsAdvancedHttpProxyTesting",
     "settingsAdvancedHttpProxyTestSuccess",
-    "settingsAdvancedHttpProxyTestFailed"
+    "settingsAdvancedHttpProxyTestFailed",
+    "referenceTranslationsTitle",
+    "referenceTranslationsHint",
+    "referenceTranslationsAdd",
+    "referenceTranslationsAddAnother",
+    "referenceTranslationsDropHere",
+    "referenceTranslationsParsing",
+    "referenceTranslationsParsed",
+    "referenceTranslationsFailed",
+    "referenceTranslationsPending",
+    "referenceTranslationsDeleteTitle",
+    "referenceTranslationsDeleteConfirm",
+    "referenceTranslationsDeleteAction",
+    "referenceTranslationsCancel",
+    "referenceTranslationsUnsupportedFormat",
+    "referenceTranslationsAddedHint"
   ]
 }

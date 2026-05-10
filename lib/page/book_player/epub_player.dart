@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:ai_book_reader/config/shared_preference_provider.dart';
@@ -29,6 +30,7 @@ import 'package:ai_book_reader/providers/chapter_content_bridge.dart';
 import 'package:ai_book_reader/providers/chapter_parsing.dart';
 import 'package:ai_book_reader/providers/current_reading.dart';
 import 'package:ai_book_reader/service/book_player/book_player_server.dart';
+import 'package:ai_book_reader/service/pipeline/book_file_parser.dart';
 import 'package:ai_book_reader/service/pipeline/chapter_parser_service.dart';
 import 'package:ai_book_reader/providers/toc_search.dart';
 import 'package:ai_book_reader/service/tts/base_tts.dart';
@@ -141,8 +143,12 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
   }
 
   void setTranslationMode(TranslationModeEnum mode) {
+    // `typeof reader.view` would deref `reader` first and throw
+    // `ReferenceError: reader is not defined` when called before foliate-js
+    // has installed `globalThis.reader`. Guard with `typeof reader` (safe
+    // even when the binding is missing) plus an optional chain.
     webViewController.evaluateJavascript(source: '''
-      if (typeof reader.view !== 'undefined' && reader.view.setTranslationMode) {
+      if (typeof reader !== 'undefined' && reader.view && reader.view.setTranslationMode) {
         reader.view.setTranslationMode('${mode.code}');
       }
       ''');
@@ -500,15 +506,13 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
     );
   }
 
-  /// Fires once per book-open after foliate-js has delivered the TOC. If the
-  /// book has not been parsed before (no rows in `tb_source_chapters`), walks
-  /// the TOC and stores one row per chapter. Updates [chapterParsingProvider]
-  /// so the in-reader indicator can render progress.
-  void _maybeStartChapterParsing(List<TocItem> toc) {
+  /// Fires once per book-open. Reads the original book file directly with
+  /// [BookFileParser] (no WebView dependency) and stores one row per chapter
+  /// in `tb_source_chapters`. Updates [chapterParsingProvider] so the
+  /// in-reader indicator renders progress.
+  void _maybeStartChapterParsing() {
     if (_chapterParsingTriggered) return;
     _chapterParsingTriggered = true;
-
-    if (toc.isEmpty) return;
 
     if (!isParseableBookFormat(book.filePath)) {
       AnxLog.info(
@@ -519,13 +523,13 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
 
     final bookId = book.id;
     final notifier = ref.read(chapterParsingProvider(bookId).notifier);
+    final file = File(book.fileFullPath);
 
     Future<void>(() async {
       try {
         final outcome = await _chapterParser.parseBookIfNeeded(
           bookId: bookId,
-          toc: toc,
-          fetchChapterByHref: (href) => _getChapterContentByHref(href),
+          file: file,
           onProgress: (done, total) {
             if (!mounted) return;
             if (done == 0) {
@@ -554,7 +558,7 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
       } catch (error, stack) {
         AnxLog.severe('Chapter parsing crashed: $error\n$stack');
         if (mounted) {
-          notifier.fail(error, done: 0, total: toc.length);
+          notifier.fail(error, done: 0, total: 0);
         }
       }
     });
@@ -714,6 +718,10 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
     controller.addJavaScriptHandler(
         handlerName: 'onLoadEnd',
         callback: (args) {
+          // foliate-js fires onLoadEnd right after `globalThis.reader` is
+          // installed and the book is fully opened — the right moment to
+          // apply book-specific runtime settings without racing init.
+          setTranslationMode(Prefs().getBookTranslationMode(widget.book.id));
           widget.onLoadEnd();
         });
 
@@ -769,7 +777,6 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
           List<dynamic> t = args[0];
           final toc = t.map((i) => TocItem.fromJson(i)).toList();
           ref.read(bookTocProvider.notifier).setToc(toc);
-          _maybeStartChapterParsing(toc);
         });
     controller.addJavaScriptHandler(
         handlerName: 'onSelectionEnd',
@@ -975,10 +982,10 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
     setHandler(controller);
     _registerChapterContentBridge();
 
-    // Initialize translation mode based on book-specific settings
-    Future.delayed(const Duration(milliseconds: 300), () {
-      setTranslationMode(Prefs().getBookTranslationMode(widget.book.id));
-    });
+    // setTranslationMode used to be fired here on a 300 ms timer, which raced
+    // foliate-js initialisation on Windows / fb2 books and produced
+    // `ReferenceError: reader is not defined`. It is now applied from the
+    // `onLoadEnd` JS handler, when foliate has installed `globalThis.reader`.
   }
 
   void removeOverlay() {
@@ -1040,6 +1047,8 @@ class EpubPlayerState extends ConsumerState<EpubPlayer>
       });
     }
     super.initState();
+    // Pure-Dart chapter parsing — no WebView dependency, runs immediately.
+    Future.microtask(_maybeStartChapterParsing);
   }
 
   @override

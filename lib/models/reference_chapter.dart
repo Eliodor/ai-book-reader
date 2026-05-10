@@ -1,19 +1,17 @@
-import 'package:ai_book_reader/models/chapter_status.dart';
-
-/// One chapter in the original (untranslated) language.
+/// One chapter extracted from a [ReferenceTranslation] file.
 ///
-/// Ported from `D:\Projects\NovelTranslator\core\database\models.py::SourceChapter`.
-/// On mobile every row carries `bookId` because one SQLite database stores many
-/// books, unlike the Python project where one DB == one project.
-class SourceChapter {
-  SourceChapter({
+/// `bookId` is denormalised here (also lives on the parent
+/// `tb_reference_translations` row) so alignment queries can JOIN directly
+/// on `(book_id, chapter_number)` without hopping through the parent table.
+class ReferenceChapter {
+  ReferenceChapter({
     this.id,
+    required this.referenceTranslationId,
     required this.bookId,
     required this.title,
     required this.orderIndex,
     this.chapterNumber,
     this.content = '',
-    this.status = ChapterStatus.newly,
     this.meta = '{}',
     DateTime? createTime,
     DateTime? updateTime,
@@ -21,36 +19,37 @@ class SourceChapter {
         updateTime = updateTime ?? DateTime.now();
 
   int? id;
+  int referenceTranslationId;
   int bookId;
   String title;
   int orderIndex;
   int? chapterNumber;
   String content;
-  ChapterStatus status;
   String meta;
   DateTime createTime;
   DateTime updateTime;
 
-  SourceChapter copyWith({
+  ReferenceChapter copyWith({
     int? id,
+    int? referenceTranslationId,
     int? bookId,
     String? title,
     int? orderIndex,
     int? chapterNumber,
     String? content,
-    ChapterStatus? status,
     String? meta,
     DateTime? createTime,
     DateTime? updateTime,
   }) {
-    return SourceChapter(
+    return ReferenceChapter(
       id: id ?? this.id,
+      referenceTranslationId:
+          referenceTranslationId ?? this.referenceTranslationId,
       bookId: bookId ?? this.bookId,
       title: title ?? this.title,
       orderIndex: orderIndex ?? this.orderIndex,
       chapterNumber: chapterNumber ?? this.chapterNumber,
       content: content ?? this.content,
-      status: status ?? this.status,
       meta: meta ?? this.meta,
       createTime: createTime ?? this.createTime,
       updateTime: updateTime ?? this.updateTime,
@@ -60,31 +59,31 @@ class SourceChapter {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'reference_translation_id': referenceTranslationId,
       'book_id': bookId,
       'title': title,
       'order_index': orderIndex,
       'chapter_number': chapterNumber,
       'content': content,
-      'status': status.dbValue,
       'meta': meta,
       'create_time': createTime.toIso8601String(),
       'update_time': updateTime.toIso8601String(),
     };
   }
 
-  factory SourceChapter.fromDb(Map<String, dynamic> map) {
+  factory ReferenceChapter.fromDb(Map<String, dynamic> map) {
     final createTimeString = map['create_time'] as String?;
     final updateTimeString = map['update_time'] as String?;
     final now = DateTime.now();
 
-    return SourceChapter(
+    return ReferenceChapter(
       id: map['id'] as int?,
+      referenceTranslationId: map['reference_translation_id'] as int,
       bookId: map['book_id'] as int,
       title: map['title'] as String? ?? '',
       orderIndex: map['order_index'] as int? ?? 0,
       chapterNumber: map['chapter_number'] as int?,
       content: map['content'] as String? ?? '',
-      status: ChapterStatus.fromDb(map['status'] as String?),
       meta: map['meta'] as String? ?? '{}',
       createTime: createTimeString != null
           ? DateTime.tryParse(createTimeString) ?? now
