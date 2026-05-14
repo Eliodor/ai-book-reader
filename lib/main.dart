@@ -22,6 +22,7 @@ import 'package:ai_book_reader/utils/window_position_validator.dart';
 import 'package:ai_book_reader/providers/sync.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:heroine/heroine.dart';
@@ -40,6 +41,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Prefs().initPrefs();
   HttpOverrides.global = AnxHttpProxyOverrides();
+
+  // flutter_foreground_task v8: enable bi-directional communication between
+  // the foreground service task isolate and the main UI isolate. Safe to call
+  // on platforms that don't use a foreground service — it's a no-op there.
+  FlutterForegroundTask.initCommunicationPort();
 
   // Initialize desktop window with validated position
   if (AnxPlatform.isWindows || AnxPlatform.isMacOS) {

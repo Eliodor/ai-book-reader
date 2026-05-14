@@ -142,6 +142,51 @@ PromptTemplatePayload generatePromptFullTextTranslate(
   );
 }
 
+/// Builds the Stage B (LLM filter) prompt. [termsBlock] is one term per line
+/// of the form: `INDEX. "TERM" freq=N ch=M — snippet "..."`.
+PromptTemplatePayload generatePromptCandidateFilter(String termsBlock) {
+  final prompt = Prefs().getAiPrompt(AiPrompts.candidateFilter);
+  final normalized = _normalizePrompt(prompt);
+  final template = ChatPromptTemplate.fromPromptMessages([
+    HumanChatMessagePromptTemplate.fromTemplate(normalized),
+  ]);
+  return PromptTemplatePayload(
+    template: template,
+    variables: {
+      'terms_block': termsBlock,
+    },
+    identifier: AiPrompts.candidateFilter,
+  );
+}
+
+/// Builds the Stage C (mining) prompt. The model receives the full source and
+/// target chapter plus a newline-separated list of source terms; the response
+/// is a JSON object {source -> lemma-form translation or null}.
+PromptTemplatePayload generatePromptCandidateMining({
+  required String sourceText,
+  required String targetText,
+  required String fromLocale,
+  required String toLocale,
+  required String termsList,
+}) {
+  final prompt = Prefs().getAiPrompt(AiPrompts.candidateMining);
+  final normalized = _normalizePrompt(prompt);
+  final template = ChatPromptTemplate.fromPromptMessages([
+    HumanChatMessagePromptTemplate.fromTemplate(normalized),
+  ]);
+  return PromptTemplatePayload(
+    template: template,
+    variables: {
+      'source_text': sourceText,
+      'target_text': targetText,
+      'from_locale': fromLocale,
+      'to_locale': toLocale,
+      'terms_list': termsList,
+    },
+    identifier: AiPrompts.candidateMining,
+  );
+}
+
 String _normalizePrompt(String template) {
   return template.replaceAll('{{', '{').replaceAll('}}', '}');
 }

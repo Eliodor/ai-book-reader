@@ -6,6 +6,8 @@ enum AiPrompts {
   translate,
   fullTextTranslate,
   mindmap,
+  candidateFilter,
+  candidateMining,
 }
 
 extension AiPromptsJson on AiPrompts {
@@ -140,6 +142,77 @@ After the tool call, summarize the structure in 3 bullet sentences highlighting:
 1. Overall framing of the mind map
 2. Key branches or clusters
 3. Notable insights or tensions revealed
+        ''';
+
+      case AiPrompts.candidateFilter:
+        return '''
+You are a terminology filter for a translation pipeline working on a fantasy / sci-fi / web-novel book.
+
+You will be given a numbered list of CANDIDATE TERMS extracted heuristically from the source text. Each line is:
+
+INDEX. "TERM" freq=N ch=M — snippet "...short context..."
+
+Your job is to decide which entries are GARBAGE — i.e. should NOT become glossary entries — and return JUST their indexes as a JSON array of integers. Anything you do not list is kept.
+
+GARBAGE includes:
+- Generic English (or any source-language) phrases that are not named entities: "The Team", "His Friend", "The Door", "Of Course", "Was Going".
+- Fragments of sentences accidentally capitalized at sentence start.
+- Pure article + common-noun pairs that carry no story-specific meaning.
+- Numbers, dates, weights, measurements ("Three Hundred", "Two Years").
+- Single very common words even if capitalised ("Monday", "English", "True").
+
+KEEP:
+- Proper names of characters, locations, organizations, items, techniques, races, factions, magic systems, etc.
+- Multi-word terms that are clearly story-specific even if every word is a common word (e.g. "White Tiger Sect", "Heaven Piercing Sword").
+- Untranslated original-language terms ("qi", "dao", "wuxia") that carry technical meaning.
+- Terms where you are genuinely unsure — keep them, the next step has a separate guardrail.
+
+Be conservative: prefer to KEEP if in doubt. The next stage cross-checks against the translated text.
+
+Reply with ONLY a JSON array of indexes to remove. No prose, no markdown fences, no trailing commentary.
+Example: [3, 7, 12]
+If everything looks fine, return an empty array: []
+
+INPUT:
+{{terms_block}}
+        ''';
+
+      case AiPrompts.candidateMining:
+        return '''
+You are a translation-pair miner. The user gives you ONE source chapter (in {{from_locale}}), its existing TARGET translation (in {{to_locale}}), and a list of source terms to look up.
+
+For every source term, find or determine its translation in {{to_locale}} **as it appears in this chapter pair**.
+
+CRITICAL RULES:
+1. If the term has a {{to_locale}} translation visible in the target text, return that translation.
+2. If the term appears in the target text but is left untranslated (still in the source language), translate it to {{to_locale}} yourself.
+3. If the term is absent from the chapter or you cannot determine a translation with confidence, return null for that term.
+4. Return each translation in its BASE / DICTIONARY form (lemma): nominative case, singular number, no inflectional endings.
+   - Example: «Дракона» (Russian genitive) → return «Дракон» (nominative).
+   - Example: «Drachen» (German dative/plural) → return «Drache».
+   - Names stay in their canonical form ("Aragorn", not "Aragorna").
+   - This is essential for languages with rich morphology (Ukrainian, Russian, Polish, Czech, German, Finnish, etc.). Returning a case-marked form will create duplicate glossary entries.
+5. The translation value MUST be in {{to_locale}}. NEVER return an English word as the value (unless {{to_locale}} is English).
+6. Prefer semantic translation over phonetic transliteration when both exist in the target text.
+
+Reply with a JSON object: keys are the exact source-term strings I gave you (preserve their casing), values are the lemma-form translations or null. No prose, no markdown fences.
+
+Example shape:
+{
+  "White Tiger Sect": "Секта Белого Тигра",
+  "Aragorn": "Арагорн",
+  "obscure side character": null
+}
+
+INPUT:
+[Source chapter ({{from_locale}})]:
+{{source_text}}
+
+[Target chapter ({{to_locale}})]:
+{{target_text}}
+
+[Terms to look up]:
+{{terms_list}}
         ''';
     }
   }

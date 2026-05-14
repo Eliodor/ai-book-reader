@@ -13,7 +13,7 @@ import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 // Current app database version
-const int currentDbVersion = 10;
+const int currentDbVersion = 11;
 
 const createBookSQL = '''
 CREATE TABLE tb_books (
@@ -214,6 +214,76 @@ CREATE INDEX idx_reference_chapter_translation_id ON tb_reference_chapters (refe
 
 const createReferenceChapterAlignmentIndexSQL = '''
 CREATE INDEX idx_reference_chapter_alignment ON tb_reference_chapters (book_id, chapter_number)
+''';
+
+const createTermCandidateSQL = '''
+CREATE TABLE tb_term_candidates (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  book_id INTEGER NOT NULL,
+  source_text TEXT NOT NULL,
+  normalized_source TEXT NOT NULL,
+  candidate_type TEXT NOT NULL DEFAULT 'phrase',
+  score REAL NOT NULL DEFAULT 0,
+  frequency_total INTEGER NOT NULL DEFAULT 0,
+  chapter_count INTEGER NOT NULL DEFAULT 0,
+  first_chapter_id INTEGER,
+  status TEXT NOT NULL DEFAULT 'candidate',
+  llm_verdict TEXT,
+  llm_reason TEXT,
+  filtered_at TEXT,
+  promoted_at TEXT,
+  create_time TEXT NOT NULL,
+  update_time TEXT NOT NULL,
+  UNIQUE (book_id, normalized_source)
+)
+''';
+
+const createTermCandidateBookStatusIndexSQL = '''
+CREATE INDEX idx_term_cand_book_status ON tb_term_candidates (book_id, status)
+''';
+
+const createTermCandidateBookScoreIndexSQL = '''
+CREATE INDEX idx_term_cand_book_score ON tb_term_candidates (book_id, score DESC)
+''';
+
+const createTermCandidateOccurrenceSQL = '''
+CREATE TABLE tb_term_candidate_occurrences (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  candidate_id INTEGER NOT NULL,
+  chapter_id INTEGER NOT NULL,
+  order_index INTEGER NOT NULL,
+  position INTEGER NOT NULL DEFAULT 0,
+  context_before TEXT NOT NULL DEFAULT '',
+  context_after TEXT NOT NULL DEFAULT '',
+  FOREIGN KEY (candidate_id) REFERENCES tb_term_candidates(id) ON DELETE CASCADE
+)
+''';
+
+const createTermOccCandidateIndexSQL = '''
+CREATE INDEX idx_term_occ_candidate ON tb_term_candidate_occurrences (candidate_id)
+''';
+
+const createTermOccChapterIndexSQL = '''
+CREATE INDEX idx_term_occ_chapter ON tb_term_candidate_occurrences (chapter_id)
+''';
+
+const createGlossaryTermVariantSQL = '''
+CREATE TABLE tb_glossary_term_variants (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  book_id INTEGER NOT NULL,
+  term_source TEXT NOT NULL,
+  term_target_normalized TEXT NOT NULL,
+  term_target_display TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 1,
+  first_chapter_id INTEGER,
+  create_time TEXT NOT NULL,
+  update_time TEXT NOT NULL,
+  UNIQUE (book_id, term_source, term_target_normalized)
+)
+''';
+
+const createGlossaryTermVariantBookSourceIndexSQL = '''
+CREATE INDEX idx_variants_book_source ON tb_glossary_term_variants (book_id, term_source)
 ''';
 
 class DBHelper {
@@ -571,6 +641,18 @@ class DBHelper {
         await db.execute(createReferenceChapterSQL);
         await db.execute(createReferenceChapterTranslationIndexSQL);
         await db.execute(createReferenceChapterAlignmentIndexSQL);
+        continue case10;
+      case10:
+      case 10:
+        // term-extraction pipeline: candidates, occurrences, glossary variants
+        await db.execute(createTermCandidateSQL);
+        await db.execute(createTermCandidateBookStatusIndexSQL);
+        await db.execute(createTermCandidateBookScoreIndexSQL);
+        await db.execute(createTermCandidateOccurrenceSQL);
+        await db.execute(createTermOccCandidateIndexSQL);
+        await db.execute(createTermOccChapterIndexSQL);
+        await db.execute(createGlossaryTermVariantSQL);
+        await db.execute(createGlossaryTermVariantBookSourceIndexSQL);
     }
 
     if (oldVersion != 0 && Prefs().webdavStatus) {
