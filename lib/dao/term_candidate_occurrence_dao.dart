@@ -33,6 +33,35 @@ class TermCandidateOccurrenceDao extends BaseDao {
     );
   }
 
+  /// Returns the first occurrence (by `order_index, id`) for every id in
+  /// [candidateIds]. Used by Stage B to attach a snippet to each candidate in
+  /// a batch — one query instead of N round-trips.
+  Future<Map<int, TermCandidateOccurrence>> selectFirstByCandidateIds(
+    List<int> candidateIds,
+  ) async {
+    if (candidateIds.isEmpty) return const {};
+    final placeholders = List.filled(candidateIds.length, '?').join(',');
+    final rows = await rawQueryList(
+      '''
+      SELECT o.* FROM $table o
+      INNER JOIN (
+        SELECT candidate_id, MIN(order_index) AS min_order
+        FROM $table
+        WHERE candidate_id IN ($placeholders)
+        GROUP BY candidate_id
+      ) m
+        ON o.candidate_id = m.candidate_id AND o.order_index = m.min_order
+      ''',
+      arguments: candidateIds,
+      mapper: TermCandidateOccurrence.fromDb,
+    );
+    final result = <int, TermCandidateOccurrence>{};
+    for (final occ in rows) {
+      result.putIfAbsent(occ.candidateId, () => occ);
+    }
+    return result;
+  }
+
   /// Returns `(candidate_id, chapter_id)` pairs for all candidates in
   /// [candidateIds] — used to build the coverage map for Stage C selector.
   Future<List<(int candidateId, int chapterId)>> selectCoveragePairs(

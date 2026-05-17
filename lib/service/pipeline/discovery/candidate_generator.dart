@@ -62,12 +62,19 @@ class CandidateGenerator {
   }
 
   /// Should we trust a sentence-initial capitalised token? Yes if the same
-  /// token occurs capitalised mid-sentence at least once elsewhere.
+  /// token occurs capitalised mid-sentence at least once elsewhere, OR if it
+  /// recurs as sentence-initial often enough to be a name in its own right
+  /// (e.g. "Aragorn drew his sword. Aragorn turned. Aragorn looked.").
   bool _trustToken(Token tok) {
     if (!tok.isCapitalized) return false;
     if (!tok.isSentenceInitial) return true;
-    return (_midSentenceCounts[tok.normalizedText] ?? 0) > 0;
+    final mid = _midSentenceCounts[tok.normalizedText] ?? 0;
+    if (mid > 0) return true;
+    final initial = _sentenceInitialCounts[tok.normalizedText] ?? 0;
+    return initial >= _sentenceInitialTrustThreshold;
   }
+
+  static const int _sentenceInitialTrustThreshold = 3;
 
   /// Build candidates from one tokenised chapter. The instance accumulates
   /// state across all chapters — call once per chapter, then [finalize].
@@ -98,28 +105,39 @@ class CandidateGenerator {
   }
 
   /// Returns the index of the last token in a capitalised group starting at
-  /// [start], obeying [maxCandidateWordCount] and connector rules.
+  /// [start], obeying [maxCandidateWordCount] (counted in content words —
+  /// connectors are free) and the connector-chain rule (up to
+  /// [_maxConnectorChain] consecutive connectors are bridged when followed by
+  /// another trusted capitalised token).
   int _walkGroupEnd(List<Token> tokens, int start) {
     var end = start;
     var j = start + 1;
-    var lengthInWords = 1;
-    while (j < tokens.length && lengthInWords < maxCandidateWordCount) {
+    var contentWords = 1;
+    while (j < tokens.length && contentWords < maxCandidateWordCount) {
       final candidate = tokens[j];
       if (candidate.isCapitalized && _trustToken(candidate)) {
         end = j;
         j++;
-        lengthInWords++;
+        contentWords++;
         continue;
       }
-      // Connector: only consume if followed by another capitalised trusted
-      // token within reach.
-      if (connectors.contains(candidate.normalizedText) &&
-          j + 1 < tokens.length) {
-        final next = tokens[j + 1];
-        if (next.isCapitalized && _trustToken(next)) {
-          end = j + 1;
-          j += 2;
-          lengthInWords += 2; // count both connector and the following token
+      if (connectors.contains(candidate.normalizedText)) {
+        // Skip up to _maxConnectorChain consecutive connectors and require a
+        // trusted capitalised token afterwards.
+        var k = j;
+        var connectorCount = 0;
+        while (k < tokens.length &&
+            connectorCount < _maxConnectorChain &&
+            connectors.contains(tokens[k].normalizedText)) {
+          k++;
+          connectorCount++;
+        }
+        if (k < tokens.length &&
+            tokens[k].isCapitalized &&
+            _trustToken(tokens[k])) {
+          end = k;
+          j = k + 1;
+          contentWords++; // connectors do not consume the word-count budget.
           continue;
         }
       }
@@ -128,6 +146,8 @@ class CandidateGenerator {
     return end;
   }
 
+  static const int _maxConnectorChain = 3;
+
   void _emitGroup(
     List<Token> tokens,
     int start,
@@ -135,13 +155,23 @@ class CandidateGenerator {
     TokenizedChapter chapter,
     String normalizedContent,
   ) {
-    // Emit prefixes from the full group down to length 1 — this keeps both
-    // "Master Elder" and "Master" as candidates with proper substring
-    // statistics for the C-value stage.
-    for (var to = end; to >= start; to--) {
-      // Skip degenerate emission where the boundary token is a connector.
-      if (connectors.contains(tokens[to].normalizedText)) continue;
-      _emitSpan(tokens, start, to, chapter, normalizedContent);
+    // Emit every contiguous sub-span (from, to) inside [start..end]. Spans
+    // that start or end with a connector are skipped — they are filtered out
+    // anyway by [_emitSpan]'s boundary check, but skipping here avoids the
+    // allocation. The number of content words (non-connectors) is capped at
+    // [maxCandidateWordCount]. For a length-5 group this is at most ~15
+    // emissions.
+    for (var from = start; from <= end; from++) {
+      if (connectors.contains(tokens[from].normalizedText)) continue;
+      var contentWords = 0;
+      for (var to = from; to <= end; to++) {
+        final isConn = connectors.contains(tokens[to].normalizedText);
+        if (!isConn) {
+          contentWords++;
+          if (contentWords > maxCandidateWordCount) break;
+          _emitSpan(tokens, from, to, chapter, normalizedContent);
+        }
+      }
     }
   }
 
@@ -187,23 +217,33 @@ class CandidateGenerator {
         universalArticles.contains(lastNorm)) {
       return;
     }
-    if (parts.length == 1 &&
-        (parts.first.length < 3 || stopwords.contains(firstNorm))) {
-      return;
-    }
+    if (parts.length == 1 && parts.first.length < 3) return;
 
-    final type = _classify(normalized, parts.length);
+    // Content-word count for C-value: connectors (of/the/de/von/…) are not
+    // counted, so "Master of Crimson" gets wordCount=2, not 3.
+    var contentWordCount = 0;
+    for (final np in normalizedParts) {
+      if (!connectors.contains(np)) contentWordCount++;
+    }
+    if (contentWordCount == 0) return;
+
+    final type = _classify(normalized, contentWordCount);
     final cand = _candidates.putIfAbsent(
       normalized,
       () => RawCandidate(
         sourceText: sourceText,
         normalizedSource: normalized,
         candidateType: type,
-        wordCount: parts.length,
+        wordCount: contentWordCount,
       ),
     );
     cand.frequencyTotal++;
     cand.chapterIds.add(chapter.chapterId);
+    cand.chapterFrequencies.update(
+      chapter.chapterId,
+      (v) => v + 1,
+      ifAbsent: () => 1,
+    );
     cand.firstChapterId ??= chapter.chapterId;
     if (allCaps) cand.allCapsOccurrences++;
     final sentenceKey =
@@ -256,6 +296,11 @@ class CandidateGenerator {
       );
       cand.frequencyTotal++;
       cand.chapterIds.add(chapter.chapterId);
+      cand.chapterFrequencies.update(
+        chapter.chapterId,
+        (v) => v + 1,
+        ifAbsent: () => 1,
+      );
       cand.firstChapterId ??= chapter.chapterId;
       final sentenceKey = chapter.orderIndex * 1000000;
       cand.uniqueSentences.add(sentenceKey);
@@ -299,6 +344,11 @@ class CandidateGenerator {
           );
           c.frequency++;
           c.chapterIds.add(ch.chapterId);
+          c.chapterFrequencies.update(
+            ch.chapterId,
+            (v) => v + 1,
+            ifAbsent: () => 1,
+          );
         }
       }
     }
@@ -316,6 +366,13 @@ class CandidateGenerator {
       );
       cand.frequencyTotal += c.frequency;
       cand.chapterIds.addAll(c.chapterIds);
+      c.chapterFrequencies.forEach((chId, count) {
+        cand.chapterFrequencies.update(
+          chId,
+          (v) => v + count,
+          ifAbsent: () => count,
+        );
+      });
       cand.firstChapterId ??= c.firstChapterId;
     });
   }
@@ -394,6 +451,7 @@ class _NgramCounter {
   final int firstPosition;
   int frequency = 0;
   final Set<int> chapterIds = <int>{};
+  final Map<int, int> chapterFrequencies = <int, int>{};
 }
 
 const Set<String> _orgSuffixes = {

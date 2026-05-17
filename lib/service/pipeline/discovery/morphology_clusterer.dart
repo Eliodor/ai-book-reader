@@ -86,12 +86,24 @@ class MorphologyClusterer {
       final winner = cluster.members.first;
       // Merge stats from the other members into the winner.
       var totalScore = winner.score;
+      const noFirst = 1 << 30;
+      var minFirst = winner.firstChapterId ?? noFirst;
       for (var i = 1; i < cluster.members.length; i++) {
         final m = cluster.members[i];
         winner.frequencyTotal += m.frequencyTotal;
         winner.chapterIds.addAll(m.chapterIds);
+        m.chapterFrequencies.forEach((chId, count) {
+          winner.chapterFrequencies.update(
+            chId,
+            (v) => v + count,
+            ifAbsent: () => count,
+          );
+        });
         winner.allCapsOccurrences += m.allCapsOccurrences;
         winner.uniqueSentences.addAll(m.uniqueSentences);
+        if (m.firstChapterId != null && m.firstChapterId! < minFirst) {
+          minFirst = m.firstChapterId!;
+        }
         // Keep up to maxOccurrencesPerCandidate occurrences.
         for (final occ in m.occurrences) {
           if (winner.occurrences.length >= maxOccurrencesPerCandidate) break;
@@ -99,9 +111,15 @@ class MorphologyClusterer {
         }
         totalScore += m.score;
       }
-      // The winning representative's score becomes the max of cluster scores
-      // — not the sum — to avoid pathological inflation.
+      // The winning representative's score becomes the average of cluster
+      // scores — not the sum — to avoid pathological inflation.
       winner.score = totalScore / cluster.members.length;
+      // Propagate earliest first-chapter id across the cluster so Stage C's
+      // greedy chapter selector doesn't ignore early occurrences in less
+      // frequent surface forms.
+      if (minFirst < noFirst) {
+        winner.firstChapterId = minFirst;
+      }
       survivors[winner.normalizedSource] = winner;
     }
 

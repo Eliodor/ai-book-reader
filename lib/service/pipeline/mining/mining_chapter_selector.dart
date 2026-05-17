@@ -53,7 +53,6 @@ MiningSelectionResult selectMiningChapters({
     int? bestChapter;
     var bestGain = 0.0;
     var bestNewCount = 0;
-    var bestAllCount = 0;
 
     chapterCoverage.forEach((chapterId, candidates) {
       if (picked.contains(chapterId)) return;
@@ -71,7 +70,6 @@ MiningSelectionResult selectMiningChapters({
         bestGain = effective;
         bestChapter = chapterId;
         bestNewCount = newCount;
-        bestAllCount = candidates.length;
       }
     });
 
@@ -84,8 +82,6 @@ MiningSelectionResult selectMiningChapters({
         accumulatedScore += candidateScores[candId] ?? 0;
       }
     }
-    // bestAllCount is informational only; reference to avoid unused warning.
-    bestAllCount.toString();
   }
 
   // Order picked chapters by their natural order_index for predictable

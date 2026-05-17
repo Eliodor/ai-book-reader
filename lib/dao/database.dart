@@ -13,7 +13,7 @@ import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 // Current app database version
-const int currentDbVersion = 11;
+const int currentDbVersion = 12;
 
 const createBookSQL = '''
 CREATE TABLE tb_books (
@@ -284,6 +284,20 @@ CREATE TABLE tb_glossary_term_variants (
 
 const createGlossaryTermVariantBookSourceIndexSQL = '''
 CREATE INDEX idx_variants_book_source ON tb_glossary_term_variants (book_id, term_source)
+''';
+
+const createMiningProgressSQL = '''
+CREATE TABLE tb_mining_progress (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  book_id INTEGER NOT NULL,
+  source_chapter_id INTEGER NOT NULL,
+  mined_at TEXT NOT NULL,
+  UNIQUE (book_id, source_chapter_id)
+)
+''';
+
+const createMiningProgressBookIndexSQL = '''
+CREATE INDEX idx_mining_progress_book ON tb_mining_progress (book_id)
 ''';
 
 class DBHelper {
@@ -653,6 +667,13 @@ class DBHelper {
         await db.execute(createTermOccChapterIndexSQL);
         await db.execute(createGlossaryTermVariantSQL);
         await db.execute(createGlossaryTermVariantBookSourceIndexSQL);
+        continue case11;
+      case11:
+      case 11:
+        // per-chapter mining progress so Stage C is resumable without
+        // double-counting variant votes on restart.
+        await db.execute(createMiningProgressSQL);
+        await db.execute(createMiningProgressBookIndexSQL);
     }
 
     if (oldVersion != 0 && Prefs().webdavStatus) {

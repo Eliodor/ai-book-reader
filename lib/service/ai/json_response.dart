@@ -77,14 +77,19 @@ bool looksTruncated(String raw, {required bool expectArray}) {
 }
 
 String _stripFences(String raw) {
-  // Common pattern: ```json\n...\n``` or ```\n...\n```.
+  // Common pattern: ```json\n...\n``` or ```\n...\n```. Some models double-wrap
+  // the answer in nested fences (an outer fence containing an inner ```json …```
+  // block); peel up to two layers so the JSON inside stays reachable.
   final fenceStart = RegExp(r'```(?:json|JSON)?\s*');
-  final match = fenceStart.firstMatch(raw);
-  if (match == null) return raw;
-  final afterStart = raw.substring(match.end);
-  final closeIdx = afterStart.indexOf('```');
-  if (closeIdx < 0) return afterStart;
-  return afterStart.substring(0, closeIdx);
+  var current = raw;
+  for (var layer = 0; layer < 2; layer++) {
+    final match = fenceStart.firstMatch(current);
+    if (match == null) return current;
+    final afterStart = current.substring(match.end);
+    final closeIdx = afterStart.indexOf('```');
+    current = closeIdx < 0 ? afterStart : afterStart.substring(0, closeIdx);
+  }
+  return current;
 }
 
 int _matchBracket(String s, int openIdx) {

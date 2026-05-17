@@ -41,7 +41,7 @@ class TermExtractionCard extends ConsumerWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Извлечение глоссария',
+                  'Витяг глосарію',
                   style: theme.textTheme.titleSmall,
                 ),
               ),
@@ -52,17 +52,17 @@ class TermExtractionCard extends ConsumerWidget {
           ),
           const SizedBox(height: 10),
           _StageRow(
-            label: 'Поиск терминов',
+            label: 'Пошук термінів',
             progress: discoveryProgress,
             sublabel: _discoveryStageLabel(state),
           ),
           _StageRow(
-            label: 'AI-фильтр мусора',
+            label: 'AI-фільтр сміття',
             progress: filterProgress.value,
             sublabel: filterProgress.label,
           ),
           _StageRow(
-            label: 'Парный майнинг',
+            label: 'Парний майнинг',
             progress: miningProgress.value,
             sublabel: miningProgress.label,
           ),
@@ -83,7 +83,7 @@ class TermExtractionCard extends ConsumerWidget {
                     ? null
                     : () => _start(ref),
                 icon: const Icon(Icons.play_arrow_rounded, size: 18),
-                label: const Text('Запустить'),
+                label: const Text('Запустити'),
               ),
               const SizedBox(width: 8),
               OutlinedButton.icon(
@@ -91,11 +91,11 @@ class TermExtractionCard extends ConsumerWidget {
                     ? () => ref.read(termExtractionProvider(bookId).notifier).cancel()
                     : null,
                 icon: const Icon(Icons.stop_rounded, size: 18),
-                label: const Text('Отмена'),
+                label: const Text('Скасувати'),
               ),
               const Spacer(),
               IconButton(
-                tooltip: 'Сбросить и начать заново',
+                tooltip: 'Скинути та почати спочатку',
                 onPressed: isRunning
                     ? null
                     : () => ref
@@ -134,19 +134,19 @@ class TermExtractionCard extends ConsumerWidget {
     if (state is TermExtractionDiscoveryRunning) {
       switch (state.stage) {
         case 'load-chapters':
-          return 'Чтение глав…';
+          return 'Читання розділів…';
         case 'detect-language':
-          return 'Определение языка…';
+          return 'Визначення мови…';
         case 'discover':
-          return 'Анализ корпуса…';
+          return 'Аналіз корпусу…';
         case 'persist':
-          return 'Сохранение кандидатов…';
+          return 'Збереження кандидатів…';
         default:
           return state.stage;
       }
     }
     if (state is TermExtractionDone) {
-      return 'Найдено: ${state.candidatesDiscovered}';
+      return 'Знайдено: ${state.candidatesDiscovered}';
     }
     return null;
   }
@@ -161,7 +161,7 @@ class TermExtractionCard extends ConsumerWidget {
       return _ProgressInfo(
         1.0,
         state is TermExtractionDone
-            ? 'Принято: ${state.candidatesAccepted}'
+            ? 'Прийнято: ${state.candidatesAccepted}'
             : null,
       );
     }
@@ -172,28 +172,31 @@ class TermExtractionCard extends ConsumerWidget {
     if (state is TermExtractionMiningRunning) {
       final p = state.total == 0 ? null : state.done / state.total;
       final stageLabel = switch (state.stage) {
-        'mine' => 'Главы: ${state.done} / ${state.total}',
-        'aggregate' => 'Сбор победителей голосования…',
-        'select-chapters' => 'Выбор глав…',
+        'mine' => 'Розділи: ${state.done} / ${state.total}',
+        'aggregate' => 'Збір переможців голосування…',
+        'select-chapters' => 'Вибір розділів…',
         _ => state.stage,
       };
       return _ProgressInfo(p, stageLabel);
     }
     if (state is TermExtractionDone) {
-      return _ProgressInfo(1.0, 'В глоссарии: ${state.glossaryWinners}');
+      return _ProgressInfo(1.0, 'У глосарії: ${state.glossaryWinners}');
     }
     return _ProgressInfo(0.0, null);
   }
 
   String? _summary(TermExtractionState state) {
     if (state is TermExtractionDone) {
-      return 'Источник: ${state.sourceLanguage} • '
-          'Кандидатов ${state.candidatesDiscovered} → '
-          'принято ${state.candidatesAccepted} → '
-          'в глоссарии ${state.glossaryWinners}';
+      return 'Джерело: ${state.sourceLanguage} • '
+          'Кандидатів ${state.candidatesDiscovered} → '
+          'прийнято ${state.candidatesAccepted} → '
+          'у глосарії ${state.glossaryWinners}';
     }
     if (state is TermExtractionFailed) {
-      return 'Ошибка на этапе ${state.stage}: ${state.error}';
+      return 'Помилка на етапі ${state.stage}: ${state.error}';
+    }
+    if (state is TermExtractionCancelled) {
+      return 'Скасовано користувачем';
     }
     return null;
   }

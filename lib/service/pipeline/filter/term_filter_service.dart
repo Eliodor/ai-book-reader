@@ -1,11 +1,10 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:ai_book_reader/dao/term_candidate_dao.dart';
 import 'package:ai_book_reader/dao/term_candidate_occurrence_dao.dart';
 import 'package:ai_book_reader/models/candidate_status.dart';
 import 'package:ai_book_reader/models/term_candidate.dart';
+import 'package:ai_book_reader/models/term_candidate_occurrence.dart';
 import 'package:ai_book_reader/service/ai/ai_generate_once.dart';
+import 'package:ai_book_reader/service/ai/ai_retry.dart';
 import 'package:ai_book_reader/service/ai/json_response.dart';
 import 'package:ai_book_reader/service/ai/prompt_generate.dart';
 import 'package:ai_book_reader/utils/log/common.dart';
@@ -39,6 +38,10 @@ class FilterFailed extends FilterOutcome {
   final Object error;
 }
 
+class FilterCancelled extends FilterOutcome {
+  const FilterCancelled();
+}
+
 /// Stage B — LLM filter over discovery candidates.
 ///
 /// Reads `status='candidate'` rows, sends them to the LLM in batches of
@@ -52,11 +55,13 @@ class TermFilterService {
     int minBatchSize = 30,
   })  : _candidateDao = candidateDao ?? termCandidateDao,
         _occurrenceDao = occurrenceDao ?? termCandidateOccurrenceDao,
+        _initialBatchSize = batchSize,
         _batchSize = batchSize,
         _minBatchSize = minBatchSize;
 
   final TermCandidateDao _candidateDao;
   final TermCandidateOccurrenceDao _occurrenceDao;
+  final int _initialBatchSize;
   int _batchSize;
   final int _minBatchSize;
 
@@ -69,6 +74,8 @@ class TermFilterService {
     void Function(int done, int total)? onProgress,
   }) async {
     resetCancellation();
+    // Don't carry a previous book's truncation-driven batch reduction over.
+    _batchSize = _initialBatchSize;
     final pending = await _candidateDao.selectByStatus(
       bookId,
       CandidateStatus.candidate,
@@ -143,7 +150,7 @@ class TermFilterService {
     }
 
     if (_cancelled) {
-      return FilterFailed(error: const _CancelledException());
+      return const FilterCancelled();
     }
     return FilterCompleted(
       accepted: accepted,
@@ -207,23 +214,28 @@ class TermFilterService {
   }
 
   Future<String> _buildTermsBlock(List<TermCandidate> batch) async {
+    final ids = <int>[
+      for (final c in batch)
+        if (c.id != null) c.id!,
+    ];
+    final occurrences = ids.isEmpty
+        ? const <int, TermCandidateOccurrence>{}
+        : await _occurrenceDao.selectFirstByCandidateIds(ids);
+
     final buf = StringBuffer();
     for (var i = 0; i < batch.length; i++) {
       final c = batch[i];
-      String snippet = '';
-      if (c.id != null) {
-        final occs = await _occurrenceDao.selectByCandidateId(c.id!, limit: 1);
-        if (occs.isNotEmpty) {
-          final o = occs.first;
-          final before = o.contextBefore.isEmpty
-              ? ''
-              : '${o.contextBefore.substring(o.contextBefore.length > 40 ? o.contextBefore.length - 40 : 0)} ';
-          final after = o.contextAfter.isEmpty
-              ? ''
-              : ' ${o.contextAfter.substring(0, o.contextAfter.length > 40 ? 40 : o.contextAfter.length)}';
-          snippet =
-              ' — snippet "${before.trim()}[${c.sourceText}]${after.trim()}"';
-        }
+      var snippet = '';
+      final occ = c.id == null ? null : occurrences[c.id];
+      if (occ != null) {
+        final before = occ.contextBefore.isEmpty
+            ? ''
+            : '${occ.contextBefore.substring(occ.contextBefore.length > 40 ? occ.contextBefore.length - 40 : 0)} ';
+        final after = occ.contextAfter.isEmpty
+            ? ''
+            : ' ${occ.contextAfter.substring(0, occ.contextAfter.length > 40 ? 40 : occ.contextAfter.length)}';
+        snippet =
+            ' — snippet "${before.trim()}[${c.sourceText}]${after.trim()}"';
       }
       buf.writeln(
         '${i + 1}. "${c.sourceText}" freq=${c.frequencyTotal} '
@@ -233,38 +245,15 @@ class TermFilterService {
     return buf.toString().trimRight();
   }
 
-  Future<String> _callLlm(String termsBlock) async {
-    // Retry with backoff for transient errors.
-    Object? lastError;
-    for (var attempt = 0; attempt < 3; attempt++) {
-      if (_cancelled) return '';
-      try {
-        final payload = generatePromptCandidateFilter(termsBlock);
-        final messages = payload.buildMessages();
-        return await aiGenerateOnce(
-          messages,
-          identifier: payload.identifier.name,
-        );
-      } on TimeoutException catch (e) {
-        lastError = e;
-      } on SocketException catch (e) {
-        lastError = e;
-      } catch (e) {
-        final s = e.toString().toLowerCase();
-        if (s.contains('429') ||
-            s.contains('rate limit') ||
-            s.contains('timeout') ||
-            s.contains('network')) {
-          lastError = e;
-        } else {
-          rethrow;
-        }
-      }
-      final wait = Duration(milliseconds: 200 * (1 << attempt));
-      await Future.delayed(wait);
-    }
-    if (lastError != null) throw lastError;
-    return '';
+  Future<String> _callLlm(String termsBlock) {
+    final payload = generatePromptCandidateFilter(termsBlock);
+    final messages = payload.buildMessages();
+    final identifier = payload.identifier.name;
+    return retryOnTransient<String>(
+      () => aiGenerateOnce(messages, identifier: identifier),
+      isCancelled: () => _cancelled,
+      onCancelled: () => '',
+    );
   }
 
   void _assignStatuses({
@@ -312,12 +301,6 @@ class _BatchResult {
   _BatchResult({required this.removeIndexes, required this.softFallback});
   final List<int> removeIndexes;
   final bool softFallback;
-}
-
-class _CancelledException implements Exception {
-  const _CancelledException();
-  @override
-  String toString() => 'Term filter cancelled';
 }
 
 final termFilterService = TermFilterService();

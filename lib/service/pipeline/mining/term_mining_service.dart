@@ -1,8 +1,6 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:ai_book_reader/dao/glossary_term_dao.dart';
 import 'package:ai_book_reader/dao/glossary_term_variant_dao.dart';
+import 'package:ai_book_reader/dao/mining_progress_dao.dart';
 import 'package:ai_book_reader/dao/source_chapter_dao.dart';
 import 'package:ai_book_reader/dao/target_chapter_dao.dart';
 import 'package:ai_book_reader/dao/term_candidate_dao.dart';
@@ -13,8 +11,10 @@ import 'package:ai_book_reader/models/source_chapter.dart';
 import 'package:ai_book_reader/models/target_chapter.dart';
 import 'package:ai_book_reader/models/term_candidate.dart';
 import 'package:ai_book_reader/service/ai/ai_generate_once.dart';
+import 'package:ai_book_reader/service/ai/ai_retry.dart';
 import 'package:ai_book_reader/service/ai/index.dart';
 import 'package:ai_book_reader/service/ai/json_response.dart';
+import 'package:ai_book_reader/service/ai/locale_names.dart';
 import 'package:ai_book_reader/service/ai/prompt_generate.dart';
 import 'package:ai_book_reader/service/pipeline/mining/mining_chapter_selector.dart';
 import 'package:ai_book_reader/service/pipeline/mining/mining_postfilter.dart';
@@ -49,6 +49,10 @@ class MiningFailed extends MiningOutcome {
   final String stage;
 }
 
+class MiningCancelled extends MiningOutcome {
+  const MiningCancelled();
+}
+
 /// Soft chapter-size limit (chars) before we split the chapter into halves.
 const int _splitThresholdChars = 240000;
 
@@ -70,12 +74,14 @@ class TermMiningService {
     TargetChapterDao? targetDao,
     GlossaryTermVariantDao? variantDao,
     GlossaryTermDao? glossaryDao,
+    MiningProgressDao? progressDao,
   })  : _candidateDao = candidateDao ?? termCandidateDao,
         _occurrenceDao = occurrenceDao ?? termCandidateOccurrenceDao,
         _sourceDao = sourceDao ?? sourceChapterDao,
         _targetDao = targetDao ?? targetChapterDao,
         _variantDao = variantDao ?? glossaryTermVariantDao,
-        _glossaryDao = glossaryDao ?? glossaryTermDao;
+        _glossaryDao = glossaryDao ?? glossaryTermDao,
+        _progressDao = progressDao ?? miningProgressDao;
 
   final TermCandidateDao _candidateDao;
   final TermCandidateOccurrenceDao _occurrenceDao;
@@ -83,6 +89,7 @@ class TermMiningService {
   final TargetChapterDao _targetDao;
   final GlossaryTermVariantDao _variantDao;
   final GlossaryTermDao _glossaryDao;
+  final MiningProgressDao _progressDao;
 
   bool _cancelled = false;
   void cancel() {
@@ -92,12 +99,21 @@ class TermMiningService {
 
   void resetCancellation() => _cancelled = false;
 
+  /// Mines glossary pairs for the book.
+  ///
+  /// `concurrency` defaults to 1 (sequential per-chapter). The plumbing for
+  /// parallel workers is in place, but the underlying `CancelableLangchainRunner`
+  /// (`lib/service/ai/langchain_runner.dart`) stores a single `_subscription`
+  /// at module scope, so two concurrent streams trample each other's cancel
+  /// handles. Once the runner supports multiple in-flight requests, raise this
+  /// default to 3-4 for a ~3-5× wall-clock win on multi-chapter mining.
   Future<MiningOutcome> mineIfNeeded({
     required int bookId,
     required String fromLocale,
     required String toLocale,
     double targetCoverage = 80.0,
     int maxChapters = 0,
+    int concurrency = 1,
     void Function(int done, int total)? onProgress,
     void Function(String stage)? onStageChange,
   }) async {
@@ -170,49 +186,86 @@ class TermMiningService {
     );
 
     onStageChange?.call('mine');
-    onProgress?.call(0, selection.orderedChapterIds.length);
+    final chapterIds = selection.orderedChapterIds;
+    final total = chapterIds.length;
+    final alreadyMined = await _progressDao.selectMinedChapterIds(bookId);
+    onProgress?.call(0, total);
 
     var variantsInserted = 0;
-    var chaptersProcessed = 0;
-    for (final chapterId in selection.orderedChapterIds) {
-      if (_cancelled) break;
-      final source = sourceById[chapterId];
-      final target = targetBySource[chapterId];
-      if (source == null || target == null) continue;
+    var chaptersProcessed = alreadyMined
+        .where((id) => chapterIds.contains(id))
+        .length;
+    if (chaptersProcessed > 0) {
+      AnxLog.info(
+        'Term mining: resuming, skipping $chaptersProcessed/$total already-mined chapter(s)',
+      );
+      onProgress?.call(chaptersProcessed, total);
+    }
+    var cursor = 0;
+    Object? failureError;
+    int? failureChapterId;
 
-      final candidatesHere = chapterCoverage[chapterId] ?? const <int>{};
-      if (candidatesHere.isEmpty) continue;
-      final terms = candidatesHere
-          .map((id) => byId[id])
-          .whereType<TermCandidate>()
-          .where((c) => c.status != CandidateStatus.promoted)
-          .toList();
-      if (terms.isEmpty) {
+    Future<void> worker() async {
+      while (true) {
+        if (_cancelled || failureError != null) return;
+        final myIdx = cursor++;
+        if (myIdx >= total) return;
+        final chapterId = chapterIds[myIdx];
+        if (alreadyMined.contains(chapterId)) continue;
+        final source = sourceById[chapterId];
+        final target = targetBySource[chapterId];
+        if (source == null || target == null) {
+          continue;
+        }
+        final candidatesHere = chapterCoverage[chapterId] ?? const <int>{};
+        if (candidatesHere.isEmpty) continue;
+        final terms = candidatesHere
+            .map((id) => byId[id])
+            .whereType<TermCandidate>()
+            .where((c) => c.status != CandidateStatus.promoted)
+            .toList();
+        if (terms.isEmpty) {
+          await _progressDao.markMined(bookId, chapterId);
+          chaptersProcessed++;
+          onProgress?.call(chaptersProcessed, total);
+          continue;
+        }
+        try {
+          final inserted = await _mineChapter(
+            bookId: bookId,
+            source: source,
+            target: target,
+            terms: terms,
+            fromLocale: fromLocale,
+            toLocale: toLocale,
+          );
+          variantsInserted += inserted;
+          await _progressDao.markMined(bookId, chapterId);
+        } catch (e, st) {
+          AnxLog.severe('Mining chapter $chapterId failed: $e\n$st');
+          failureError = e;
+          failureChapterId = chapterId;
+          return;
+        }
         chaptersProcessed++;
-        onProgress?.call(chaptersProcessed, selection.orderedChapterIds.length);
-        continue;
+        onProgress?.call(chaptersProcessed, total);
       }
-
-      try {
-        final inserted = await _mineChapter(
-          bookId: bookId,
-          source: source,
-          target: target,
-          terms: terms,
-          fromLocale: fromLocale,
-          toLocale: toLocale,
-        );
-        variantsInserted += inserted;
-      } catch (e, st) {
-        AnxLog.severe('Mining chapter $chapterId failed: $e\n$st');
-        return MiningFailed(error: e, stage: 'mine-chapter');
-      }
-      chaptersProcessed++;
-      onProgress?.call(chaptersProcessed, selection.orderedChapterIds.length);
     }
 
+    final workers = List.generate(
+      concurrency < 1 ? 1 : concurrency,
+      (_) => worker(),
+    );
+    await Future.wait(workers);
+
+    if (failureError != null) {
+      return MiningFailed(
+        error: failureError!,
+        stage: 'mine-chapter:${failureChapterId ?? -1}',
+      );
+    }
     if (_cancelled) {
-      return const MiningFailed(error: 'cancelled', stage: 'mine');
+      return const MiningCancelled();
     }
 
     onStageChange?.call('aggregate');
@@ -257,7 +310,7 @@ class TermMiningService {
         await _runMiningChunked(source.content, target.content, fromLocale,
             toLocale, termsList);
 
-    var inserted = 0;
+    final upserts = <VariantUpsert>[];
     for (final entry in pairs.entries) {
       final src = entry.key;
       final tgt = entry.value;
@@ -266,16 +319,18 @@ class TermMiningService {
       final normalized = normalizeTargetKey(tgt!);
       if (normalized.isEmpty) continue;
       final candidate = termsByText[src];
-      await _variantDao.upsertVariant(
+      upserts.add(VariantUpsert(
         bookId: bookId,
         termSource: src,
         termTargetNormalized: normalized,
         termTargetDisplay: tgt.trim(),
         firstChapterId: candidate?.firstChapterId ?? source.id,
-      );
-      inserted++;
+      ));
     }
-    return inserted;
+    if (upserts.isNotEmpty) {
+      await _variantDao.bulkUpsertVariants(upserts);
+    }
+    return upserts.length;
   }
 
   Future<Map<String, String?>> _runMiningChunked(
@@ -322,11 +377,13 @@ class TermMiningService {
     String toLocale,
     String termsList,
   ) async {
+    // Translate raw ISO codes ("uk" / "de") into English language names
+    // ("Ukrainian" / "German") for the prompt: weaker LLMs misread bare codes.
     final payload = generatePromptCandidateMining(
       sourceText: sourceContent,
       targetText: targetContent,
-      fromLocale: fromLocale,
-      toLocale: toLocale,
+      fromLocale: localeToEnglishName(fromLocale),
+      toLocale: localeToEnglishName(toLocale),
       termsList: termsList,
     );
     final raw = await _callWithRetry(payload.buildMessages());
@@ -334,34 +391,12 @@ class TermMiningService {
     return parsed ?? const <String, String?>{};
   }
 
-  Future<String> _callWithRetry(List<ChatMessage> messages) async {
-    Object? lastError;
-    for (var attempt = 0; attempt < 3; attempt++) {
-      if (_cancelled) return '';
-      try {
-        return await aiGenerateOnce(
-          messages,
-          identifier: 'candidateMining',
-        );
-      } on TimeoutException catch (e) {
-        lastError = e;
-      } on SocketException catch (e) {
-        lastError = e;
-      } catch (e) {
-        final s = e.toString().toLowerCase();
-        if (s.contains('429') ||
-            s.contains('rate limit') ||
-            s.contains('timeout') ||
-            s.contains('network')) {
-          lastError = e;
-        } else {
-          rethrow;
-        }
-      }
-      await Future.delayed(Duration(milliseconds: 200 * (1 << attempt)));
-    }
-    if (lastError != null) throw lastError;
-    return '';
+  Future<String> _callWithRetry(List<ChatMessage> messages) {
+    return retryOnTransient<String>(
+      () => aiGenerateOnce(messages, identifier: 'candidateMining'),
+      isCancelled: () => _cancelled,
+      onCancelled: () => '',
+    );
   }
 
   int _splitAtParagraph(String s, int target) {

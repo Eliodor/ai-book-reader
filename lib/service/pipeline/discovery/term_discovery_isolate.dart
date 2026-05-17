@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:isolate';
+
 import 'package:ai_book_reader/service/pipeline/discovery/candidate_generator.dart';
 import 'package:ai_book_reader/service/pipeline/discovery/cvalue_scorer.dart';
 import 'package:ai_book_reader/service/pipeline/discovery/dispersion_scorer.dart';
@@ -7,9 +10,9 @@ import 'package:ai_book_reader/service/pipeline/discovery/substring_penalizer.da
 import 'package:ai_book_reader/service/pipeline/discovery/term_discovery_constants.dart';
 import 'package:ai_book_reader/service/pipeline/discovery/tokenizer.dart';
 
-/// Input shipped to the discovery [compute] isolate. Everything inside must be
-/// either primitive, a List/Map/Set of primitives, or a SendPort — anything
-/// that closes over a DB handle / asset bundle is forbidden.
+/// Input shipped to the discovery isolate. Everything inside must be either
+/// primitive, a List/Map/Set of primitives, or a SendPort — anything that
+/// closes over a DB handle / asset bundle is forbidden.
 class DiscoveryInput {
   DiscoveryInput({
     required this.chapters,
@@ -78,37 +81,132 @@ class DiscoveryStats {
   DiscoveryStats({
     required this.tokenizeMs,
     required this.candidateGenMs,
+    required this.prefilterMs,
     required this.cValueMs,
-    required this.dispersionMs,
     required this.clusterMs,
+    required this.dispersionMs,
     required this.substringMs,
     required this.totalMs,
     required this.rawCandidateCount,
+    required this.prefilteredCount,
     required this.finalCandidateCount,
   });
 
   final int tokenizeMs;
   final int candidateGenMs;
+  final int prefilterMs;
   final int cValueMs;
-  final int dispersionMs;
   final int clusterMs;
+  final int dispersionMs;
   final int substringMs;
   final int totalMs;
   final int rawCandidateCount;
+  final int prefilteredCount;
   final int finalCandidateCount;
 }
 
-/// Top-level entry point for `compute(runDiscoveryAll, input)`.
-DiscoveryOutput runDiscoveryAll(DiscoveryInput input) {
+/// Cap applied after the low-frequency prefilter. Above this the C-value
+/// pairwise substring scan still degrades to seconds even after pruning, so we
+/// keep the top-N by raw frequency as a safety net.
+const int _maxCandidatesAfterPrefilter = 20000;
+
+/// Arguments passed to [discoveryIsolateEntry] via `Isolate.spawn`.
+class DiscoverySpawnArgs {
+  DiscoverySpawnArgs({
+    required this.mainSendPort,
+    required this.input,
+  });
+
+  final SendPort mainSendPort;
+  final DiscoveryInput input;
+}
+
+/// Marker sent by the worker on its main port immediately after it has set up
+/// its own [ReceivePort]. Lets the orchestrator know which port to use for
+/// cancellation signals.
+class DiscoveryIsolateReady {
+  DiscoveryIsolateReady(this.cancelPort);
+  final SendPort cancelPort;
+}
+
+class DiscoveryIsolateResult {
+  DiscoveryIsolateResult(this.output);
+  final DiscoveryOutput output;
+}
+
+class DiscoveryIsolateError {
+  DiscoveryIsolateError(this.error, this.stackTrace);
+  final Object error;
+  final StackTrace stackTrace;
+}
+
+/// Sentinel value the orchestrator sends to the worker's cancel port.
+const String discoveryCancelSignal = 'discovery_cancel';
+
+/// Sentinel emitted by the worker after honouring a cancellation.
+const String discoveryCancelledResult = 'discovery_cancelled';
+
+/// Internal exception thrown from inside the pipeline once a cancellation is
+/// observed at a yield point.
+class _DiscoveryCancelledException implements Exception {
+  const _DiscoveryCancelledException();
+}
+
+/// Isolate entry — spawned via `Isolate.spawn(discoveryIsolateEntry, args)`.
+///
+/// Listens on its own [ReceivePort] for a cancel sentinel and runs the async
+/// pipeline. Yields back to the event loop frequently enough that the cancel
+/// message is observed within a few hundred milliseconds.
+Future<void> discoveryIsolateEntry(DiscoverySpawnArgs args) async {
+  final main = args.mainSendPort;
+  final cancelPort = ReceivePort();
+  var cancelled = false;
+  final sub = cancelPort.listen((msg) {
+    if (msg == discoveryCancelSignal) cancelled = true;
+  });
+
+  main.send(DiscoveryIsolateReady(cancelPort.sendPort));
+
+  try {
+    final output = await _runDiscoveryAsync(args.input, () => cancelled);
+    if (cancelled) {
+      main.send(discoveryCancelledResult);
+    } else {
+      main.send(DiscoveryIsolateResult(output));
+    }
+  } on _DiscoveryCancelledException {
+    main.send(discoveryCancelledResult);
+  } catch (e, st) {
+    main.send(DiscoveryIsolateError(e, st));
+  } finally {
+    await sub.cancel();
+    cancelPort.close();
+  }
+}
+
+/// The heart of Stage A. Same six etaps as before, but reordered (cluster
+/// before dispersion — see term_extraction_fixes.md Fix 6) and gated by a
+/// cancellation token that the caller checks via [isCancelled].
+Future<DiscoveryOutput> _runDiscoveryAsync(
+  DiscoveryInput input,
+  bool Function() isCancelled,
+) async {
   final swTotal = Stopwatch()..start();
 
+  Future<void> yieldCheck() async {
+    await Future<void>.delayed(Duration.zero);
+    if (isCancelled()) throw const _DiscoveryCancelledException();
+  }
+
   // Etap 0 — tokenize all chapters.
+  await yieldCheck();
   final swTokenize = Stopwatch()..start();
   final tokenized = <TokenizedChapter>[];
   var totalTokens = 0;
   var totalSentences = 0;
   final chapterTokenCounts = <int, int>{};
   for (final ch in input.chapters) {
+    if (isCancelled()) throw const _DiscoveryCancelledException();
     final t = tokenize(
       chapterId: ch.id,
       orderIndex: ch.orderIndex,
@@ -122,6 +220,7 @@ DiscoveryOutput runDiscoveryAll(DiscoveryInput input) {
   swTokenize.stop();
 
   // Etap 1 — candidate generation.
+  await yieldCheck();
   final swGen = Stopwatch()..start();
   final generator = CandidateGenerator(
     sourceLanguage: input.sourceLanguage,
@@ -131,31 +230,49 @@ DiscoveryOutput runDiscoveryAll(DiscoveryInput input) {
   swGen.stop();
   final rawCount = candidates.length;
 
+  // Etap 1.5 — pre-filter low-frequency candidates so the O(K^2) C-value scan
+  // doesn't explode on books that yield 50k+ raw candidates. See Fix 3 in
+  // term_extraction_fixes.md.
+  await yieldCheck();
+  final swPrefilter = Stopwatch()..start();
+  _prefilterCandidates(candidates);
+  swPrefilter.stop();
+  final prefilteredCount = candidates.length;
+
   // Etap 2 — C-value + truncated YAKE.
+  await yieldCheck();
   final swC = Stopwatch()..start();
-  CValueScorer(totalSentences: totalSentences).score(candidates);
+  await CValueScorer(totalSentences: totalSentences)
+      .score(candidates, isCancelled: isCancelled);
   swC.stop();
 
-  // Etap 3 — Gries DP boost.
-  final swDp = Stopwatch()..start();
-  final chapterCounts = buildChapterCounts(candidates);
-  DispersionScorer(
-    chapterTokenCounts: chapterTokenCounts,
-    totalTokens: totalTokens,
-  ).score(candidates, chapterCounts);
-  swDp.stop();
-
-  // Etap 4 — morphological clustering (single-pass).
+  // Etap 3 — morphological clustering (single-pass). Seeds with C-value ×
+  // YAKE features only; DP boost runs *after* clustering so it operates on
+  // cluster representatives rather than getting diluted across surface forms.
+  await yieldCheck();
   final swCluster = Stopwatch()..start();
   MorphologyClusterer(sourceLanguage: input.sourceLanguage).cluster(candidates);
   swCluster.stop();
 
+  // Etap 4 — Gries DP boost on cluster representatives. Reads per-chapter
+  // frequencies from each candidate's own chapterFrequencies map (populated
+  // exactly during generation, merged across morphological variants).
+  await yieldCheck();
+  final swDp = Stopwatch()..start();
+  DispersionScorer(
+    chapterTokenCounts: chapterTokenCounts,
+    totalTokens: totalTokens,
+  ).score(candidates);
+  swDp.stop();
+
   // Etap 5 — substring containment soft penalty.
+  await yieldCheck();
   final swSub = Stopwatch()..start();
   applySubstringPenalty(candidates);
   swSub.stop();
 
   // Etap 6 — sort & cap at topN, build serialisable payloads.
+  await yieldCheck();
   final ordered = candidates.values.toList()
     ..sort((a, b) => b.score.compareTo(a.score));
   final limit =
@@ -193,15 +310,42 @@ DiscoveryOutput runDiscoveryAll(DiscoveryInput input) {
     stats: DiscoveryStats(
       tokenizeMs: swTokenize.elapsedMilliseconds,
       candidateGenMs: swGen.elapsedMilliseconds,
+      prefilterMs: swPrefilter.elapsedMilliseconds,
       cValueMs: swC.elapsedMilliseconds,
-      dispersionMs: swDp.elapsedMilliseconds,
       clusterMs: swCluster.elapsedMilliseconds,
+      dispersionMs: swDp.elapsedMilliseconds,
       substringMs: swSub.elapsedMilliseconds,
       totalMs: swTotal.elapsedMilliseconds,
       rawCandidateCount: rawCount,
+      prefilteredCount: prefilteredCount,
       finalCandidateCount: outCandidates.length,
     ),
   );
+}
+
+/// Drops single-word hapax legomena (`wordCount==1 && frequencyTotal<2`) and,
+/// if the pool is still huge, keeps only the top [_maxCandidatesAfterPrefilter]
+/// by raw frequency. Multi-word candidates are preserved unconditionally —
+/// rare unique multi-word strings are usually meaningful proper names.
+void _prefilterCandidates(Map<String, RawCandidate> candidates) {
+  if (candidates.isEmpty) return;
+  final keys = candidates.keys.toList(growable: false);
+  for (final key in keys) {
+    final c = candidates[key];
+    if (c == null) continue;
+    if (c.wordCount <= 1 && c.frequencyTotal < 2) {
+      candidates.remove(key);
+    }
+  }
+  if (candidates.length > _maxCandidatesAfterPrefilter) {
+    final sorted = candidates.values.toList()
+      ..sort((a, b) => b.frequencyTotal.compareTo(a.frequencyTotal));
+    candidates.clear();
+    for (var i = 0; i < _maxCandidatesAfterPrefilter; i++) {
+      final c = sorted[i];
+      candidates[c.normalizedSource] = c;
+    }
+  }
 }
 
 String _trimSnippet(String s) {

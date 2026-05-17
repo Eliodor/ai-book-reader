@@ -20,15 +20,7 @@ class GlossaryTermVariantDao extends BaseDao {
     final now = DateTime.now().toIso8601String();
     final db = await database;
     await db.rawInsert(
-      '''
-      INSERT INTO $table
-        (book_id, term_source, term_target_normalized, term_target_display,
-         count, first_chapter_id, create_time, update_time)
-      VALUES (?, ?, ?, ?, 1, ?, ?, ?)
-      ON CONFLICT (book_id, term_source, term_target_normalized) DO UPDATE SET
-        count = count + 1,
-        update_time = excluded.update_time
-      ''',
+      _upsertSql,
       [
         bookId,
         termSource,
@@ -40,6 +32,39 @@ class GlossaryTermVariantDao extends BaseDao {
       ],
     );
   }
+
+  /// Bulk variant of [upsertVariant] — applies every entry in a single
+  /// transaction, so a chapter's worth of pairs hits sqflite once instead of
+  /// once per pair.
+  Future<void> bulkUpsertVariants(List<VariantUpsert> rows) async {
+    if (rows.isEmpty) return;
+    final now = DateTime.now().toIso8601String();
+    await transaction((txn) async {
+      final batch = txn.batch();
+      for (final r in rows) {
+        batch.rawInsert(_upsertSql, [
+          r.bookId,
+          r.termSource,
+          r.termTargetNormalized,
+          r.termTargetDisplay,
+          r.firstChapterId,
+          now,
+          now,
+        ]);
+      }
+      await batch.commit(noResult: true);
+    });
+  }
+
+  static const String _upsertSql = '''
+    INSERT INTO $table
+      (book_id, term_source, term_target_normalized, term_target_display,
+       count, first_chapter_id, create_time, update_time)
+    VALUES (?, ?, ?, ?, 1, ?, ?, ?)
+    ON CONFLICT (book_id, term_source, term_target_normalized) DO UPDATE SET
+      count = count + 1,
+      update_time = excluded.update_time
+    ''';
 
   Future<List<GlossaryTermVariant>> selectVariantsForSource(
     int bookId,
@@ -98,3 +123,18 @@ class GlossaryTermVariantDao extends BaseDao {
 }
 
 final glossaryTermVariantDao = GlossaryTermVariantDao();
+
+class VariantUpsert {
+  const VariantUpsert({
+    required this.bookId,
+    required this.termSource,
+    required this.termTargetNormalized,
+    required this.termTargetDisplay,
+    this.firstChapterId,
+  });
+  final int bookId;
+  final String termSource;
+  final String termTargetNormalized;
+  final String termTargetDisplay;
+  final int? firstChapterId;
+}

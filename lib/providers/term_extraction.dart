@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:ai_book_reader/config/shared_preference_provider.dart';
 import 'package:ai_book_reader/dao/glossary_term_variant_dao.dart';
+import 'package:ai_book_reader/dao/mining_progress_dao.dart';
 import 'package:ai_book_reader/service/pipeline/discovery/term_discovery_service.dart';
 import 'package:ai_book_reader/service/pipeline/filter/term_filter_service.dart';
 import 'package:ai_book_reader/service/pipeline/mining/term_mining_service.dart';
@@ -66,6 +67,10 @@ class TermExtractionFailed extends TermExtractionState {
   final Object error;
 }
 
+class TermExtractionCancelled extends TermExtractionState {
+  const TermExtractionCancelled();
+}
+
 @Riverpod(keepAlive: true)
 class TermExtraction extends _$TermExtraction {
   @override
@@ -83,12 +88,12 @@ class TermExtraction extends _$TermExtraction {
 
     try {
       state = const TermExtractionDiscoveryRunning(stage: 'load-chapters');
-      _updateForegroundNotification('Поиск терминов: чтение глав…');
+      _updateForegroundNotification('Пошук термінів: читання розділів…');
       final discovery = await termDiscoveryService.discoverIfNeeded(
         bookId: bookId,
         onStageChange: (s) {
           state = TermExtractionDiscoveryRunning(stage: s);
-          _updateForegroundNotification('Поиск терминов: $s');
+          _updateForegroundNotification('Пошук термінів: $s');
         },
       );
 
@@ -100,18 +105,21 @@ class TermExtraction extends _$TermExtraction {
           detectedLang = sourceLanguage;
         case DiscoverySkipped(:final reason):
           AnxLog.info('Term discovery skipped: $reason');
+        case DiscoveryCancelled():
+          state = const TermExtractionCancelled();
+          return;
         case DiscoveryFailed(:final stage, :final error):
           state = TermExtractionFailed(stage: 'discovery/$stage', error: error);
           return;
       }
 
       state = const TermExtractionFilterRunning(done: 0, total: 0);
-      _updateForegroundNotification('AI-фильтр: подготовка…');
+      _updateForegroundNotification('AI-фільтр: підготовка…');
       final filter = await termFilterService.filterIfNeeded(
         bookId: bookId,
         onProgress: (done, total) {
           state = TermExtractionFilterRunning(done: done, total: total);
-          _updateForegroundNotification('AI-фильтр: $done / $total');
+          _updateForegroundNotification('AI-фільтр: $done / $total');
         },
       );
       var acceptedTotal = 0;
@@ -122,6 +130,9 @@ class TermExtraction extends _$TermExtraction {
           acceptedTotal = accepted + uncertain;
         case FilterSkipped(:final reason):
           AnxLog.info('Term filter skipped: $reason');
+        case FilterCancelled():
+          state = const TermExtractionCancelled();
+          return;
         case FilterFailed(:final error):
           state = TermExtractionFailed(stage: 'filter', error: error);
           return;
@@ -132,7 +143,7 @@ class TermExtraction extends _$TermExtraction {
         total: 0,
         stage: 'mine',
       );
-      _updateForegroundNotification('Майнинг: подготовка…');
+      _updateForegroundNotification('Майнинг: підготовка…');
       final mining = await termMiningService.mineIfNeeded(
         bookId: bookId,
         fromLocale: detectedLang,
@@ -143,7 +154,7 @@ class TermExtraction extends _$TermExtraction {
             total: total,
             stage: 'mine',
           );
-          _updateForegroundNotification('Майнинг: глав $done / $total');
+          _updateForegroundNotification('Майнинг: розділів $done / $total');
         },
         onStageChange: (s) {
           final cur = state;
@@ -164,6 +175,9 @@ class TermExtraction extends _$TermExtraction {
           winners = glossaryWinners;
         case MiningSkipped(:final reason):
           AnxLog.info('Term mining skipped: $reason');
+        case MiningCancelled():
+          state = const TermExtractionCancelled();
+          return;
         case MiningFailed(:final stage, :final error):
           state = TermExtractionFailed(stage: 'mining/$stage', error: error);
           return;
@@ -185,6 +199,7 @@ class TermExtraction extends _$TermExtraction {
   }
 
   void cancel() {
+    termDiscoveryService.cancel();
     termFilterService.cancel();
     termMiningService.cancel();
   }
@@ -193,6 +208,7 @@ class TermExtraction extends _$TermExtraction {
     cancel();
     await termDiscoveryService.resetForBook(bookId);
     await glossaryTermVariantDao.deleteByBookId(bookId);
+    await miningProgressDao.deleteByBookId(bookId);
     state = const TermExtractionIdle();
   }
 
@@ -230,8 +246,8 @@ class TermExtraction extends _$TermExtraction {
       } else {
         await FlutterForegroundTask.startService(
           serviceId: 0x7E70, // arbitrary, must be stable per service kind.
-          notificationTitle: 'Извлечение глоссария',
-          notificationText: 'Подготовка…',
+          notificationTitle: 'Витяг глосарію',
+          notificationText: 'Підготовка…',
           callback: termExtractionTaskCallback,
         );
       }
@@ -244,7 +260,7 @@ class TermExtraction extends _$TermExtraction {
     if (!Platform.isAndroid) return;
     try {
       FlutterForegroundTask.updateService(
-        notificationTitle: 'Извлечение глоссария',
+        notificationTitle: 'Витяг глосарію',
         notificationText: text,
       );
     } catch (_) {

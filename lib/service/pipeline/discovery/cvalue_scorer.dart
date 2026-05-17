@@ -14,44 +14,66 @@ class CValueScorer {
   /// Total sentence count across the corpus — used by T_DifSentence.
   final int totalSentences;
 
-  /// Score every candidate in [candidates] in place. Returns the same map.
-  Map<String, RawCandidate> score(Map<String, RawCandidate> candidates) {
-    final byNormalized = <String, RawCandidate>{};
-    candidates.forEach((k, v) => byNormalized[k] = v);
+  /// Outer-loop iteration count between cancellation checks. A typical book
+  /// pushes ~thousands of candidates through this scorer, so a check every
+  /// 1000 outer rows keeps responsiveness within a few hundred ms.
+  static const int _cancelCheckInterval = 1000;
 
+  /// Score every candidate in [candidates] in place. Returns the same map.
+  ///
+  /// Async so the worker isolate can yield to its event loop periodically and
+  /// observe a cancellation signal mid-scan. Cancellation is checked every
+  /// [_cancelCheckInterval] outer iterations.
+  Future<Map<String, RawCandidate>> score(
+    Map<String, RawCandidate> candidates, {
+    bool Function()? isCancelled,
+  }) async {
     // 1. Build inverted index: for every candidate, find longer candidates
     //    that contain it as a sub-phrase. Single-word candidates can be
     //    contained in any longer one; multi-word in any strictly longer one.
+    //
+    //    The inner loop matches `' inner '` against `' outer '` to enforce
+    //    word boundaries. We pre-compute both padded forms once per candidate
+    //    so the hot loop doesn't allocate a new wrapper string per probe.
     final byWordCount = <int, List<RawCandidate>>{};
-    for (final c in byNormalized.values) {
+    final padded = <String, String>{};
+    for (final c in candidates.values) {
       byWordCount.putIfAbsent(c.wordCount, () => []).add(c);
+      padded[c.normalizedSource] = ' ${c.normalizedSource} ';
     }
     final maxLen =
         byWordCount.keys.isEmpty ? 0 : byWordCount.keys.reduce(math.max);
 
-    for (final cand in byNormalized.values) {
+    var counter = 0;
+    for (final cand in candidates.values) {
       if (cand.wordCount >= maxLen) continue;
-      final candWords = ' ${cand.normalizedSource} ';
+      final candWords = padded[cand.normalizedSource]!;
       for (var len = cand.wordCount + 1; len <= maxLen; len++) {
         final longer = byWordCount[len];
         if (longer == null) continue;
         for (final lc in longer) {
-          if ((' ${lc.normalizedSource} ').contains(candWords)) {
-            cand.superCandidateIndices.add(lc.hashCode);
-            cand.nestedFrequency += lc.frequencyTotal;
+          if (padded[lc.normalizedSource]!.contains(candWords)) {
+            if (cand.superCandidateKeys.add(lc.normalizedSource)) {
+              cand.nestedFrequency += lc.frequencyTotal;
+            }
           }
         }
+      }
+      counter++;
+      if (counter % _cancelCheckInterval == 0) {
+        await Future<void>.delayed(Duration.zero);
+        if (isCancelled?.call() ?? false) return candidates;
       }
     }
 
     // 2. Apply C-value, T_Case, T_DifSentence.
-    for (final cand in byNormalized.values) {
+    for (final cand in candidates.values) {
       final logLen = math.log(math.max(2, cand.wordCount)) / math.ln2;
       double cValue;
-      if (cand.superCandidateIndices.isEmpty) {
+      if (cand.superCandidateKeys.isEmpty) {
         cValue = logLen * cand.frequencyTotal.toDouble();
       } else {
-        final n = cand.superCandidateIndices.length;
+        final n = cand.superCandidateKeys.length;
         final avgNested = cand.nestedFrequency / n;
         cValue = logLen * (cand.frequencyTotal - avgNested);
         if (cValue < 0) cValue = 0;
@@ -72,6 +94,6 @@ class CValueScorer {
       if (cand.score < 0) cand.score = 0;
     }
 
-    return byNormalized;
+    return candidates;
   }
 }

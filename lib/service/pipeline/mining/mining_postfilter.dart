@@ -47,17 +47,22 @@ PostfilterResult postfilterPair({
 /// normalised. Stage C uses this as the `term_target_normalized` column.
 String normalizeTargetKey(String target) {
   final nfc = unorm.nfc(target.trim().toLowerCase());
-  return nfc.replaceAll(RegExp(r'\s+'), ' ');
+  return nfc.replaceAll(_whitespaceRun, ' ');
 }
 
+final RegExp _whitespaceRun = RegExp(r'\s+');
+final RegExp _pureDigitsOrPunct =
+    RegExp(r'^[\d\s\p{P}\p{S}]+$', unicode: true);
+final RegExp _combiningMarks = RegExp(r'\p{M}', unicode: true);
+
 bool _isPureDigitsOrPunctuation(String s) {
-  return RegExp(r'^[\d\s\p{P}\p{S}]+$', unicode: true).hasMatch(s);
+  return _pureDigitsOrPunct.hasMatch(s);
 }
 
 String _fold(String s) {
   final nfd = unorm.nfd(s.toLowerCase());
   // strip combining marks (NFD diacritics) so "café" == "cafe".
-  return nfd.replaceAll(RegExp(r'\p{M}', unicode: true), '');
+  return nfd.replaceAll(_combiningMarks, '');
 }
 
 bool _isMostlyAscii(String s) {
@@ -70,10 +75,8 @@ bool _isMostlyAscii(String s) {
 }
 
 double _wordOverlap(String a, String b) {
-  final wordsA =
-      a.toLowerCase().split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toSet();
-  final wordsB =
-      b.toLowerCase().split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toSet();
+  final wordsA = a.toLowerCase().split(_whitespaceRun).where((w) => w.isNotEmpty).toSet();
+  final wordsB = b.toLowerCase().split(_whitespaceRun).where((w) => w.isNotEmpty).toSet();
   if (wordsA.isEmpty || wordsB.isEmpty) return 0;
   final inter = wordsA.intersection(wordsB).length;
   return inter / (wordsA.length < wordsB.length ? wordsA.length : wordsB.length);

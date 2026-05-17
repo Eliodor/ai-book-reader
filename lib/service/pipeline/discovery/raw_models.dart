@@ -23,6 +23,11 @@ class RawCandidate {
   /// Chapters that contain at least one occurrence.
   final Set<int> chapterIds = <int>{};
 
+  /// Exact per-chapter occurrence counts. Authoritative source for Gries DP —
+  /// `occurrences` is capped at [maxOccurrencesPerCandidate], so it cannot
+  /// be used to recover chapter-level frequencies for frequent terms.
+  final Map<int, int> chapterFrequencies = <int, int>{};
+
   int? firstChapterId;
 
   /// Number of times the candidate text was written in ALL CAPS. Drives the
@@ -37,9 +42,10 @@ class RawCandidate {
   /// snippets, dispersion, substring containment). Trimmed by the final stage.
   final List<RawOccurrence> occurrences = <RawOccurrence>[];
 
-  /// Indices of longer candidates that contain this one as a sub-phrase
-  /// — populated by Stage 2 / 5.
-  final Set<int> superCandidateIndices = <int>{};
+  /// `normalizedSource` of longer candidates that contain this one as a
+  /// sub-phrase — populated by Stage 2 and read by Stage 5. Using the
+  /// normalised source guarantees a stable, collision-free identity.
+  final Set<String> superCandidateKeys = <String>{};
 
   /// Frequency of this candidate counted only as a sub-phrase of a longer
   /// candidate. Stage 5 uses ratio (nested / total) to decide soft penalty.

@@ -188,10 +188,10 @@ CRITICAL RULES:
 2. If the term appears in the target text but is left untranslated (still in the source language), translate it to {{to_locale}} yourself.
 3. If the term is absent from the chapter or you cannot determine a translation with confidence, return null for that term.
 4. Return each translation in its BASE / DICTIONARY form (lemma): nominative case, singular number, no inflectional endings.
-   - Example: «Дракона» (Russian genitive) → return «Дракон» (nominative).
+   - Example: «Дракона» (Ukrainian genitive) → return «Дракон» (nominative).
    - Example: «Drachen» (German dative/plural) → return «Drache».
    - Names stay in their canonical form ("Aragorn", not "Aragorna").
-   - This is essential for languages with rich morphology (Ukrainian, Russian, Polish, Czech, German, Finnish, etc.). Returning a case-marked form will create duplicate glossary entries.
+   - This is essential for languages with rich morphology (Ukrainian, Polish, Czech, German, Finnish, etc.). Returning a case-marked form will create duplicate glossary entries.
 5. The translation value MUST be in {{to_locale}}. NEVER return an English word as the value (unless {{to_locale}} is English).
 6. Prefer semantic translation over phonetic transliteration when both exist in the target text.
 
@@ -199,7 +199,7 @@ Reply with a JSON object: keys are the exact source-term strings I gave you (pre
 
 Example shape:
 {
-  "White Tiger Sect": "Секта Белого Тигра",
+  "White Tiger Sect": "Секта Білого Тигра",
   "Aragorn": "Арагорн",
   "obscure side character": null
 }
