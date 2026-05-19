@@ -1,0 +1,1001 @@
+{
+  "wiki": "solo-leveling",
+  "book": "book",
+  "filtered_at": "2026-05-19T18:56:25.864533Z",
+  "min_count": 3,
+  "source": "D:\\Projects\\AIBookReader\\benchmarks\\term_extraction\\data\\solo-leveling\\ground_truth_raw.json",
+  "stats": {
+    "Characters": {
+      "pages_in": 144,
+      "pages_kept": 34,
+      "canonicals_kept": 25,
+      "epithets_kept": 13
+    },
+    "Magic_Beasts": {
+      "pages_in": 102,
+      "pages_kept": 40,
+      "canonicals_kept": 31,
+      "epithets_kept": 11
+    },
+    "Shadows": {
+      "pages_in": 22,
+      "pages_kept": 10,
+      "canonicals_kept": 10,
+      "epithets_kept": 1
+    },
+    "Abilities": {
+      "pages_in": 29,
+      "pages_kept": 11,
+      "canonicals_kept": 11,
+      "epithets_kept": 0
+    },
+    "Items": {
+      "pages_in": 41,
+      "pages_kept": 10,
+      "canonicals_kept": 10,
+      "epithets_kept": 0
+    },
+    "Weapons": {
+      "pages_in": 16,
+      "pages_kept": 3,
+      "canonicals_kept": 3,
+      "epithets_kept": 0
+    },
+    "Locations": {
+      "pages_in": 49,
+      "pages_kept": 16,
+      "canonicals_kept": 16,
+      "epithets_kept": 0
+    },
+    "Organizations": {
+      "pages_in": 9,
+      "pages_kept": 2,
+      "canonicals_kept": 2,
+      "epithets_kept": 0
+    },
+    "Guilds": {
+      "pages_in": 34,
+      "pages_kept": 7,
+      "canonicals_kept": 7,
+      "epithets_kept": 0
+    },
+    "Hunters": {
+      "pages_in": 88,
+      "pages_kept": 12,
+      "canonicals_kept": 12,
+      "epithets_kept": 1
+    },
+    "Monarchs": {
+      "pages_in": 20,
+      "pages_kept": 12,
+      "canonicals_kept": 4,
+      "epithets_kept": 12
+    },
+    "Rulers": {
+      "pages_in": 13,
+      "pages_kept": 6,
+      "canonicals_kept": 6,
+      "epithets_kept": 2
+    },
+    "Dungeons": {
+      "pages_in": 20,
+      "pages_kept": 4,
+      "canonicals_kept": 4,
+      "epithets_kept": 0
+    },
+    "Gates": {
+      "pages_in": 11,
+      "pages_kept": 2,
+      "canonicals_kept": 2,
+      "epithets_kept": 0
+    }
+  },
+  "categories": {
+    "Characters": [
+      {
+        "canonical": "Thomas Andre",
+        "canonical_count": 110
+      },
+      {
+        "canonical": "Arsha",
+        "epithets": [
+          {
+            "text": "Queen of Insects",
+            "count": 23
+          }
+        ]
+      },
+      {
+        "canonical": "Laura",
+        "canonical_count": 90
+      },
+      {
+        "canonical": "Querehsha",
+        "epithets": [
+          {
+            "text": "Queen of Insects",
+            "count": 23
+          }
+        ]
+      },
+      {
+        "canonical": "A-Rank",
+        "canonical_count": 340
+      },
+      {
+        "canonical": "B-Rank",
+        "canonical_count": 142
+      },
+      {
+        "canonical": "C-Rank",
+        "canonical_count": 240
+      },
+      {
+        "canonical": "Christopher Reed",
+        "canonical_count": 20
+      },
+      {
+        "canonical": "D-Rank",
+        "canonical_count": 69
+      },
+      {
+        "canonical": "E-Rank",
+        "canonical_count": 214
+      },
+      {
+        "canonical": "Hunters",
+        "canonical_count": 3830
+      },
+      {
+        "canonical": "Jay Mills",
+        "canonical_count": 6
+      },
+      {
+        "canonical": "Jonas",
+        "canonical_count": 4
+      },
+      {
+        "canonical": "Kim",
+        "canonical_count": 312
+      },
+      {
+        "canonical": "S-Rank",
+        "canonical_count": 783
+      },
+      {
+        "canonical": "Sung Jinwoo",
+        "canonical_count": 4,
+        "epithets": [
+          {
+            "text": "King of the Dead",
+            "count": 25
+          }
+        ]
+      },
+      {
+        "canonical": "Absolute Being",
+        "epithets": [
+          {
+            "text": "God",
+            "count": 84
+          }
+        ]
+      },
+      {
+        "canonical": "Adam White",
+        "canonical_count": 15
+      },
+      {
+        "canonical": "Ammut",
+        "epithets": [
+          {
+            "text": "King of Monstrous Humanoids",
+            "count": 8
+          }
+        ]
+      },
+      {
+        "canonical": "Ant King",
+        "canonical_count": 84
+      },
+      {
+        "canonical": "Antares",
+        "epithets": [
+          {
+            "text": "Monarch of Destruction",
+            "count": 40
+          }
+        ]
+      },
+      {
+        "canonical": "Ashborn",
+        "canonical_count": 27,
+        "epithets": [
+          {
+            "text": "King of the Dead",
+            "count": 25
+          }
+        ]
+      },
+      {
+        "canonical": "Baran",
+        "epithets": [
+          {
+            "text": "King of Demons",
+            "count": 6
+          },
+          {
+            "text": "Demon Monarch",
+            "count": 90
+          }
+        ]
+      },
+      {
+        "canonical": "Cerberus",
+        "canonical_count": 64
+      },
+      {
+        "canonical": "Groctar",
+        "canonical_count": 74
+      },
+      {
+        "canonical": "Kamish",
+        "canonical_count": 86
+      },
+      {
+        "canonical": "Kandiaru",
+        "canonical_count": 3
+      },
+      {
+        "canonical": "Legia",
+        "epithets": [
+          {
+            "text": "King of Giants",
+            "count": 71
+          },
+          {
+            "text": "Monarch of the Beginning",
+            "count": 12
+          }
+        ]
+      },
+      {
+        "canonical": "Metus",
+        "canonical_count": 32
+      },
+      {
+        "canonical": "Michael Connor",
+        "canonical_count": 8
+      },
+      {
+        "canonical": "Rakan",
+        "epithets": [
+          {
+            "text": "King of Beasts",
+            "count": 41
+          }
+        ]
+      },
+      {
+        "canonical": "Tarnak",
+        "epithets": [
+          {
+            "text": "King of Monstrous Humanoids",
+            "count": 8
+          }
+        ]
+      },
+      {
+        "canonical": "Vulcan",
+        "canonical_count": 109
+      },
+      {
+        "canonical": "Titans",
+        "canonical_count": 86
+      }
+    ],
+    "Magic_Beasts": [
+      {
+        "canonical": "Absolute Being",
+        "epithets": [
+          {
+            "text": "God",
+            "count": 84
+          }
+        ]
+      },
+      {
+        "canonical": "Ammut",
+        "epithets": [
+          {
+            "text": "King of Monstrous Humanoids",
+            "count": 8
+          }
+        ]
+      },
+      {
+        "canonical": "Ant King",
+        "canonical_count": 84
+      },
+      {
+        "canonical": "Ants",
+        "canonical_count": 524
+      },
+      {
+        "canonical": "Archers",
+        "canonical_count": 11
+      },
+      {
+        "canonical": "Arsha",
+        "epithets": [
+          {
+            "text": "Queen of Insects",
+            "count": 23
+          }
+        ]
+      },
+      {
+        "canonical": "Assassins",
+        "canonical_count": 22
+      },
+      {
+        "canonical": "Beasts",
+        "canonical_count": 1192
+      },
+      {
+        "canonical": "Black-Shadow Razan",
+        "canonical_count": 6
+      },
+      {
+        "canonical": "Blue Venom-Fanged Kasaka",
+        "canonical_count": 10
+      },
+      {
+        "canonical": "Cerberus",
+        "canonical_count": 64
+      },
+      {
+        "canonical": "Demons",
+        "canonical_count": 427
+      },
+      {
+        "canonical": "Dragons",
+        "canonical_count": 191
+      },
+      {
+        "canonical": "Dungeon Jackals",
+        "canonical_count": 6
+      },
+      {
+        "canonical": "Giants",
+        "canonical_count": 436
+      },
+      {
+        "canonical": "Goblins",
+        "canonical_count": 32
+      },
+      {
+        "canonical": "Groctar",
+        "canonical_count": 74
+      },
+      {
+        "canonical": "High Orcs",
+        "canonical_count": 156
+      },
+      {
+        "canonical": "Humanoids",
+        "canonical_count": 8
+      },
+      {
+        "canonical": "Ice Bears",
+        "canonical_count": 50
+      },
+      {
+        "canonical": "Ice Elves",
+        "canonical_count": 18
+      },
+      {
+        "canonical": "Insects",
+        "canonical_count": 67
+      },
+      {
+        "canonical": "Kaisellin",
+        "canonical_count": 5
+      },
+      {
+        "canonical": "Kamish",
+        "canonical_count": 86
+      },
+      {
+        "canonical": "Kandiaru",
+        "canonical_count": 3
+      },
+      {
+        "canonical": "Knights",
+        "canonical_count": 425
+      },
+      {
+        "canonical": "Metus",
+        "canonical_count": 32
+      },
+      {
+        "canonical": "Nagas",
+        "canonical_count": 30
+      },
+      {
+        "canonical": "Orcs",
+        "canonical_count": 320
+      },
+      {
+        "canonical": "Razor-Clawed Briga",
+        "canonical_count": 3
+      },
+      {
+        "canonical": "Snow Folk",
+        "canonical_count": 5
+      },
+      {
+        "canonical": "Titans",
+        "canonical_count": 86
+      },
+      {
+        "canonical": "Vulcan",
+        "canonical_count": 109
+      },
+      {
+        "canonical": "World Tree",
+        "canonical_count": 41
+      },
+      {
+        "canonical": "Rakan",
+        "epithets": [
+          {
+            "text": "King of Beasts",
+            "count": 41
+          }
+        ]
+      },
+      {
+        "canonical": "Tarnak",
+        "epithets": [
+          {
+            "text": "King of Monstrous Humanoids",
+            "count": 8
+          }
+        ]
+      },
+      {
+        "canonical": "Baran",
+        "epithets": [
+          {
+            "text": "King of Demons",
+            "count": 6
+          },
+          {
+            "text": "Demon Monarch",
+            "count": 90
+          }
+        ]
+      },
+      {
+        "canonical": "Antares",
+        "epithets": [
+          {
+            "text": "Monarch of Destruction",
+            "count": 40
+          }
+        ]
+      },
+      {
+        "canonical": "Legia",
+        "epithets": [
+          {
+            "text": "King of Giants",
+            "count": 71
+          },
+          {
+            "text": "Monarch of the Beginning",
+            "count": 12
+          }
+        ]
+      },
+      {
+        "canonical": "Querehsha",
+        "epithets": [
+          {
+            "text": "Queen of Insects",
+            "count": 23
+          }
+        ]
+      }
+    ],
+    "Shadows": [
+      {
+        "canonical": "Ashborn",
+        "canonical_count": 27,
+        "epithets": [
+          {
+            "text": "King of the Dead",
+            "count": 25
+          }
+        ]
+      },
+      {
+        "canonical": "Bellion",
+        "canonical_count": 160
+      },
+      {
+        "canonical": "Beru",
+        "canonical_count": 781
+      },
+      {
+        "canonical": "Greed",
+        "canonical_count": 34
+      },
+      {
+        "canonical": "Igris",
+        "canonical_count": 460
+      },
+      {
+        "canonical": "Iron",
+        "canonical_count": 169
+      },
+      {
+        "canonical": "Jima",
+        "canonical_count": 18
+      },
+      {
+        "canonical": "Kaisel",
+        "canonical_count": 146
+      },
+      {
+        "canonical": "Kamish",
+        "canonical_count": 86
+      },
+      {
+        "canonical": "Tank",
+        "canonical_count": 144
+      }
+    ],
+    "Abilities": [
+      {
+        "canonical": "Authority",
+        "canonical_count": 89
+      },
+      {
+        "canonical": "Breath of Destruction",
+        "canonical_count": 26
+      },
+      {
+        "canonical": "Detection",
+        "canonical_count": 18
+      },
+      {
+        "canonical": "Dragon's Fear",
+        "canonical_count": 12
+      },
+      {
+        "canonical": "Monarch's Domain",
+        "canonical_count": 40
+      },
+      {
+        "canonical": "Mutilation",
+        "canonical_count": 39
+      },
+      {
+        "canonical": "Ruler's Authority",
+        "canonical_count": 70
+      },
+      {
+        "canonical": "Shadow Exchange",
+        "canonical_count": 76
+      },
+      {
+        "canonical": "Shadow Extraction",
+        "canonical_count": 132
+      },
+      {
+        "canonical": "Stealth",
+        "canonical_count": 195
+      },
+      {
+        "canonical": "Taunt",
+        "canonical_count": 12
+      }
+    ],
+    "Items": [
+      {
+        "canonical": "Black Heart",
+        "canonical_count": 48
+      },
+      {
+        "canonical": "Cup of Reincarnation",
+        "canonical_count": 38
+      },
+      {
+        "canonical": "Essence Stones",
+        "canonical_count": 158
+      },
+      {
+        "canonical": "Kamish's Wrath",
+        "canonical_count": 75
+      },
+      {
+        "canonical": "Kasaka's Venom Fang",
+        "canonical_count": 93
+      },
+      {
+        "canonical": "Knight Killer",
+        "canonical_count": 61
+      },
+      {
+        "canonical": "Mana",
+        "canonical_count": 669
+      },
+      {
+        "canonical": "Rune Stones",
+        "canonical_count": 18
+      },
+      {
+        "canonical": "System",
+        "canonical_count": 427
+      },
+      {
+        "canonical": "Teleportation Stone",
+        "canonical_count": 48
+      }
+    ],
+    "Weapons": [
+      {
+        "canonical": "Kamish's Wrath",
+        "canonical_count": 75
+      },
+      {
+        "canonical": "Kasaka's Venom Fang",
+        "canonical_count": 93
+      },
+      {
+        "canonical": "Knight Killer",
+        "canonical_count": 61
+      }
+    ],
+    "Locations": [
+      {
+        "canonical": "Canada",
+        "canonical_count": 33
+      },
+      {
+        "canonical": "Cartenon Temple",
+        "canonical_count": 15
+      },
+      {
+        "canonical": "China",
+        "canonical_count": 73
+      },
+      {
+        "canonical": "Gates",
+        "canonical_count": 382
+      },
+      {
+        "canonical": "Hapjeong Subway Station",
+        "canonical_count": 3
+      },
+      {
+        "canonical": "India",
+        "canonical_count": 4
+      },
+      {
+        "canonical": "Japan",
+        "canonical_count": 557
+      },
+      {
+        "canonical": "Jeju Island",
+        "canonical_count": 226
+      },
+      {
+        "canonical": "North Korea",
+        "canonical_count": 12
+      },
+      {
+        "canonical": "Penalty Zone",
+        "canonical_count": 46
+      },
+      {
+        "canonical": "Red Gate",
+        "canonical_count": 132
+      },
+      {
+        "canonical": "Red Gate Incident",
+        "canonical_count": 4
+      },
+      {
+        "canonical": "Russia",
+        "canonical_count": 23
+      },
+      {
+        "canonical": "South Korea",
+        "canonical_count": 76
+      },
+      {
+        "canonical": "World Tree",
+        "canonical_count": 41
+      },
+      {
+        "canonical": "Yoojin Construction",
+        "canonical_count": 54
+      }
+    ],
+    "Organizations": [
+      {
+        "canonical": "Guilds",
+        "canonical_count": 284
+      },
+      {
+        "canonical": "Yoojin Construction",
+        "canonical_count": 54
+      }
+    ],
+    "Guilds": [
+      {
+        "canonical": "Ahjin Guild",
+        "canonical_count": 72
+      },
+      {
+        "canonical": "Fame Guild",
+        "canonical_count": 14
+      },
+      {
+        "canonical": "Hunters Guild",
+        "canonical_count": 138
+      },
+      {
+        "canonical": "Knights Guild",
+        "canonical_count": 112
+      },
+      {
+        "canonical": "Scavenger Guild",
+        "canonical_count": 86
+      },
+      {
+        "canonical": "White Tiger Guild",
+        "canonical_count": 134
+      },
+      {
+        "canonical": "Yoojin Guild",
+        "canonical_count": 36
+      }
+    ],
+    "Hunters": [
+      {
+        "canonical": "A-Rank",
+        "canonical_count": 340
+      },
+      {
+        "canonical": "B-Rank",
+        "canonical_count": 142
+      },
+      {
+        "canonical": "C-Rank",
+        "canonical_count": 240
+      },
+      {
+        "canonical": "Christopher Reed",
+        "canonical_count": 20
+      },
+      {
+        "canonical": "D-Rank",
+        "canonical_count": 69
+      },
+      {
+        "canonical": "E-Rank",
+        "canonical_count": 214
+      },
+      {
+        "canonical": "Jay Mills",
+        "canonical_count": 6
+      },
+      {
+        "canonical": "Jonas",
+        "canonical_count": 4
+      },
+      {
+        "canonical": "Kim",
+        "canonical_count": 312
+      },
+      {
+        "canonical": "S-Rank",
+        "canonical_count": 783
+      },
+      {
+        "canonical": "Sung Jinwoo",
+        "canonical_count": 4,
+        "epithets": [
+          {
+            "text": "King of the Dead",
+            "count": 25
+          }
+        ]
+      },
+      {
+        "canonical": "Thomas Andre",
+        "canonical_count": 110
+      }
+    ],
+    "Monarchs": [
+      {
+        "canonical": "Ammut",
+        "epithets": [
+          {
+            "text": "King of Monstrous Humanoids",
+            "count": 8
+          }
+        ]
+      },
+      {
+        "canonical": "Antares",
+        "epithets": [
+          {
+            "text": "Monarch of Destruction",
+            "count": 40
+          }
+        ]
+      },
+      {
+        "canonical": "Arsha",
+        "epithets": [
+          {
+            "text": "Queen of Insects",
+            "count": 23
+          }
+        ]
+      },
+      {
+        "canonical": "Ashborn",
+        "canonical_count": 27,
+        "epithets": [
+          {
+            "text": "King of the Dead",
+            "count": 25
+          }
+        ]
+      },
+      {
+        "canonical": "Baran",
+        "epithets": [
+          {
+            "text": "King of Demons",
+            "count": 6
+          },
+          {
+            "text": "Demon Monarch",
+            "count": 90
+          }
+        ]
+      },
+      {
+        "canonical": "Kandiaru",
+        "canonical_count": 3
+      },
+      {
+        "canonical": "Legia",
+        "epithets": [
+          {
+            "text": "King of Giants",
+            "count": 71
+          },
+          {
+            "text": "Monarch of the Beginning",
+            "count": 12
+          }
+        ]
+      },
+      {
+        "canonical": "Querehsha",
+        "epithets": [
+          {
+            "text": "Queen of Insects",
+            "count": 23
+          }
+        ]
+      },
+      {
+        "canonical": "Rakan",
+        "epithets": [
+          {
+            "text": "King of Beasts",
+            "count": 41
+          }
+        ]
+      },
+      {
+        "canonical": "Sung Jinwoo",
+        "canonical_count": 4,
+        "epithets": [
+          {
+            "text": "King of the Dead",
+            "count": 25
+          }
+        ]
+      },
+      {
+        "canonical": "Tarnak",
+        "epithets": [
+          {
+            "text": "King of Monstrous Humanoids",
+            "count": 8
+          }
+        ]
+      },
+      {
+        "canonical": "Thomas Andre",
+        "canonical_count": 110
+      }
+    ],
+    "Rulers": [
+      {
+        "canonical": "Ashborn",
+        "canonical_count": 27,
+        "epithets": [
+          {
+            "text": "King of the Dead",
+            "count": 25
+          }
+        ]
+      },
+      {
+        "canonical": "Christopher Reed",
+        "canonical_count": 20
+      },
+      {
+        "canonical": "Jonas",
+        "canonical_count": 4
+      },
+      {
+        "canonical": "Ruler's Authority",
+        "canonical_count": 70
+      },
+      {
+        "canonical": "Sung Jinwoo",
+        "canonical_count": 4,
+        "epithets": [
+          {
+            "text": "King of the Dead",
+            "count": 25
+          }
+        ]
+      },
+      {
+        "canonical": "Thomas Andre",
+        "canonical_count": 110
+      }
+    ],
+    "Dungeons": [
+      {
+        "canonical": "Cartenon Temple",
+        "canonical_count": 15
+      },
+      {
+        "canonical": "Hapjeong Subway Station",
+        "canonical_count": 3
+      },
+      {
+        "canonical": "Penalty Zone",
+        "canonical_count": 46
+      },
+      {
+        "canonical": "Red Gate Incident",
+        "canonical_count": 4
+      }
+    ],
+    "Gates": [
+      {
+        "canonical": "Red Gate",
+        "canonical_count": 132
+      },
+      {
+        "canonical": "Red Gate Incident",
+        "canonical_count": 4
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "wiki": "_smoke",
+  "book": "fake.epub",
+  "filtered_at": "2026-05-19T16:52:14.527239Z",
+  "min_count": 1,
+  "stats": {},
+  "categories": {
+    "Characters": [
+      {
+        "canonical": "Sung Jinwoo",
+        "canonical_count": 543
+      },
+      {
+        "canonical": "Cha Hae-In",
+        "canonical_count": 200
+      }
+    ],
+    "Shadows": [
+      {
+        "canonical": "Igris",
+        "canonical_count": 87
+      }
+    ],
+    "Titles": [
+      {
+        "canonical": "Shadow Monarch",
+        "canonical_count": 41
+      },
+      {
+        "canonical": "Knight of Death",
+        "canonical_count": 5
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+name: term_extraction_benchmark
+description: >
+  Standalone CLI tooling for benchmarking the term extraction pipeline against
+  fan-curated wikis. Not part of the Flutter app build — intentionally isolated.
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.5.2 <4.0.0'
+
+dependencies:
+  http: ^1.3.0
+  path: ^1.9.0
+  archive: ^3.6.1
+  html: ^0.15.4
+  unorm_dart: ^0.3.0
+  sqlite3: ^2.4.0
+  xml: ^6.5.0
+
+dev_dependencies:
+  lints: ^4.0.0

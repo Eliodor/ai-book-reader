@@ -1,0 +1,6 @@
+﻿candidate_id,source_text,score,frequency_total,chapter_count,status,candidate_type,is_term,note
+1,Sung Jinwoo,2.5000,543,18,accepted,proper_name,,
+2,Jinwoo,1.8000,1024,19,accepted,proper_name,,
+4,Shadow Monarch,1.5000,41,8,accepted,phrase,,
+3,Igris,1.2000,87,12,accepted,proper_name,,
+5,random noise,0.3000,5,2,rejected,phrase,,

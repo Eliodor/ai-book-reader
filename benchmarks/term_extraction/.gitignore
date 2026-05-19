@@ -1,0 +1,9 @@
+.dart_tool/
+.packages
+pubspec.lock
+
+# HTTP cache for Fandom API responses (regenerable; can be huge).
+data/*/cache/
+
+# Book text is user-supplied; do not commit copyrighted material.
+data/*/book/

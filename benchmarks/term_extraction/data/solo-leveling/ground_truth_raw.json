@@ -1,0 +1,2319 @@
+{
+  "wiki": "solo-leveling",
+  "fetched_at": "2026-05-19T16:45:22.204050Z",
+  "stats": {
+    "Characters": {
+      "pages": 144,
+      "with_epithet": 35
+    },
+    "Magic_Beasts": {
+      "pages": 102,
+      "with_epithet": 13
+    },
+    "Shadows": {
+      "pages": 22,
+      "with_epithet": 2
+    },
+    "Abilities": {
+      "pages": 29,
+      "with_epithet": 0
+    },
+    "Items": {
+      "pages": 41,
+      "with_epithet": 0
+    },
+    "Weapons": {
+      "pages": 16,
+      "with_epithet": 0
+    },
+    "Locations": {
+      "pages": 49,
+      "with_epithet": 0
+    },
+    "Organizations": {
+      "pages": 9,
+      "with_epithet": 0
+    },
+    "Guilds": {
+      "pages": 34,
+      "with_epithet": 0
+    },
+    "Hunters": {
+      "pages": 88,
+      "with_epithet": 18
+    },
+    "Monarchs": {
+      "pages": 20,
+      "with_epithet": 16
+    },
+    "Rulers": {
+      "pages": 13,
+      "with_epithet": 6
+    },
+    "Dungeons": {
+      "pages": 20,
+      "with_epithet": 0
+    },
+    "Gates": {
+      "pages": 11,
+      "with_epithet": 0
+    }
+  },
+  "categories": {
+    "Characters": [
+      {
+        "canonical": "Characters"
+      },
+      {
+        "canonical": "Kim Yongjun"
+      },
+      {
+        "canonical": "Lee Se-Hwan"
+      },
+      {
+        "canonical": "Lim Do-Gyu"
+      },
+      {
+        "canonical": "Thomas Andre",
+        "epithets": [
+          "The Goliath",
+          "Monarch of Conquest (Novel)",
+          "King of Giants (Novel)Ragnarok Novel: Chapter 340"
+        ]
+      },
+      {
+        "canonical": "Yoo Soohyun"
+      },
+      {
+        "canonical": "Akari Shimizu"
+      },
+      {
+        "canonical": "Ant Queen"
+      },
+      {
+        "canonical": "Arsha",
+        "epithets": [
+          "Queen of Insects",
+          "Monarch of the Void",
+          "Queen of Bees (Novel)"
+        ]
+      },
+      {
+        "canonical": "Baek Miho"
+      },
+      {
+        "canonical": "Cha Hae-In",
+        "epithets": [
+          "The Dancer",
+          "Dragon Maiden (Ragnarok)"
+        ]
+      },
+      {
+        "canonical": "Choi Hasul",
+        "epithets": [
+          "Harvester Hasul",
+          "Shadow of Paradise"
+        ]
+      },
+      {
+        "canonical": "Choi Yoora"
+      },
+      {
+        "canonical": "Esil Radiru",
+        "epithets": [
+          "Spoiler: Monarch of Gluttony"
+        ]
+      },
+      {
+        "canonical": "Gina"
+      },
+      {
+        "canonical": "Han Semi"
+      },
+      {
+        "canonical": "Han Song-Yi"
+      },
+      {
+        "canonical": "Hanekawa"
+      },
+      {
+        "canonical": "Jung Yerim"
+      },
+      {
+        "canonical": "Kanae Tawata"
+      },
+      {
+        "canonical": "Laura"
+      },
+      {
+        "canonical": "Lee Bora"
+      },
+      {
+        "canonical": "Lee Joohee"
+      },
+      {
+        "canonical": "Mari Ishida"
+      },
+      {
+        "canonical": "Norma Selner",
+        "epithets": [
+          "The Seer"
+        ]
+      },
+      {
+        "canonical": "Park Heejin"
+      },
+      {
+        "canonical": "Park Kyung-Hye"
+      },
+      {
+        "canonical": "Querehsha",
+        "epithets": [
+          "Queen of Insects",
+          "Monarch of Plagues"
+        ]
+      },
+      {
+        "canonical": "Seo Jiwoo"
+      },
+      {
+        "canonical": "Sirka",
+        "epithets": [
+          "Queen of Snow Folk",
+          "Monarch of Nightmares"
+        ]
+      },
+      {
+        "canonical": "Sung Jinah"
+      },
+      {
+        "canonical": "Yoo Jinhee"
+      },
+      {
+        "canonical": "A-Rank"
+      },
+      {
+        "canonical": "Ali Hassan"
+      },
+      {
+        "canonical": "Atsushi Kumamoto"
+      },
+      {
+        "canonical": "B-Rank"
+      },
+      {
+        "canonical": "Bae Yoon-Suk"
+      },
+      {
+        "canonical": "Baek Yoonho"
+      },
+      {
+        "canonical": "C-Rank"
+      },
+      {
+        "canonical": "Cho Kyuhwan",
+        "epithets": [
+          "[[Li"
+        ]
+      },
+      {
+        "canonical": "Choi Jong-In",
+        "epithets": [
+          "The Ultimate Soldier"
+        ]
+      },
+      {
+        "canonical": "Christopher Reed"
+      },
+      {
+        "canonical": "D-Rank"
+      },
+      {
+        "canonical": "Derek Johson"
+      },
+      {
+        "canonical": "E-Rank"
+      },
+      {
+        "canonical": "Gerald"
+      },
+      {
+        "canonical": "Go Gunhee",
+        "epithets": [
+          "S-Rank Among S-Ranks",
+          "The Sky Above The Skies",
+          "Brightest Fragment of Brilliant Light"
+        ]
+      },
+      {
+        "canonical": "Go Myung-Hwan"
+      },
+      {
+        "canonical": "Goo Juntae",
+        "epithets": [
+          "[[Li"
+        ]
+      },
+      {
+        "canonical": "Goto Ryuji",
+        "epithets": [
+          "Japan's Greatest Hunter"
+        ]
+      },
+      {
+        "canonical": "Han Jaehyuk"
+      },
+      {
+        "canonical": "Hunters"
+      },
+      {
+        "canonical": "Hwang Dongsoo"
+      },
+      {
+        "canonical": "Hwang Dongsuk",
+        "epithets": [
+          "[[Li"
+        ]
+      },
+      {
+        "canonical": "Hyeonmoo Gang"
+      },
+      {
+        "canonical": "Ippei Izawa"
+      },
+      {
+        "canonical": "Jackson"
+      },
+      {
+        "canonical": "Jay Mills"
+      },
+      {
+        "canonical": "Jinsuk",
+        "epithets": [
+          "[[Li"
+        ]
+      },
+      {
+        "canonical": "Jonas"
+      },
+      {
+        "canonical": "Joo Jae-Hwan"
+      },
+      {
+        "canonical": "Jung Yoontae"
+      },
+      {
+        "canonical": "Kang Jeongho"
+      },
+      {
+        "canonical": "Kang Taeshik"
+      },
+      {
+        "canonical": "Kei"
+      },
+      {
+        "canonical": "Kenzo Tanaka"
+      },
+      {
+        "canonical": "Kim"
+      },
+      {
+        "canonical": "Kim Chul"
+      },
+      {
+        "canonical": "Kim Sangshik"
+      },
+      {
+        "canonical": "Kwak Dooyoung"
+      },
+      {
+        "canonical": "Lee Chul-Jin",
+        "epithets": [
+          "[[Li"
+        ]
+      },
+      {
+        "canonical": "Lee Eunseok"
+      },
+      {
+        "canonical": "Lee Minsung",
+        "epithets": [
+          "Hallyu Star",
+          "Asia's Biggest Movie Star"
+        ]
+      },
+      {
+        "canonical": "Lee Sung-Gu"
+      },
+      {
+        "canonical": "Lee Yeongho"
+      },
+      {
+        "canonical": "Lennart Niermann"
+      },
+      {
+        "canonical": "Lim Tae-Gyu"
+      },
+      {
+        "canonical": "Liu Zhigang",
+        "epithets": [
+          "The Hero of China",
+          "China's 7-Star Hunter",
+          "Sword Demon of China",
+          "Berserker",
+          "Butcher"
+        ]
+      },
+      {
+        "canonical": "Ma Dongwook"
+      },
+      {
+        "canonical": "Min Byung-Gyu"
+      },
+      {
+        "canonical": "Minoru Hoshino"
+      },
+      {
+        "canonical": "National Level Hunters"
+      },
+      {
+        "canonical": "Park Beom-Shik"
+      },
+      {
+        "canonical": "Park Jongcheol"
+      },
+      {
+        "canonical": "Park Jongsoo"
+      },
+      {
+        "canonical": "Randolph"
+      },
+      {
+        "canonical": "Reiji Sugimoto"
+      },
+      {
+        "canonical": "Rio Singh"
+      },
+      {
+        "canonical": "S-Rank"
+      },
+      {
+        "canonical": "Shin Seokjin"
+      },
+      {
+        "canonical": "Siddharth Bachchan"
+      },
+      {
+        "canonical": "Son Kihoon"
+      },
+      {
+        "canonical": "Song Chi-Yul",
+        "epithets": [
+          "Old Man SongReferred to by Kim Sangshik, Episode 9|English=Sean Hennigan|Japanese=Eiji Hanawa|Age=60+}}",
+          "() is a Korean C-Rank Hunter and a kumdo teacher. He is also one of Jinwoo's old friends, having known him since he was a E-Rank Hunter, and one of the six survivors of the first Double Dungeon incident.",
+          "== Appearance ==",
+          "Chi-Yul is a thin middle-aged man with blonde hair, prominent wrinkles, and no left arm, due to having lost it during his experience in the Double Dungeon. In his first appearance, he wore a simple blue tracksuit.",
+          "== Personality ==",
+          "Chi-Yul is a lively and sarcastic man with a strong sense of duty, to the point that he refused to retire from hunting even after losing his left arm in the Double Dungeon. He also cares for his comrades, as demonstrated by his interactions with Jinwoo and Joohee, and was willing to sacrifice himself for them on multiple occasions.",
+          "Although he prefers to hunt with a plan in mind, Chi-Yul is willing to take risks from time to time. However, he is also open to the opinions of others and never forces anyone into doing anything they don't want to.",
+          "After the Double Dungeon incident, Chi-Yul have grown remorseful over his failure as a leader and chose to keep the loss of his arm as a reminder of his mistake.",
+          "== History ==",
+          "Before awakening, Chi-Yul was a kumdo who after awakening as a hunter found himself in the Mage class, which he found ironic considering he was a swordsman. Due to this he often lamented on how his sword skills which he hone for years were useless against the Magic Beasts in dungeons. Despite the odd twist of fate, Cho-Yul believed that there must be a reason for him receiving such a class.",
+          "Over the years he gained a lot of experience as a independent C-Rank hunter and garnered a respected reputation as a professional. It was said it he wasn't already of advanced age he would have been in one of the major guilds.",
+          "===D-Rank Dungeon Arc===",
+          "At a construction site where a D-Rank Gate opened, Chi-Yul elected himself as leader for the raid to the hunters that gathered in the area. Due to him being the highest ranked hunter no one disputed him.Solo Leveling Webtoon: Chapter 1",
+          "In the dungeon Chi-Yul employed his fire magic against the magic beasts. After the monsters were all killed, the hunters discovered a second entrance. Chi-Yul believed to be a rumored Double Dungeon. He used his magic to light the entrance revealing a deep tunnel. Normally such a find would be reported to the Korean Hunters Association and let them assess the dungeon, but Chi-Yul suggested that the hunters present handle the dungeon boss themselves so as not to miss out on the rewards. He left it up to a vote to the 17 hunters on whether they go in or not.Solo Leveling Novel: Chapter 1Solo Leveling Webtoon: Chapter 2",
+          "Chi-Yul led the hunters deeper into the tunnel where at the end was a pair of ominous doors. While some of the hunters were beginning to have second doubts, Chi-Yul reminded them that they already came all this way and it would be a pity to go back empty-handed. He pushed the doors opened, wanting to be in on any discoveries in the new dungeon, inviting anyone to go or stay. Due to his veterans years as a hunter, the others in the raid party trusted Chi-Yul's confidence and followed him in.",
+          "On the other side of the door was a chamber filled with giant stone statues. Chi-Yul while observing his surroundings noticed a symbol on the ground that resembled a divination circle. But before he could examine it further, he was called by the other hunters, finding a strange stone statue with an inscription called the Commandments of Kandiaru and that they were in the Cartenon Temple. After finishing reading them, the doors to the dungeon closed. One of the hunters thinking that coming into the room was a bad idea tried to open the doors. Chi-Yul sensing danger tried to call out to the hunter to stop, but it was too late as one of the giant statues in the room moved and decapitated the man.Solo Leveling Webtoon: Chapter 3",
+          "Upon witnessing this Chi-Yul came to the horrible reali"
+        ]
+      },
+      {
+        "canonical": "Sukmin",
+        "epithets": [
+          "[[Li"
+        ]
+      },
+      {
+        "canonical": "Sung Il-Hwan"
+      },
+      {
+        "canonical": "Sung Jinwoo",
+        "epithets": [
+          "King of the Dead",
+          "Monarch of Shadows",
+          "The Weakest Hunter of All MankindSolo Leveling Webtoon: Chapter 1",
+          "Korea's 10th S-Rank HunterSolo Leveling Webtoon: Chapter 62",
+          "6th National Level Hunter",
+          "2nd-Rate Asian HunterSolo Leveling Novel: Chapter 177 - A disdainful nickname given by Christopher Reed.",
+          "The GhostSolo Leveling Webtoon: Chapter 190"
+        ]
+      },
+      {
+        "canonical": "Sung Suho",
+        "epithets": [
+          "Monarch of Transcendence",
+          "Young Monarch",
+          "Vice Lord",
+          "Son of the Shadow Monarch",
+          "The World's 1st National Level HunterRagnarok Webtoon: Chapter 221",
+          "Guardian of the World Tree"
+        ]
+      },
+      {
+        "canonical": "Tatsumi Fujishima"
+      },
+      {
+        "canonical": "Woo Jinchul"
+      },
+      {
+        "canonical": "Yoo Jinho",
+        "epithets": [
+          "The Upgrader"
+        ]
+      },
+      {
+        "canonical": "Yoon Kijoong"
+      },
+      {
+        "canonical": "Yuri Orloff",
+        "epithets": [
+          "Barrier Specialist",
+          "Best Support-Type Hunter",
+          "Apostle of Infinity"
+        ]
+      },
+      {
+        "canonical": "Absolute Being",
+        "epithets": [
+          "God"
+        ]
+      },
+      {
+        "canonical": "Adam White"
+      },
+      {
+        "canonical": "Ahn Sangmin"
+      },
+      {
+        "canonical": "Ammut",
+        "epithets": [
+          "King of Monstrous Humanoids",
+          "Monarch of Trials"
+        ]
+      },
+      {
+        "canonical": "Ant King"
+      },
+      {
+        "canonical": "Antares",
+        "epithets": [
+          "King of Dragons",
+          "Monarch of Destruction"
+        ]
+      },
+      {
+        "canonical": "Ashborn",
+        "epithets": [
+          "King of the Dead",
+          "Monarch of Shadows",
+          "Greatest Fragment of Brilliant Light"
+        ]
+      },
+      {
+        "canonical": "Baran",
+        "epithets": [
+          "King of Demons",
+          "Monarch of White Flames",
+          "Demon Monarch"
+        ]
+      },
+      {
+        "canonical": "Baruka"
+      },
+      {
+        "canonical": "Blood-Red Commander Igris"
+      },
+      {
+        "canonical": "Brocky"
+      },
+      {
+        "canonical": "Cerberus"
+      },
+      {
+        "canonical": "David Brennon"
+      },
+      {
+        "canonical": "Gray"
+      },
+      {
+        "canonical": "Groctar"
+      },
+      {
+        "canonical": "Harmakan"
+      },
+      {
+        "canonical": "Hyun Kichul"
+      },
+      {
+        "canonical": "Itarim of Dimension-1"
+      },
+      {
+        "canonical": "Joo Sungchan"
+      },
+      {
+        "canonical": "Jung Gi-Soo"
+      },
+      {
+        "canonical": "Kamish"
+      },
+      {
+        "canonical": "Kandiaru"
+      },
+      {
+        "canonical": "Kargalgan"
+      },
+      {
+        "canonical": "Lee Seong-Chul"
+      },
+      {
+        "canonical": "Lee Wong-Yu"
+      },
+      {
+        "canonical": "Legia",
+        "epithets": [
+          "King of Giants",
+          "Monarch of the Beginning"
+        ]
+      },
+      {
+        "canonical": "Matsumoto Shigeo"
+      },
+      {
+        "canonical": "Metus"
+      },
+      {
+        "canonical": "Michael Connor"
+      },
+      {
+        "canonical": "Park Giseul"
+      },
+      {
+        "canonical": "Ragnar"
+      },
+      {
+        "canonical": "Rakan",
+        "epithets": [
+          "King of Beasts",
+          "Monarch of Fangs",
+          "Greatest Hunter In The Chaos World (Novel)"
+        ]
+      },
+      {
+        "canonical": "Shika"
+      },
+      {
+        "canonical": "Sillad",
+        "epithets": [
+          "King of Snow Folk",
+          "Monarch of Frost",
+          "Hockwan"
+        ]
+      },
+      {
+        "canonical": "Tarnak",
+        "epithets": [
+          "King of Monstrous Humanoids",
+          "Monarch of Iron Body"
+        ]
+      },
+      {
+        "canonical": "Tiel",
+        "epithets": [
+          "Envoy of God"
+        ]
+      },
+      {
+        "canonical": "Vulcan"
+      },
+      {
+        "canonical": "Xavier"
+      },
+      {
+        "canonical": "Yogumunt",
+        "epithets": [
+          "King of Demonic Spectres",
+          "Monarch of Transfiguration",
+          "Greatest Sorcerer in the Chaos World (Novel)"
+        ]
+      },
+      {
+        "canonical": "Yoo Jinsung"
+      },
+      {
+        "canonical": "Yoo Myunghan"
+      },
+      {
+        "canonical": "Titans"
+      }
+    ],
+    "Magic_Beasts": [
+      {
+        "canonical": "Absolute Being",
+        "epithets": [
+          "God"
+        ]
+      },
+      {
+        "canonical": "Ammut",
+        "epithets": [
+          "King of Monstrous Humanoids",
+          "Monarch of Trials"
+        ]
+      },
+      {
+        "canonical": "Ant King"
+      },
+      {
+        "canonical": "Ant Queen"
+      },
+      {
+        "canonical": "Ants"
+      },
+      {
+        "canonical": "Apostle of Conquest"
+      },
+      {
+        "canonical": "Apostle of Evolution"
+      },
+      {
+        "canonical": "Apostle of Itarim"
+      },
+      {
+        "canonical": "Apostle of Nightmares"
+      },
+      {
+        "canonical": "Apostle of Paradise"
+      },
+      {
+        "canonical": "Apostles of Annihilation"
+      },
+      {
+        "canonical": "Arch Liches"
+      },
+      {
+        "canonical": "Archers"
+      },
+      {
+        "canonical": "Arsha",
+        "epithets": [
+          "Queen of Insects",
+          "Monarch of the Void",
+          "Queen of Bees (Novel)"
+        ]
+      },
+      {
+        "canonical": "Assassins"
+      },
+      {
+        "canonical": "Banshee"
+      },
+      {
+        "canonical": "Baruka"
+      },
+      {
+        "canonical": "Beasts"
+      },
+      {
+        "canonical": "Black-Shadow Razan"
+      },
+      {
+        "canonical": "Blood-Red Commander Igris"
+      },
+      {
+        "canonical": "Blue Venom-Fanged Kasaka"
+      },
+      {
+        "canonical": "Brocky"
+      },
+      {
+        "canonical": "Cerberus"
+      },
+      {
+        "canonical": "Crocors"
+      },
+      {
+        "canonical": "Death Knights"
+      },
+      {
+        "canonical": "Demonic Spectres"
+      },
+      {
+        "canonical": "Demons"
+      },
+      {
+        "canonical": "Dragon Tooth Warriors"
+      },
+      {
+        "canonical": "Dragons"
+      },
+      {
+        "canonical": "Dungeon Jackals"
+      },
+      {
+        "canonical": "Dwarves"
+      },
+      {
+        "canonical": "Earth Giant"
+      },
+      {
+        "canonical": "Earth Golems"
+      },
+      {
+        "canonical": "Esil Radiru",
+        "epithets": [
+          "Spoiler: Monarch of Gluttony"
+        ]
+      },
+      {
+        "canonical": "Giant Arachnid Buryura"
+      },
+      {
+        "canonical": "Giants"
+      },
+      {
+        "canonical": "Goblins"
+      },
+      {
+        "canonical": "Grave Spider Arachne"
+      },
+      {
+        "canonical": "Grave Spiders"
+      },
+      {
+        "canonical": "Gray"
+      },
+      {
+        "canonical": "Groctar"
+      },
+      {
+        "canonical": "Harmakan"
+      },
+      {
+        "canonical": "Heavenly Soldiers"
+      },
+      {
+        "canonical": "High Elves"
+      },
+      {
+        "canonical": "High Orcs"
+      },
+      {
+        "canonical": "Higos"
+      },
+      {
+        "canonical": "Hobgoblin"
+      },
+      {
+        "canonical": "Humanoids"
+      },
+      {
+        "canonical": "Ice Bears"
+      },
+      {
+        "canonical": "Ice Elves"
+      },
+      {
+        "canonical": "Ice Giants"
+      },
+      {
+        "canonical": "Ice Golems"
+      },
+      {
+        "canonical": "Insects"
+      },
+      {
+        "canonical": "Itarim of Dimension-1"
+      },
+      {
+        "canonical": "Kaisellin"
+      },
+      {
+        "canonical": "Kamish"
+      },
+      {
+        "canonical": "Kandiaru"
+      },
+      {
+        "canonical": "Kargalgan"
+      },
+      {
+        "canonical": "Knights"
+      },
+      {
+        "canonical": "Kraken"
+      },
+      {
+        "canonical": "Magic Beasts"
+      },
+      {
+        "canonical": "Magicians"
+      },
+      {
+        "canonical": "Metus"
+      },
+      {
+        "canonical": "Minotaurs"
+      },
+      {
+        "canonical": "Mist Burn"
+      },
+      {
+        "canonical": "Mummies"
+      },
+      {
+        "canonical": "Nagas"
+      },
+      {
+        "canonical": "Nidhogg"
+      },
+      {
+        "canonical": "Nightmare Buds"
+      },
+      {
+        "canonical": "Nukira"
+      },
+      {
+        "canonical": "Orcs"
+      },
+      {
+        "canonical": "Phantom Tree"
+      },
+      {
+        "canonical": "Poisoned-Toothed Giant Desert Centipedes"
+      },
+      {
+        "canonical": "Ragnar"
+      },
+      {
+        "canonical": "Razor-Clawed Briga"
+      },
+      {
+        "canonical": "Salamanders"
+      },
+      {
+        "canonical": "Shika"
+      },
+      {
+        "canonical": "Sirka",
+        "epithets": [
+          "Queen of Snow Folk",
+          "Monarch of Nightmares"
+        ]
+      },
+      {
+        "canonical": "Snow Folk"
+      },
+      {
+        "canonical": "Spiked Lizard"
+      },
+      {
+        "canonical": "Steel-Fanged Raikans"
+      },
+      {
+        "canonical": "Stone Golem"
+      },
+      {
+        "canonical": "Titans"
+      },
+      {
+        "canonical": "Transcended Intermediate Demon"
+      },
+      {
+        "canonical": "Treefolk Centaur"
+      },
+      {
+        "canonical": "Twin-Headed Ogres"
+      },
+      {
+        "canonical": "Tyrant King of Madblood"
+      },
+      {
+        "canonical": "Undead"
+      },
+      {
+        "canonical": "Vulcan"
+      },
+      {
+        "canonical": "Vulcan's Guards"
+      },
+      {
+        "canonical": "Werewolves"
+      },
+      {
+        "canonical": "World Tree"
+      },
+      {
+        "canonical": "Xavier"
+      },
+      {
+        "canonical": "Yetis"
+      },
+      {
+        "canonical": "Rakan",
+        "epithets": [
+          "King of Beasts",
+          "Monarch of Fangs",
+          "Greatest Hunter In The Chaos World (Novel)"
+        ]
+      },
+      {
+        "canonical": "Tarnak",
+        "epithets": [
+          "King of Monstrous Humanoids",
+          "Monarch of Iron Body"
+        ]
+      },
+      {
+        "canonical": "Yogumunt",
+        "epithets": [
+          "King of Demonic Spectres",
+          "Monarch of Transfiguration",
+          "Greatest Sorcerer in the Chaos World (Novel)"
+        ]
+      },
+      {
+        "canonical": "Baran",
+        "epithets": [
+          "King of Demons",
+          "Monarch of White Flames",
+          "Demon Monarch"
+        ]
+      },
+      {
+        "canonical": "Antares",
+        "epithets": [
+          "King of Dragons",
+          "Monarch of Destruction"
+        ]
+      },
+      {
+        "canonical": "Legia",
+        "epithets": [
+          "King of Giants",
+          "Monarch of the Beginning"
+        ]
+      },
+      {
+        "canonical": "Querehsha",
+        "epithets": [
+          "Queen of Insects",
+          "Monarch of Plagues"
+        ]
+      },
+      {
+        "canonical": "Sillad",
+        "epithets": [
+          "King of Snow Folk",
+          "Monarch of Frost",
+          "Hockwan"
+        ]
+      }
+    ],
+    "Shadows": [
+      {
+        "canonical": "Ant Queen"
+      },
+      {
+        "canonical": "Ashborn",
+        "epithets": [
+          "King of the Dead",
+          "Monarch of Shadows",
+          "Greatest Fragment of Brilliant Light"
+        ]
+      },
+      {
+        "canonical": "Bellion"
+      },
+      {
+        "canonical": "Beru"
+      },
+      {
+        "canonical": "Brocky"
+      },
+      {
+        "canonical": "Gordon"
+      },
+      {
+        "canonical": "Greed"
+      },
+      {
+        "canonical": "Harmakan"
+      },
+      {
+        "canonical": "Igris",
+        "epithets": [
+          "Knight of Death"
+        ]
+      },
+      {
+        "canonical": "Iron"
+      },
+      {
+        "canonical": "Jima"
+      },
+      {
+        "canonical": "Kaisel"
+      },
+      {
+        "canonical": "Kamish"
+      },
+      {
+        "canonical": "Kira"
+      },
+      {
+        "canonical": "Kwei"
+      },
+      {
+        "canonical": "Min Byung-Gyu"
+      },
+      {
+        "canonical": "Shadow Giants"
+      },
+      {
+        "canonical": "Shadow Nidhogg"
+      },
+      {
+        "canonical": "Shadows"
+      },
+      {
+        "canonical": "Sita"
+      },
+      {
+        "canonical": "Tank"
+      },
+      {
+        "canonical": "Tusk"
+      }
+    ],
+    "Abilities": [
+      {
+        "canonical": "Authority"
+      },
+      {
+        "canonical": "Bloodlust"
+      },
+      {
+        "canonical": "Breath of Destruction"
+      },
+      {
+        "canonical": "Creation"
+      },
+      {
+        "canonical": "Dagger Rush"
+      },
+      {
+        "canonical": "Detection"
+      },
+      {
+        "canonical": "Dragon's Fear"
+      },
+      {
+        "canonical": "Iron Body Technique"
+      },
+      {
+        "canonical": "Mana Shield"
+      },
+      {
+        "canonical": "Monarch's Domain"
+      },
+      {
+        "canonical": "Mutilation"
+      },
+      {
+        "canonical": "Quicksilver"
+      },
+      {
+        "canonical": "Ruler's Authority"
+      },
+      {
+        "canonical": "Shadow Creation"
+      },
+      {
+        "canonical": "Shadow Exchange"
+      },
+      {
+        "canonical": "Shadow Extraction"
+      },
+      {
+        "canonical": "Shadow of The World Tree Authority"
+      },
+      {
+        "canonical": "Shadow Preservation"
+      },
+      {
+        "canonical": "Spiritual Body Manifestation"
+      },
+      {
+        "canonical": "Stage of the Lonely God"
+      },
+      {
+        "canonical": "Stealth"
+      },
+      {
+        "canonical": "Strengthening"
+      },
+      {
+        "canonical": "Taunt"
+      },
+      {
+        "canonical": "Tenacity"
+      },
+      {
+        "canonical": "The Shadow Power"
+      },
+      {
+        "canonical": "Transcendence Authority"
+      },
+      {
+        "canonical": "Twin Swords"
+      },
+      {
+        "canonical": "Unwithering Spring"
+      },
+      {
+        "canonical": "World's Predation"
+      }
+    ],
+    "Items": [
+      {
+        "canonical": "Antares' Fangs"
+      },
+      {
+        "canonical": "Avatar"
+      },
+      {
+        "canonical": "Baruka's Dagger"
+      },
+      {
+        "canonical": "Black Heart"
+      },
+      {
+        "canonical": "Bloodstone"
+      },
+      {
+        "canonical": "Contaminated Elvenwood Fruits"
+      },
+      {
+        "canonical": "Cup of Reincarnation"
+      },
+      {
+        "canonical": "Demon King's Daggers"
+      },
+      {
+        "canonical": "Demon King's Longsword"
+      },
+      {
+        "canonical": "Dragon King's Heart"
+      },
+      {
+        "canonical": "Essence Stones"
+      },
+      {
+        "canonical": "Fang of Rakan"
+      },
+      {
+        "canonical": "Game Capsule"
+      },
+      {
+        "canonical": "Grim Reaper’s Bow"
+      },
+      {
+        "canonical": "Holy Water of Life"
+      },
+      {
+        "canonical": "Ice Bear's Robe"
+      },
+      {
+        "canonical": "Itarim’s Stone Tablet"
+      },
+      {
+        "canonical": "Kamish's Wrath"
+      },
+      {
+        "canonical": "Kasaka's Venom Fang"
+      },
+      {
+        "canonical": "Kim Sangshik's Sword"
+      },
+      {
+        "canonical": "Knight Killer"
+      },
+      {
+        "canonical": "Leaf of the World Tree"
+      },
+      {
+        "canonical": "Mad Blood Poison"
+      },
+      {
+        "canonical": "Mana"
+      },
+      {
+        "canonical": "Mana Crystals"
+      },
+      {
+        "canonical": "Orb of Avarice"
+      },
+      {
+        "canonical": "Primordial Light and Darkness"
+      },
+      {
+        "canonical": "Purified Blood of the Demon King"
+      },
+      {
+        "canonical": "Rune Stones"
+      },
+      {
+        "canonical": "Scorching Gauntlets"
+      },
+      {
+        "canonical": "Seed of Evolution"
+      },
+      {
+        "canonical": "Shadow of Destruction, The Flame that Gawns Gods - Ragnarok"
+      },
+      {
+        "canonical": "Spring Water from the Forest of Echoes"
+      },
+      {
+        "canonical": "Stardust"
+      },
+      {
+        "canonical": "Starpiece"
+      },
+      {
+        "canonical": "System"
+      },
+      {
+        "canonical": "Teleportation Stone"
+      },
+      {
+        "canonical": "The Sword that Gawns the World Tree Nidhogg"
+      },
+      {
+        "canonical": "Vulcan Horn"
+      },
+      {
+        "canonical": "Vulcan's Horn"
+      },
+      {
+        "canonical": "World Tree's Fragment"
+      }
+    ],
+    "Weapons": [
+      {
+        "canonical": "Baruka's Dagger"
+      },
+      {
+        "canonical": "Demon King's Daggers"
+      },
+      {
+        "canonical": "Demon King's Longsword"
+      },
+      {
+        "canonical": "Fang of Rakan"
+      },
+      {
+        "canonical": "Grim Reaper’s Bow"
+      },
+      {
+        "canonical": "Kamish's Wrath"
+      },
+      {
+        "canonical": "Kasaka's Venom Fang"
+      },
+      {
+        "canonical": "Kim Sangshik's Sword"
+      },
+      {
+        "canonical": "Knight Killer"
+      },
+      {
+        "canonical": "Scorching Gauntlets"
+      },
+      {
+        "canonical": "Shadow of Destruction, The Flame that Gawns Gods - Ragnarok"
+      },
+      {
+        "canonical": "Sung Jinwoo/Items"
+      },
+      {
+        "canonical": "Sung Suho/Items"
+      },
+      {
+        "canonical": "The Sword that Gawns the World Tree Nidhogg"
+      },
+      {
+        "canonical": "Vulcan Horn"
+      },
+      {
+        "canonical": "Vulcan's Horn"
+      }
+    ],
+    "Locations": [
+      {
+        "canonical": "2nd Red Gate Dungeon"
+      },
+      {
+        "canonical": "Ahjin Soft"
+      },
+      {
+        "canonical": "Black Market"
+      },
+      {
+        "canonical": "Busan Gate"
+      },
+      {
+        "canonical": "Canada"
+      },
+      {
+        "canonical": "Cartenon Temple"
+      },
+      {
+        "canonical": "Chaos World"
+      },
+      {
+        "canonical": "China"
+      },
+      {
+        "canonical": "Coliseum"
+      },
+      {
+        "canonical": "Demon Castle"
+      },
+      {
+        "canonical": "Dimensional Crack"
+      },
+      {
+        "canonical": "Elvenwood"
+      },
+      {
+        "canonical": "First S-Rank Gate"
+      },
+      {
+        "canonical": "Gates"
+      },
+      {
+        "canonical": "Glacier Dungeon"
+      },
+      {
+        "canonical": "Goblins Dungeon"
+      },
+      {
+        "canonical": "Gwanak Mountain Dungeon"
+      },
+      {
+        "canonical": "Hapjeong Subway Station"
+      },
+      {
+        "canonical": "Hunters Guild Gate"
+      },
+      {
+        "canonical": "India"
+      },
+      {
+        "canonical": "Insects Dungeon"
+      },
+      {
+        "canonical": "Japan"
+      },
+      {
+        "canonical": "Jeju Island"
+      },
+      {
+        "canonical": "Jeju Island S-Rank Gate"
+      },
+      {
+        "canonical": "Jisan Prison"
+      },
+      {
+        "canonical": "Job Change Quest Dungeon"
+      },
+      {
+        "canonical": "Last Paradise"
+      },
+      {
+        "canonical": "Loktak Lake Field"
+      },
+      {
+        "canonical": "Magok Field"
+      },
+      {
+        "canonical": "North Korea"
+      },
+      {
+        "canonical": "North Korea Field"
+      },
+      {
+        "canonical": "Outer Universe Dimension-1"
+      },
+      {
+        "canonical": "Outer Universes"
+      },
+      {
+        "canonical": "Penalty Zone"
+      },
+      {
+        "canonical": "Pyeongtaek Dungeon"
+      },
+      {
+        "canonical": "Pyramid Field"
+      },
+      {
+        "canonical": "Red Gate"
+      },
+      {
+        "canonical": "Red Gate Incident"
+      },
+      {
+        "canonical": "Russia"
+      },
+      {
+        "canonical": "Sea of The Afterlife"
+      },
+      {
+        "canonical": "Seoul Station Field"
+      },
+      {
+        "canonical": "Shadow Dungeon"
+      },
+      {
+        "canonical": "South Korea"
+      },
+      {
+        "canonical": "Tokyo S-Rank Gate"
+      },
+      {
+        "canonical": "USA"
+      },
+      {
+        "canonical": "World of Eternal Slumber"
+      },
+      {
+        "canonical": "World of Nothingness"
+      },
+      {
+        "canonical": "World Tree"
+      },
+      {
+        "canonical": "Yoojin Construction"
+      }
+    ],
+    "Organizations": [
+      {
+        "canonical": "Ahjin Soft"
+      },
+      {
+        "canonical": "Black Market"
+      },
+      {
+        "canonical": "Federal Bureau of Hunters"
+      },
+      {
+        "canonical": "Guilds"
+      },
+      {
+        "canonical": "Japanese Hunters Association"
+      },
+      {
+        "canonical": "Korean Hunters Association"
+      },
+      {
+        "canonical": "Korean Hunters Auction"
+      },
+      {
+        "canonical": "World Hunter Association"
+      },
+      {
+        "canonical": "Yoojin Construction"
+      }
+    ],
+    "Guilds": [
+      {
+        "canonical": "Ahjin Guild"
+      },
+      {
+        "canonical": "Asura Guild"
+      },
+      {
+        "canonical": "Black Tortoise Guild"
+      },
+      {
+        "canonical": "Chivalry Guild"
+      },
+      {
+        "canonical": "Collecting Team"
+      },
+      {
+        "canonical": "Courage Guild"
+      },
+      {
+        "canonical": "Draw Sword Guild"
+      },
+      {
+        "canonical": "Fame Guild"
+      },
+      {
+        "canonical": "Fiend Guild"
+      },
+      {
+        "canonical": "Gold Dragon Guild"
+      },
+      {
+        "canonical": "Guilds"
+      },
+      {
+        "canonical": "Hunters Guild"
+      },
+      {
+        "canonical": "Hyena Guild"
+      },
+      {
+        "canonical": "Imphal Guild"
+      },
+      {
+        "canonical": "Knights Guild"
+      },
+      {
+        "canonical": "Richter Guild"
+      },
+      {
+        "canonical": "Scavenger Guild"
+      },
+      {
+        "canonical": "White Tiger Guild"
+      },
+      {
+        "canonical": "Woojin Guild"
+      },
+      {
+        "canonical": "Yoojin Guild"
+      },
+      {
+        "canonical": "Jackson"
+      },
+      {
+        "canonical": "Rio Singh"
+      },
+      {
+        "canonical": "Siddharth Bachchan"
+      },
+      {
+        "canonical": "Hyeonmoo Gang"
+      },
+      {
+        "canonical": "Lee Yeongho"
+      },
+      {
+        "canonical": "Ahn Sangmin"
+      },
+      {
+        "canonical": "Baek Miho"
+      },
+      {
+        "canonical": "Baek Yoonho"
+      },
+      {
+        "canonical": "Go Myung-Hwan"
+      },
+      {
+        "canonical": "Hyun Kichul"
+      },
+      {
+        "canonical": "Joo Sungchan"
+      },
+      {
+        "canonical": "Kim Chul"
+      },
+      {
+        "canonical": "Park Heejin"
+      },
+      {
+        "canonical": "Yoon Kijoong"
+      }
+    ],
+    "Hunters": [
+      {
+        "canonical": "A-Rank"
+      },
+      {
+        "canonical": "Akari Shimizu"
+      },
+      {
+        "canonical": "Ali Hassan"
+      },
+      {
+        "canonical": "Atsushi Kumamoto"
+      },
+      {
+        "canonical": "B-Rank"
+      },
+      {
+        "canonical": "Bae Yoon-Suk"
+      },
+      {
+        "canonical": "Baek Miho"
+      },
+      {
+        "canonical": "Baek Yoonho"
+      },
+      {
+        "canonical": "C-Rank"
+      },
+      {
+        "canonical": "Cha Hae-In",
+        "epithets": [
+          "The Dancer",
+          "Dragon Maiden (Ragnarok)"
+        ]
+      },
+      {
+        "canonical": "Cho Kyuhwan",
+        "epithets": [
+          "[[Li"
+        ]
+      },
+      {
+        "canonical": "Choi Jong-In",
+        "epithets": [
+          "The Ultimate Soldier"
+        ]
+      },
+      {
+        "canonical": "Christopher Reed"
+      },
+      {
+        "canonical": "D-Rank"
+      },
+      {
+        "canonical": "Derek Johson"
+      },
+      {
+        "canonical": "E-Rank"
+      },
+      {
+        "canonical": "Gerald"
+      },
+      {
+        "canonical": "Gina"
+      },
+      {
+        "canonical": "Go Gunhee",
+        "epithets": [
+          "S-Rank Among S-Ranks",
+          "The Sky Above The Skies",
+          "Brightest Fragment of Brilliant Light"
+        ]
+      },
+      {
+        "canonical": "Go Myung-Hwan"
+      },
+      {
+        "canonical": "Goo Juntae",
+        "epithets": [
+          "[[Li"
+        ]
+      },
+      {
+        "canonical": "Goto Ryuji",
+        "epithets": [
+          "Japan's Greatest Hunter"
+        ]
+      },
+      {
+        "canonical": "Han Jaehyuk"
+      },
+      {
+        "canonical": "Han Semi"
+      },
+      {
+        "canonical": "Han Song-Yi"
+      },
+      {
+        "canonical": "Hanekawa"
+      },
+      {
+        "canonical": "Hunters"
+      },
+      {
+        "canonical": "Hwang Dongsoo"
+      },
+      {
+        "canonical": "Hwang Dongsuk",
+        "epithets": [
+          "[[Li"
+        ]
+      },
+      {
+        "canonical": "Hyeonmoo Gang"
+      },
+      {
+        "canonical": "Ippei Izawa"
+      },
+      {
+        "canonical": "Jackson"
+      },
+      {
+        "canonical": "Jay Mills"
+      },
+      {
+        "canonical": "Jinsuk",
+        "epithets": [
+          "[[Li"
+        ]
+      },
+      {
+        "canonical": "Jonas"
+      },
+      {
+        "canonical": "Joo Jae-Hwan"
+      },
+      {
+        "canonical": "Jung Yerim"
+      },
+      {
+        "canonical": "Jung Yoontae"
+      },
+      {
+        "canonical": "Kanae Tawata"
+      },
+      {
+        "canonical": "Kang Jeongho"
+      },
+      {
+        "canonical": "Kang Taeshik"
+      },
+      {
+        "canonical": "Kei"
+      },
+      {
+        "canonical": "Kenzo Tanaka"
+      },
+      {
+        "canonical": "Kim"
+      },
+      {
+        "canonical": "Kim Chul"
+      },
+      {
+        "canonical": "Kim Sangshik"
+      },
+      {
+        "canonical": "Kim Yongjun"
+      },
+      {
+        "canonical": "Kwak Dooyoung"
+      },
+      {
+        "canonical": "Lee Chul-Jin",
+        "epithets": [
+          "[[Li"
+        ]
+      },
+      {
+        "canonical": "Lee Eunseok"
+      },
+      {
+        "canonical": "Lee Joohee"
+      },
+      {
+        "canonical": "Lee Minsung",
+        "epithets": [
+          "Hallyu Star",
+          "Asia's Biggest Movie Star"
+        ]
+      },
+      {
+        "canonical": "Lee Se-Hwan"
+      },
+      {
+        "canonical": "Lee Sung-Gu"
+      },
+      {
+        "canonical": "Lee Yeongho"
+      },
+      {
+        "canonical": "Lennart Niermann"
+      },
+      {
+        "canonical": "Lim Do-Gyu"
+      },
+      {
+        "canonical": "Lim Tae-Gyu"
+      },
+      {
+        "canonical": "Liu Zhigang",
+        "epithets": [
+          "The Hero of China",
+          "China's 7-Star Hunter",
+          "Sword Demon of China",
+          "Berserker",
+          "Butcher"
+        ]
+      },
+      {
+        "canonical": "Ma Dongwook"
+      },
+      {
+        "canonical": "Mari Ishida"
+      },
+      {
+        "canonical": "Min Byung-Gyu"
+      },
+      {
+        "canonical": "Minoru Hoshino"
+      },
+      {
+        "canonical": "National Level Hunters"
+      },
+      {
+        "canonical": "Park Beom-Shik"
+      },
+      {
+        "canonical": "Park Heejin"
+      },
+      {
+        "canonical": "Park Jongcheol"
+      },
+      {
+        "canonical": "Park Jongsoo"
+      },
+      {
+        "canonical": "Randolph"
+      },
+      {
+        "canonical": "Reiji Sugimoto"
+      },
+      {
+        "canonical": "Rio Singh"
+      },
+      {
+        "canonical": "S-Rank"
+      },
+      {
+        "canonical": "Seo Jiwoo"
+      },
+      {
+        "canonical": "Shin Seokjin"
+      },
+      {
+        "canonical": "Siddharth Bachchan"
+      },
+      {
+        "canonical": "Son Kihoon"
+      },
+      {
+        "canonical": "Song Chi-Yul",
+        "epithets": [
+          "Old Man SongReferred to by Kim Sangshik, Episode 9|English=Sean Hennigan|Japanese=Eiji Hanawa|Age=60+}}",
+          "() is a Korean C-Rank Hunter and a kumdo teacher. He is also one of Jinwoo's old friends, having known him since he was a E-Rank Hunter, and one of the six survivors of the first Double Dungeon incident.",
+          "== Appearance ==",
+          "Chi-Yul is a thin middle-aged man with blonde hair, prominent wrinkles, and no left arm, due to having lost it during his experience in the Double Dungeon. In his first appearance, he wore a simple blue tracksuit.",
+          "== Personality ==",
+          "Chi-Yul is a lively and sarcastic man with a strong sense of duty, to the point that he refused to retire from hunting even after losing his left arm in the Double Dungeon. He also cares for his comrades, as demonstrated by his interactions with Jinwoo and Joohee, and was willing to sacrifice himself for them on multiple occasions.",
+          "Although he prefers to hunt with a plan in mind, Chi-Yul is willing to take risks from time to time. However, he is also open to the opinions of others and never forces anyone into doing anything they don't want to.",
+          "After the Double Dungeon incident, Chi-Yul have grown remorseful over his failure as a leader and chose to keep the loss of his arm as a reminder of his mistake.",
+          "== History ==",
+          "Before awakening, Chi-Yul was a kumdo who after awakening as a hunter found himself in the Mage class, which he found ironic considering he was a swordsman. Due to this he often lamented on how his sword skills which he hone for years were useless against the Magic Beasts in dungeons. Despite the odd twist of fate, Cho-Yul believed that there must be a reason for him receiving such a class.",
+          "Over the years he gained a lot of experience as a independent C-Rank hunter and garnered a respected reputation as a professional. It was said it he wasn't already of advanced age he would have been in one of the major guilds.",
+          "===D-Rank Dungeon Arc===",
+          "At a construction site where a D-Rank Gate opened, Chi-Yul elected himself as leader for the raid to the hunters that gathered in the area. Due to him being the highest ranked hunter no one disputed him.Solo Leveling Webtoon: Chapter 1",
+          "In the dungeon Chi-Yul employed his fire magic against the magic beasts. After the monsters were all killed, the hunters discovered a second entrance. Chi-Yul believed to be a rumored Double Dungeon. He used his magic to light the entrance revealing a deep tunnel. Normally such a find would be reported to the Korean Hunters Association and let them assess the dungeon, but Chi-Yul suggested that the hunters present handle the dungeon boss themselves so as not to miss out on the rewards. He left it up to a vote to the 17 hunters on whether they go in or not.Solo Leveling Novel: Chapter 1Solo Leveling Webtoon: Chapter 2",
+          "Chi-Yul led the hunters deeper into the tunnel where at the end was a pair of ominous doors. While some of the hunters were beginning to have second doubts, Chi-Yul reminded them that they already came all this way and it would be a pity to go back empty-handed. He pushed the doors opened, wanting to be in on any discoveries in the new dungeon, inviting anyone to go or stay. Due to his veterans years as a hunter, the others in the raid party trusted Chi-Yul's confidence and followed him in.",
+          "On the other side of the door was a chamber filled with giant stone statues. Chi-Yul while observing his surroundings noticed a symbol on the ground that resembled a divination circle. But before he could examine it further, he was called by the other hunters, finding a strange stone statue with an inscription called the Commandments of Kandiaru and that they were in the Cartenon Temple. After finishing reading them, the doors to the dungeon closed. One of the hunters thinking that coming into the room was a bad idea tried to open the doors. Chi-Yul sensing danger tried to call out to the hunter to stop, but it was too late as one of the giant statues in the room moved and decapitated the man.Solo Leveling Webtoon: Chapter 3",
+          "Upon witnessing this Chi-Yul came to the horrible reali"
+        ]
+      },
+      {
+        "canonical": "Sukmin",
+        "epithets": [
+          "[[Li"
+        ]
+      },
+      {
+        "canonical": "Sung Il-Hwan"
+      },
+      {
+        "canonical": "Sung Jinwoo",
+        "epithets": [
+          "King of the Dead",
+          "Monarch of Shadows",
+          "The Weakest Hunter of All MankindSolo Leveling Webtoon: Chapter 1",
+          "Korea's 10th S-Rank HunterSolo Leveling Webtoon: Chapter 62",
+          "6th National Level Hunter",
+          "2nd-Rate Asian HunterSolo Leveling Novel: Chapter 177 - A disdainful nickname given by Christopher Reed.",
+          "The GhostSolo Leveling Webtoon: Chapter 190"
+        ]
+      },
+      {
+        "canonical": "Sung Suho",
+        "epithets": [
+          "Monarch of Transcendence",
+          "Young Monarch",
+          "Vice Lord",
+          "Son of the Shadow Monarch",
+          "The World's 1st National Level HunterRagnarok Webtoon: Chapter 221",
+          "Guardian of the World Tree"
+        ]
+      },
+      {
+        "canonical": "Tatsumi Fujishima"
+      },
+      {
+        "canonical": "Thomas Andre",
+        "epithets": [
+          "The Goliath",
+          "Monarch of Conquest (Novel)",
+          "King of Giants (Novel)Ragnarok Novel: Chapter 340"
+        ]
+      },
+      {
+        "canonical": "Woo Jinchul"
+      },
+      {
+        "canonical": "Yoo Jinho",
+        "epithets": [
+          "The Upgrader"
+        ]
+      },
+      {
+        "canonical": "Yoo Soohyun"
+      },
+      {
+        "canonical": "Yoon Kijoong"
+      },
+      {
+        "canonical": "Yuri Orloff",
+        "epithets": [
+          "Barrier Specialist",
+          "Best Support-Type Hunter",
+          "Apostle of Infinity"
+        ]
+      }
+    ],
+    "Monarchs": [
+      {
+        "canonical": "Ammut",
+        "epithets": [
+          "King of Monstrous Humanoids",
+          "Monarch of Trials"
+        ]
+      },
+      {
+        "canonical": "Antares",
+        "epithets": [
+          "King of Dragons",
+          "Monarch of Destruction"
+        ]
+      },
+      {
+        "canonical": "Arsha",
+        "epithets": [
+          "Queen of Insects",
+          "Monarch of the Void",
+          "Queen of Bees (Novel)"
+        ]
+      },
+      {
+        "canonical": "Ashborn",
+        "epithets": [
+          "King of the Dead",
+          "Monarch of Shadows",
+          "Greatest Fragment of Brilliant Light"
+        ]
+      },
+      {
+        "canonical": "Baran",
+        "epithets": [
+          "King of Demons",
+          "Monarch of White Flames",
+          "Demon Monarch"
+        ]
+      },
+      {
+        "canonical": "Esil Radiru",
+        "epithets": [
+          "Spoiler: Monarch of Gluttony"
+        ]
+      },
+      {
+        "canonical": "Gray"
+      },
+      {
+        "canonical": "Kandiaru"
+      },
+      {
+        "canonical": "Legia",
+        "epithets": [
+          "King of Giants",
+          "Monarch of the Beginning"
+        ]
+      },
+      {
+        "canonical": "Monarchs"
+      },
+      {
+        "canonical": "Querehsha",
+        "epithets": [
+          "Queen of Insects",
+          "Monarch of Plagues"
+        ]
+      },
+      {
+        "canonical": "Rakan",
+        "epithets": [
+          "King of Beasts",
+          "Monarch of Fangs",
+          "Greatest Hunter In The Chaos World (Novel)"
+        ]
+      },
+      {
+        "canonical": "Sillad",
+        "epithets": [
+          "King of Snow Folk",
+          "Monarch of Frost",
+          "Hockwan"
+        ]
+      },
+      {
+        "canonical": "Sirka",
+        "epithets": [
+          "Queen of Snow Folk",
+          "Monarch of Nightmares"
+        ]
+      },
+      {
+        "canonical": "Spiritual Body Manifestation"
+      },
+      {
+        "canonical": "Sung Jinwoo",
+        "epithets": [
+          "King of the Dead",
+          "Monarch of Shadows",
+          "The Weakest Hunter of All MankindSolo Leveling Webtoon: Chapter 1",
+          "Korea's 10th S-Rank HunterSolo Leveling Webtoon: Chapter 62",
+          "6th National Level Hunter",
+          "2nd-Rate Asian HunterSolo Leveling Novel: Chapter 177 - A disdainful nickname given by Christopher Reed.",
+          "The GhostSolo Leveling Webtoon: Chapter 190"
+        ]
+      },
+      {
+        "canonical": "Sung Suho",
+        "epithets": [
+          "Monarch of Transcendence",
+          "Young Monarch",
+          "Vice Lord",
+          "Son of the Shadow Monarch",
+          "The World's 1st National Level HunterRagnarok Webtoon: Chapter 221",
+          "Guardian of the World Tree"
+        ]
+      },
+      {
+        "canonical": "Tarnak",
+        "epithets": [
+          "King of Monstrous Humanoids",
+          "Monarch of Iron Body"
+        ]
+      },
+      {
+        "canonical": "Thomas Andre",
+        "epithets": [
+          "The Goliath",
+          "Monarch of Conquest (Novel)",
+          "King of Giants (Novel)Ragnarok Novel: Chapter 340"
+        ]
+      },
+      {
+        "canonical": "Yogumunt",
+        "epithets": [
+          "King of Demonic Spectres",
+          "Monarch of Transfiguration",
+          "Greatest Sorcerer in the Chaos World (Novel)"
+        ]
+      }
+    ],
+    "Rulers": [
+      {
+        "canonical": "Ashborn",
+        "epithets": [
+          "King of the Dead",
+          "Monarch of Shadows",
+          "Greatest Fragment of Brilliant Light"
+        ]
+      },
+      {
+        "canonical": "Christopher Reed"
+      },
+      {
+        "canonical": "Go Gunhee",
+        "epithets": [
+          "S-Rank Among S-Ranks",
+          "The Sky Above The Skies",
+          "Brightest Fragment of Brilliant Light"
+        ]
+      },
+      {
+        "canonical": "Jonas"
+      },
+      {
+        "canonical": "Liu Zhigang",
+        "epithets": [
+          "The Hero of China",
+          "China's 7-Star Hunter",
+          "Sword Demon of China",
+          "Berserker",
+          "Butcher"
+        ]
+      },
+      {
+        "canonical": "National Level Hunters"
+      },
+      {
+        "canonical": "Ruler's Authority"
+      },
+      {
+        "canonical": "Rulers",
+        "epithets": [
+          "Fragments Of Brilliant Light",
+          "Messengers of God"
+        ]
+      },
+      {
+        "canonical": "Siddharth Bachchan"
+      },
+      {
+        "canonical": "Spiritual Body Manifestation"
+      },
+      {
+        "canonical": "Sung Il-Hwan"
+      },
+      {
+        "canonical": "Sung Jinwoo",
+        "epithets": [
+          "King of the Dead",
+          "Monarch of Shadows",
+          "The Weakest Hunter of All MankindSolo Leveling Webtoon: Chapter 1",
+          "Korea's 10th S-Rank HunterSolo Leveling Webtoon: Chapter 62",
+          "6th National Level Hunter",
+          "2nd-Rate Asian HunterSolo Leveling Novel: Chapter 177 - A disdainful nickname given by Christopher Reed.",
+          "The GhostSolo Leveling Webtoon: Chapter 190"
+        ]
+      },
+      {
+        "canonical": "Thomas Andre",
+        "epithets": [
+          "The Goliath",
+          "Monarch of Conquest (Novel)",
+          "King of Giants (Novel)Ragnarok Novel: Chapter 340"
+        ]
+      }
+    ],
+    "Dungeons": [
+      {
+        "canonical": "2nd Red Gate Dungeon"
+      },
+      {
+        "canonical": "Busan Gate"
+      },
+      {
+        "canonical": "Cartenon Temple"
+      },
+      {
+        "canonical": "Demon Castle"
+      },
+      {
+        "canonical": "Dungeons"
+      },
+      {
+        "canonical": "Glacier Dungeon"
+      },
+      {
+        "canonical": "Goblins Dungeon"
+      },
+      {
+        "canonical": "Hapjeong Subway Station"
+      },
+      {
+        "canonical": "Hunters Guild Gate"
+      },
+      {
+        "canonical": "Insects Dungeon"
+      },
+      {
+        "canonical": "Job Change Quest Dungeon"
+      },
+      {
+        "canonical": "Loktak Lake Field"
+      },
+      {
+        "canonical": "Magok Field"
+      },
+      {
+        "canonical": "North Korea Field"
+      },
+      {
+        "canonical": "Penalty Zone"
+      },
+      {
+        "canonical": "Pyeongtaek Dungeon"
+      },
+      {
+        "canonical": "Pyramid Field"
+      },
+      {
+        "canonical": "Red Gate Incident"
+      },
+      {
+        "canonical": "Seoul Station Field"
+      },
+      {
+        "canonical": "Shadow Dungeon"
+      }
+    ],
+    "Gates": [
+      {
+        "canonical": "Busan Gate"
+      },
+      {
+        "canonical": "First S-Rank Gate"
+      },
+      {
+        "canonical": "Gates"
+      },
+      {
+        "canonical": "Hunters Guild Gate"
+      },
+      {
+        "canonical": "Jeju Island S-Rank Gate"
+      },
+      {
+        "canonical": "Magok Field"
+      },
+      {
+        "canonical": "North Korea Field"
+      },
+      {
+        "canonical": "Red Gate"
+      },
+      {
+        "canonical": "Red Gate Incident"
+      },
+      {
+        "canonical": "Seoul Station Field"
+      },
+      {
+        "canonical": "Tokyo S-Rank Gate"
+      }
+    ]
+  }
+}

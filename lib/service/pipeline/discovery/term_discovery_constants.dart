@@ -6,6 +6,8 @@
 /// [connectorsByLanguage]; everything else is language-neutral.
 library;
 
+import 'dart:math' as math;
+
 /// Soft connectors per language. They are accepted between two capitalised
 /// tokens during candidate generation but never start or end a candidate.
 const Map<String, List<String>> connectorsByLanguage = {
@@ -30,9 +32,44 @@ const Set<String> universalArticles = {
   'a', 'an', 'the', 'and', 'or', 'of', 'in', 'on', 'at', 'to',
 };
 
-/// Default number of top candidates persisted per book after Stage A. Higher
-/// than the Python value to keep recall up for Stage B.
+/// Default number of top candidates persisted per book after Stage A.
+///
+/// Acts as the anchor for [adaptiveDiscoveryTopN] — a book of ~100 chapters
+/// (the size that produced the original benchmark on Solo Leveling) gets
+/// exactly this many candidates. Smaller and larger books are scaled
+/// sublinearly around this point.
 const int defaultDiscoveryTopN = 1500;
+
+/// Lower / upper bounds for [adaptiveDiscoveryTopN].
+/// - 500 floor: even a novella keeps enough candidates to make Stage B's
+///   batching worthwhile (~5 LLM calls).
+/// - 5000 ceiling: caps Stage B at ~50 LLM calls per book regardless of
+///   how huge the corpus is. Beyond this point we stop getting useful
+///   proper-noun candidates (Heaps' law) and only add Stage B cost.
+const int minAdaptiveTopN = 500;
+const int maxAdaptiveTopN = 5000;
+
+/// Returns the top-N target for a book with [chapterCount] chapters.
+///
+/// Why sqrt — vocabulary in a corpus grows as O(N^β) with β ≈ 0.5
+/// (Heaps' law), so the useful proper-noun pool is sublinear in book
+/// size. Linear scaling like "5 terms/chapter" would give 50 terms for a
+/// novella (too few) and 15000 for a 3000-chapter web serial (too many).
+///
+/// Examples:
+///   chapters=10   → 500    (floor)
+///   chapters=50   → 1061
+///   chapters=100  → 1500   (anchor, equal to defaultDiscoveryTopN)
+///   chapters=200  → 2121
+///   chapters=500  → 3354
+///   chapters=1000 → 4743
+///   chapters=3000 → 5000   (ceiling)
+int adaptiveDiscoveryTopN(int chapterCount) {
+  if (chapterCount <= 0) return defaultDiscoveryTopN;
+  final raw =
+      (defaultDiscoveryTopN * math.sqrt(chapterCount / 100)).round();
+  return raw.clamp(minAdaptiveTopN, maxAdaptiveTopN);
+}
 
 /// Maximum number of words in a multi-word candidate.
 const int maxCandidateWordCount = 6;

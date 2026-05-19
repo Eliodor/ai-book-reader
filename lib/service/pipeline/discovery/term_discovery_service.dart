@@ -98,7 +98,7 @@ class TermDiscoveryService {
 
   Future<DiscoveryOutcome> discoverIfNeeded({
     required int bookId,
-    int topN = defaultDiscoveryTopN,
+    int? topN,
     void Function(String stage)? onStageChange,
   }) async {
     _cancelRequested = false;
@@ -140,12 +140,14 @@ class TermDiscoveryService {
     final detection = _detectFromFirstChapters(snapshots, allStopwords);
     final stopwordsForLang = allStopwords[detection.languageCode] ?? const {};
 
+    final effectiveTopN = topN ?? adaptiveDiscoveryTopN(snapshots.length);
+
     onStageChange?.call('discover');
     final input = DiscoveryInput(
       chapters: snapshots,
       sourceLanguage: detection.languageCode,
       stopwords: stopwordsForLang,
-      topN: topN,
+      topN: effectiveTopN,
     );
 
     final _IsolateRunResult runResult;
@@ -174,6 +176,7 @@ class TermDiscoveryService {
     AnxLog.info(
       'Term discovery: book=$bookId lang=${detection.languageCode} '
       'fallback=${detection.isFallback} '
+      'chapters=${snapshots.length} topN=$effectiveTopN '
       'raw=${output.stats.rawCandidateCount} '
       'prefiltered=${output.stats.prefilteredCount} '
       'final=${output.stats.finalCandidateCount} '
