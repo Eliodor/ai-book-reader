@@ -20,7 +20,12 @@ Recall mode (default). Pick ONE of these candidate sources:
       --db=<path-to-app_database.db> --book-id=<id> \\
       [--wiki=solo-leveling] [--precision-sample=200]
 
-  Both modes join candidates with data/<wiki>/ground_truth.json and print
+  Plain term list (any pre-curated glossary or LLM output — JSON array of strings):
+    dart run bin/run_benchmark.dart \\
+      --terms-json=<path-to-array-of-strings.json> \\
+      [--wiki=solo-leveling] [--precision-sample=200]
+
+  All three modes join candidates with data/<wiki>/ground_truth.json and print
   recall (strict + loose) per category. --db mode also splits Stage A vs
   Stage A+B (filtered) when the LLM filter has run. Writes precision_sample.csv
   next to ground_truth.json for manual labelling.
@@ -50,6 +55,8 @@ Future<void> main(List<String> args) async {
 
   String? dbPath;
   String? discoveryOutputPath;
+  String? termsJsonPath;
+  String? groundTruthOverride;
   int? bookId;
   var wiki = 'solo-leveling';
   var precisionSample = 200;
@@ -58,6 +65,10 @@ Future<void> main(List<String> args) async {
       dbPath = a.substring('--db='.length);
     } else if (a.startsWith('--discovery-output=')) {
       discoveryOutputPath = a.substring('--discovery-output='.length);
+    } else if (a.startsWith('--terms-json=')) {
+      termsJsonPath = a.substring('--terms-json='.length);
+    } else if (a.startsWith('--ground-truth=')) {
+      groundTruthOverride = a.substring('--ground-truth='.length);
     } else if (a == '--db' || a == '-d') {
       stderr.writeln('Use --db=<path> form.');
       exitCode = 64;
@@ -70,14 +81,17 @@ Future<void> main(List<String> args) async {
       precisionSample = int.parse(a.substring('--precision-sample='.length));
     }
   }
-  if (dbPath == null && discoveryOutputPath == null) {
-    stderr.writeln('Need either --discovery-output=<path> or '
-        '--db=<path> --book-id=<id>.\n\n$_usage');
+  final sourceCount = [dbPath, discoveryOutputPath, termsJsonPath]
+      .where((s) => s != null)
+      .length;
+  if (sourceCount == 0) {
+    stderr.writeln('Need one of: --discovery-output=<path>, '
+        '--db=<path> --book-id=<id>, or --terms-json=<path>.\n\n$_usage');
     exitCode = 64;
     return;
   }
-  if (dbPath != null && discoveryOutputPath != null) {
-    stderr.writeln('--db and --discovery-output are mutually exclusive.');
+  if (sourceCount > 1) {
+    stderr.writeln('--db, --discovery-output and --terms-json are mutually exclusive.');
     exitCode = 64;
     return;
   }
@@ -96,24 +110,41 @@ Future<void> main(List<String> args) async {
     exitCode = 66;
     return;
   }
+  if (termsJsonPath != null && !File(termsJsonPath).existsSync()) {
+    stderr.writeln('Terms JSON not found: $termsJsonPath');
+    exitCode = 66;
+    return;
+  }
 
   final scriptDir = File(Platform.script.toFilePath()).parent.parent;
   final dataDir = p.join(scriptDir.path, 'data', wiki);
-  final gtFile = File(p.join(dataDir, 'ground_truth.json'));
+  final gtFile = groundTruthOverride != null
+      ? File(groundTruthOverride)
+      : File(p.join(dataDir, 'ground_truth.json'));
   if (!gtFile.existsSync()) {
-    stderr.writeln('Filtered ground truth not found: ${gtFile.path}\n'
-        'Run `dart run bin/filter_by_text.dart <book>` first.');
+    if (groundTruthOverride != null) {
+      stderr.writeln('Ground truth not found: ${gtFile.path}');
+    } else {
+      stderr.writeln('Filtered ground truth not found: ${gtFile.path}\n'
+          'Run `dart run bin/filter_by_text.dart <book>` first.');
+    }
     exitCode = 66;
     return;
   }
 
   final gtTerms = _loadGroundTruth(gtFile);
   stdout.writeln('Ground truth: ${gtTerms.length} terms across '
-      '${gtTerms.map((t) => t.category).toSet().length} categories.');
+      '${gtTerms.map((t) => t.category).toSet().length} categories '
+      '(${gtFile.path})');
 
   final List<Candidate> allCandidates;
   final bool stageBKnown;
-  if (discoveryOutputPath != null) {
+  if (termsJsonPath != null) {
+    allCandidates = _loadCandidatesFromTermsJson(File(termsJsonPath));
+    stageBKnown = false;
+    stdout.writeln('Candidates: ${allCandidates.length} loaded from terms JSON '
+        '(plain string array — no scores / chapter counts)');
+  } else if (discoveryOutputPath != null) {
     allCandidates = _loadCandidatesFromJson(File(discoveryOutputPath));
     stageBKnown = false;
     stdout.writeln('Candidates: ${allCandidates.length} loaded from JSON '
@@ -176,8 +207,27 @@ Future<void> main(List<String> args) async {
 }
 
 List<GtTerm> _loadGroundTruth(File file) {
-  final raw = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
-  final categories = raw['categories'] as Map<String, dynamic>;
+  final raw = jsonDecode(file.readAsStringSync());
+  // Flat string array — every entry becomes one term in a single category.
+  if (raw is List) {
+    final seen = <String>{};
+    final terms = <GtTerm>[];
+    for (final item in raw) {
+      if (item is! String) continue;
+      final canonical = item.trim();
+      if (canonical.isEmpty) continue;
+      if (!seen.add(canonical)) continue;
+      terms.add(GtTerm(
+        category: 'All',
+        canonical: canonical,
+        isEpithet: false,
+      ));
+    }
+    return terms;
+  }
+  // Categorised wiki shape: { categories: { Cat: [{canonical, epithets[]}] } }.
+  final map = raw as Map<String, dynamic>;
+  final categories = map['categories'] as Map<String, dynamic>;
   final terms = <GtTerm>[];
   for (final catEntry in categories.entries) {
     final cat = catEntry.key;
@@ -224,6 +274,38 @@ List<Candidate> _loadCandidatesFromJson(File file) {
         ),
       )
       .toList();
+}
+
+/// Wraps a plain `["term", "term", ...]` JSON array into [Candidate]s so the
+/// same recall logic can evaluate any pre-curated glossary, including LLM
+/// output. Score / freq / chapter_count are placeholders — they don't affect
+/// recall, only the precision sample CSV.
+List<Candidate> _loadCandidatesFromTermsJson(File file) {
+  final raw = jsonDecode(file.readAsStringSync());
+  if (raw is! List) {
+    throw FormatException(
+        'Expected a top-level JSON array of strings in ${file.path}');
+  }
+  var id = 0;
+  final seen = <String>{};
+  final out = <Candidate>[];
+  for (final item in raw) {
+    if (item is! String) continue;
+    final text = item.trim();
+    if (text.isEmpty) continue;
+    if (!seen.add(text)) continue;
+    out.add(Candidate(
+      id: ++id,
+      sourceText: text,
+      normalizedSource: text.toLowerCase(),
+      candidateType: 'glossary',
+      score: 1.0,
+      frequencyTotal: 1,
+      chapterCount: 1,
+      status: 'candidate',
+    ));
+  }
+  return out;
 }
 
 List<Candidate> _loadCandidates(Database db, int bookId) {
