@@ -18,13 +18,36 @@
 /// [normalizeTerms].
 typedef NormalizedGlossary = Map<String, List<String>>;
 
-NormalizedGlossary normalizeTerms(Iterable<String> rawTerms) {
-  // Trim + drop empties + dedupe (exact-string).
-  final terms = <String>{};
+/// Groups `rawTerms` by case+hyphen+plural and returns a map from each
+/// canonical display form to its sorted unique variants.
+///
+/// [cleanArtifacts] is an extra pre-step aimed at Stage A's noisy output:
+/// interjections like `"Ah!"`, `"AHHH!"`, `"Ahhh……"` and their kin all
+/// reduce to a single key once trailing/internal punctuation is stripped and
+/// any run of >2 identical characters is collapsed to 2. Off by default —
+/// LLM glossaries are already clean and don't need this.
+NormalizedGlossary normalizeTerms(
+  Iterable<String> rawTerms, {
+  bool cleanArtifacts = false,
+}) {
+  // Trim + optional artefact cleanup + drop empties + dedupe (exact-string).
+  // We keep both the cleaned form (used as the group identity) and the
+  // original display string (used when picking a canonical variant), so
+  // "Ah!" still appears next to "Ah" in the variants list.
+  final cleanedToOriginals = <String, List<String>>{};
   for (final raw in rawTerms) {
     final t = raw.trim();
-    if (t.isNotEmpty) terms.add(t);
+    if (t.isEmpty) continue;
+    final cleaned = cleanArtifacts ? _cleanArtifacts(t) : t;
+    if (cleaned.isEmpty) continue;
+    // Drop single-token artefacts that collapsed below the 3-char floor that
+    // Stage A's candidate generator itself enforces.
+    if (!cleaned.contains(' ') && cleaned.length < 3) continue;
+    cleanedToOriginals
+        .putIfAbsent(cleaned, () => <String>[])
+        .add(cleanArtifacts ? cleaned : t);
   }
+  final terms = cleanedToOriginals.keys.toSet();
 
   // Stage 1: group by case+hyphen-insensitive key.
   final caseGroups = <String, List<String>>{};
@@ -77,6 +100,48 @@ String _stripKey(String t) {
   x = x.replaceAll('-', ' ');
   x = x.replaceAll(RegExp(r'\s+'), ' ').trim();
   return x;
+}
+
+/// Stage-A clean-up: strip exclamatory punctuation (`. ! ? , ; : …` and the
+/// fullwidth/Chinese variants) and collapse any run of >2 identical
+/// characters to 2. Hyphens and apostrophes (curly + straight) are kept —
+/// they routinely appear inside legitimate names like "Sung Jin-Woo" or
+/// "Don't".
+///
+/// Examples:
+///   "Ah!" / "Ah." / "Ah…" / "Ah……"   → "Ah"
+///   "Ahhh!" / "Ahhhh!" / "AHHH!"     → "Ahh" / "AHH"  (case folded later)
+///   "U.S.A."                          → "USA"
+String _cleanArtifacts(String text) {
+  var s = text.trim();
+  if (s.isEmpty) return s;
+  // Strip end-of-sentence + parenthetical punctuation anywhere it appears.
+  // We do NOT strip hyphens, apostrophes (', ’, ‘, ʼ), or quote marks.
+  s = s.replaceAll(
+    RegExp(r'[.,!?;:…！？，；。、]'),
+    '',
+  );
+  // Collapse runs of the same character (case-sensitive) longer than 2.
+  s = _collapseRuns(s);
+  s = s.replaceAll(RegExp(r'\s+'), ' ').trim();
+  return s;
+}
+
+String _collapseRuns(String s) {
+  if (s.length < 3) return s;
+  final buf = StringBuffer();
+  String prev1 = '';
+  String prev2 = '';
+  for (final r in s.runes) {
+    final c = String.fromCharCode(r);
+    if (c == prev1 && c == prev2) {
+      continue;
+    }
+    buf.write(c);
+    prev2 = prev1;
+    prev1 = c;
+  }
+  return buf.toString();
 }
 
 List<String> _singularsOfWord(String w) {

@@ -19,12 +19,22 @@ class DiscoveryInput {
     required this.sourceLanguage,
     required this.stopwords,
     required this.topN,
+    this.minScore = 0.0,
   });
 
   final List<ChapterSnapshot> chapters;
   final String sourceLanguage;
   final Set<String> stopwords;
+
+  /// Hard upper bound on the number of candidates persisted, regardless of
+  /// score. Acts as a safety net so a pathological book can't push hundreds
+  /// of thousands of candidates downstream.
   final int topN;
+
+  /// Lower bound on the candidate score. Anything at or below this is dropped
+  /// before persistence. The default of 0 trims the score=0 tail (substring
+  /// penalty collapses pure duplicates to zero; nothing of value sits there).
+  final double minScore;
 }
 
 class DiscoveryOutput {
@@ -257,11 +267,20 @@ Future<DiscoveryOutput> _runDiscoveryAsync(
   // Etap 4 — Gries DP boost on cluster representatives. Reads per-chapter
   // frequencies from each candidate's own chapterFrequencies map (populated
   // exactly during generation, merged across morphological variants).
+  // Also runs the early-chapter recency bonus inside the same pass.
   await yieldCheck();
   final swDp = Stopwatch()..start();
+  final earlyChapterCount = (input.chapters.length / 3).ceil();
+  final earlyChapterIds = <int>{};
+  for (final ch in input.chapters) {
+    if (ch.orderIndex < earlyChapterCount) {
+      earlyChapterIds.add(ch.id);
+    }
+  }
   DispersionScorer(
     chapterTokenCounts: chapterTokenCounts,
     totalTokens: totalTokens,
+    earlyChapterIds: earlyChapterIds,
   ).score(candidates);
   swDp.stop();
 
@@ -271,12 +290,21 @@ Future<DiscoveryOutput> _runDiscoveryAsync(
   applySubstringPenalty(candidates);
   swSub.stop();
 
-  // Etap 6 — sort & cap at topN, build serialisable payloads.
+  // Etap 6 — sort, then cut where the score crosses the floor; topN is a
+  // safety cap on top of that. Ordering is descending, so the first
+  // candidate with score <= minScore tells us where the tail of zero-value
+  // entries begins.
   await yieldCheck();
   final ordered = candidates.values.toList()
     ..sort((a, b) => b.score.compareTo(a.score));
-  final limit =
+  var limit =
       ordered.length < input.topN ? ordered.length : input.topN;
+  for (var i = 0; i < limit; i++) {
+    if (ordered[i].score <= input.minScore) {
+      limit = i;
+      break;
+    }
+  }
   final outCandidates = <CandidatePayload>[];
   final outOccurrences = <OccurrencePayload>[];
   for (var i = 0; i < limit; i++) {

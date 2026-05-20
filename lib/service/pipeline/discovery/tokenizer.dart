@@ -61,6 +61,18 @@ final RegExp _allCapsPattern =
 final RegExp _titleCasePattern =
     RegExp(r'^\p{Lu}\p{Ll}+$', unicode: true, caseSensitive: true);
 
+/// Trailing English possessive `'s` / curly `’s` / modifier `ʼs`. Stripped
+/// from `normalizedText` so that `Kamish's Wrath` and `Kamish Wrath` collapse
+/// to the same internal key. `text` keeps the original apostrophe for
+/// display. False positives for contractions (`it's`) are harmless — the
+/// unstripped stem is a stopword and gets boundary-filtered anyway.
+///
+/// `\u` escapes are used instead of literal apostrophes because the Dart
+/// RegExp engine has been observed to silently miss U+2019 / U+02BC inside
+/// raw-string character classes on Windows.
+final RegExp _trailingPossessive =
+    RegExp("['’ʼ]s\$");
+
 /// Tokenise [content] into [Token]s with sentence boundaries.
 ///
 /// Pure function — safe to call inside an Isolate. The Isolate doesn't ship
@@ -85,9 +97,10 @@ TokenizedChapter tokenize({
     }
     final isAllCaps = _allCapsPattern.hasMatch(text);
     final isTitle = _titleCasePattern.hasMatch(text);
+    final lower = text.toLowerCase();
     tokens.add(Token(
       text: text,
-      normalizedText: text.toLowerCase(),
+      normalizedText: lower.replaceFirst(_trailingPossessive, ''),
       start: match.start,
       end: match.end,
       sentenceIndex: sentenceIndex,

@@ -35,7 +35,7 @@ void main() {
     if (t.isNotEmpty) terms.add(t);
   }
 
-  final canonicalToVariants = normalizeTerms(terms);
+  final canonicalToVariants = normalizeTerms(terms, cleanArtifacts: true);
   final canonicalList = canonicalToVariants.keys.toList()
     ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
 

@@ -66,7 +66,7 @@ class CValueScorer {
       }
     }
 
-    // 2. Apply C-value, T_Case, T_DifSentence.
+    // 2. Apply C-value, T_Case, T_DifSentence, type bonus.
     for (final cand in candidates.values) {
       final logLen = math.log(math.max(2, cand.wordCount)) / math.ln2;
       double cValue;
@@ -90,10 +90,23 @@ class CValueScorer {
           ? 1.0
           : math.log(2 + cand.uniqueSentences.length / totalSentences);
 
-      cand.score = cValue * tCase * difSentence;
+      // Type bonus: proper_name / title / organization candidates are
+      // structurally more likely to be glossary terms than free phrases. The
+      // type was already inferred from capitalisation in CandidateGenerator,
+      // so this re-uses an existing signal with no extra cost.
+      final typeBoost = _typeBoostsByType[cand.candidateType] ?? 1.0;
+
+      cand.score = cValue * tCase * difSentence * typeBoost;
       if (cand.score < 0) cand.score = 0;
     }
 
     return candidates;
   }
+
+  static const Map<String, double> _typeBoostsByType = {
+    'proper_name': 1.4,
+    'title': 1.3,
+    'organization': 1.3,
+    'technique': 1.2,
+  };
 }

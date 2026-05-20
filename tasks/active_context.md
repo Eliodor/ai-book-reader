@@ -1,117 +1,88 @@
 # Active Context
 
-## Current Focus — **Term extraction fixes — code landed (incl. review follow-ups), awaiting verification**
+## Current Focus — **Stage A scoring & cutoff tuning — code landed, awaiting on-device verification**
 
-The Discovery → LLM filter → Pair mining pipeline (iterations 7-8 from `tasks/migration_plan.md`) landed two sessions ago. A skeptical re-review surfaced 9 issues, all 9 landed on 2026-05-15. A second multi-source review on 2026-05-17 (manual + `simplify` 3 sub-agents + `code-review-excellence`) surfaced a deeper correctness bug plus a batch of efficiency / cleanup items — **the correctness bug and the high-value cleanups are now also in source, uncommitted, `flutter analyze` clean across all 18 touched files.**
+After landing the full Discovery + LLM filter + Mining pipeline and a round of correctness fixes, the active loop has been **measuring and tuning Stage A** against ground-truth glossaries via the standalone benchmark (no device, no UI, no LLM). The single source of truth for the benchmark workflow remains [`tasks/term_extraction_benchmark.md`](term_extraction_benchmark.md).
 
-**The single source of truth is still [`tasks/term_extraction_fixes.md`](term_extraction_fixes.md).** Two sections to read:
-- “Implementation log (2026-05-15)” — the original 9 fixes.
-- “Follow-ups discovered during multi-source review (2026-05-17)” — what the review caught, what landed (✅), what is deferred and why (incl. the AI runner re-entrancy blocker for parallel mining).
+The current iteration is in [`tasks/stage_a_tuning.md`](stage_a_tuning.md) — read that file for everything below in detail. **All work in that file is uncommitted, on `master`.**
 
-### Files touched (uncommitted, on `master`)
+Headline numbers (Solo Leveling Yen Press 8-volume EN):
 
-Original 9 fixes (2026-05-15):
-- `lib/service/pipeline/discovery/candidate_generator.dart` — Fixes 1, 2, 5, 9 (+ review trivials).
-- `lib/service/pipeline/discovery/cvalue_scorer.dart` — Fix 4 (async + cancel cadence) + super-candidate dedup via `Set<String>`.
-- `lib/service/pipeline/discovery/morphology_clusterer.dart` — Fix 8 + chapterFrequencies merge.
-- `lib/service/pipeline/discovery/term_discovery_isolate.dart` — Fixes 3, 4, 6. Substantial rewrite. Drops `buildChapterCounts`.
-- `lib/service/pipeline/discovery/term_discovery_service.dart` — Fix 4. `Isolate.spawn` + cancel `SendPort`. `DiscoveryCancelled` outcome.
-- `lib/service/ai/locale_names.dart` — **new file** (Fix 7).
-- `lib/service/pipeline/mining/term_mining_service.dart` — Fix 7 + review fixes (parallel-mining plumbing, bulk variant upsert, retry helper).
-- `lib/providers/term_extraction.dart` — Fix 4. `TermExtractionCancelled` state + Filter/Mining cancelled routing.
-- `lib/widgets/book_detail/term_extraction_card.dart` — small UI tweak so the cancelled state shows “Отменено пользователем”.
+| | Pool size | strict vs Wiki | loose vs Wiki | strict vs LLM | loose vs LLM |
+|---|---:|---:|---:|---:|---:|
+| Baseline (pre-tuning, top-N=1515 cap) | 1 515 | 61.2% | 87.4% | 35.6% | 78.7% |
+| **Current (score > 0, no top-N cap)** | **4 592** | **73.2%** | **96.7%** | **57.7%** | **94.0%** |
 
-Added in the 2026-05-17 review pass:
-- `lib/service/pipeline/discovery/raw_models.dart` — `Map<int,int> chapterFrequencies` field; `superCandidateIndices: Set<int>(hashCode)` → `superCandidateKeys: Set<String>`.
-- `lib/service/pipeline/discovery/dispersion_scorer.dart` — reads `chapterFrequencies` directly, no fallback approximation; `buildChapterCounts` / `ChapterCount` deleted.
-- `lib/service/pipeline/filter/term_filter_service.dart` — `FilterCancelled` outcome; uses `retryOnTransient`; bulk-snippet query.
-- `lib/service/pipeline/mining/mining_chapter_selector.dart` — removed `bestAllCount` no-op.
-- `lib/dao/term_candidate_occurrence_dao.dart` — new `selectFirstByCandidateIds(List<int>)`.
-- `lib/dao/glossary_term_variant_dao.dart` — new `bulkUpsertVariants(List<VariantUpsert>)` + `VariantUpsert` DTO.
-- `lib/service/ai/ai_retry.dart` — **new file**. `retryOnTransient<T>` + `isTransientAiError(Object)`.
+`vs LLM` is against an 873-term LLM-extracted glossary (8 parallel agents, one per Yen Press volume, then deduped via case+hyphen+plural folding). Both glossaries live under `benchmarks/term_extraction/data/solo-leveling/`.
 
-Added in the 2026-05-17 end-of-day non-concurrency bug pass:
-- `lib/dao/database.dart` — **DB v11 → v12**, new `tb_mining_progress` table + index in additive `case 11:` block.
-- `lib/dao/mining_progress_dao.dart` — **new file**. `selectMinedChapterIds`, `markMined`, `deleteByBookId`.
-- `lib/service/pipeline/mining/term_mining_service.dart` — resumability wiring (skip already-mined chapters via `MiningProgressDao`, mark on success).
-- `lib/providers/term_extraction.dart` — `reset()` also clears `miningProgressDao.deleteByBookId`. UI notifications switched to Ukrainian.
-- `lib/service/ai/json_response.dart` — peels up to two fence layers.
-- `lib/service/pipeline/filter/term_filter_service.dart` — `_batchSize` resets per `filterIfNeeded` run (no longer leaks across books).
-- `lib/service/pipeline/mining/mining_postfilter.dart` — 4 regexes hoisted to `static final`.
-- `lib/service/pipeline/discovery/cvalue_scorer.dart` — pre-computed padded normalized source removes per-probe allocation.
-- `lib/widgets/book_detail/term_extraction_card.dart` — UI strings switched to Ukrainian.
-- `lib/enums/ai_prompts.dart` — mining prompt morphology example switched from Russian to Ukrainian.
+## What's landed and pushed (master)
 
-### What still needs to happen before this iteration can be archived
+Mapped to commits, oldest → newest:
 
-1. **On-device verification** against the acceptance criteria in `term_extraction_fixes.md` (Master/Crimson/Hall sub-spans, Ukrainian morphology cluster, ≤ 3 s cancel, ≤ 35 LLM calls in Stage B, dictionary-form translations in Stage C). The pipeline still requires a book with translated `tb_target_chapters` rows; Iteration 4 (single-chapter translate) hasn’t landed, so the first run still needs a manual SQL pre-seed.
-2. **Commit decision** for iterations 1-8 + these fixes (still all uncommitted; see § “Up next”).
-3. After verification + commit: changelog entry; delete or archive `term_extraction_fixes.md`.
+| Commit | Iteration | Headline |
+|---|---|---|
+| `05dab3ab` | 1 | GlossaryTerm slice + initial CLAUDE.md / memory / tasks. |
+| `cf1010f7` | 2 | Chapter tables (`tb_source_chapters`, `tb_target_chapters`) + `ChapterStatus` + Windows ATL / C5054 build fix. |
+| `5afbacbf` | 3 | First-open chapter parser (foliate-js TOC walk → rows in `tb_source_chapters`). |
+| `c277b457` | 3.5 | Reference translations + chapters, chapter-number alignment, pure-Dart EPUB/FB2 parser (no WebView). |
+| `e7a991f2` | 7-8 | Full pipeline: Discovery (6-etap isolate) + Filter (LLM batched) + Mining (per-chapter, voting via `tb_glossary_term_variants`). |
+| `e7ecc07c` | 7-8 fixes | All 9 fixes from `term_extraction_fixes.md` + multi-source review fixes + DB v12 `tb_mining_progress` for Stage C resumability. |
+| `0ae89a0f` | Benchmark v1 | Standalone benchmark crate, ground truth from Solo Leveling fandom, adaptive topN. |
+| `42c8896f` | Stage A upgrade | LLM normalization output, grouping + normalization tools, latest Stage A iteration. |
 
-## What landed in the previous session (uncommitted)
+**Uncommitted on `master` (this iteration — see `tasks/stage_a_tuning.md`):**
 
-Term-extraction pipeline (Discovery + LLM filter + Pair mining). New files in:
-- `lib/dao/`: `term_candidate_dao.dart`, `term_candidate_occurrence_dao.dart`, `glossary_term_variant_dao.dart`.
-- `lib/models/`: `term_candidate.dart`, `term_candidate_occurrence.dart`, `glossary_term_variant.dart`, `candidate_status.dart`, `candidate_type.dart`.
-- `lib/service/pipeline/discovery/`: 10 files implementing the 6-stage Stage A pipeline (tokenizer, language detector, stopwords loader, candidate generator, C-value scorer, dispersion scorer, morphology clusterer, substring penalizer, isolate orchestrator, service).
-- `lib/service/pipeline/filter/term_filter_service.dart` — Stage B.
-- `lib/service/pipeline/mining/`: chapter selector, postfilter, mining service.
-- `lib/service/pipeline/term_extraction_task_handler.dart` — minimal no-op foreground task handler (see Fix-out-of-scope in the followup).
-- `lib/service/ai/json_response.dart`, `lib/service/ai/ai_generate_once.dart` — tolerant JSON parser + Future-shaped wrapper around `aiGenerateStream`.
-- `lib/providers/term_extraction.dart` — Riverpod controller with sealed state.
-- `lib/widgets/book_detail/term_extraction_card.dart` — UI card with three progress bars; mounted in `buildMoreDetail()` of `book_detail.dart`.
+- `lib/service/pipeline/discovery/text_artifacts.dart` (new) — `cleanTermArtifacts`: strips `.,!?;:…` and collapses `>2` identical-char runs.
+- `candidate_generator.dart` — calls `cleanTermArtifacts`; adds stopword-guard in `_ingestQuotedSpans` (first/last/≥50% test).
+- `cvalue_scorer.dart` — type boost (`proper_name × 1.4`, `title/organization × 1.3`, `technique × 1.2`).
+- `substring_penalizer.dart` — `0.6` softer multiplier for frequent (`freq ≥ 10`) `proper_name` candidates.
+- `dispersion_scorer.dart` — drops `topK` cap; runs Gries DP on every candidate; adds `×1.2` recency bonus for first-third-of-book + `freq ≥ 5`.
+- `term_discovery_isolate.dart` — `DiscoveryInput.minScore = 0.0`, score-floor cut after sort. Computes `earlyChapterIds` set for recency bonus. **`topN` remains as safety cap.**
+- `tokenizer.dart` — `Token.normalizedText` strips trailing `['’ʼ]s` (English possessive). `text` keeps original.
+- Benchmark instrument (`benchmarks/term_extraction/`): `lib/term_normalizer.dart`, `tool/normalize_terms.dart`, `tool/normalize_stage_a.dart`, `tool/merge_volume_terms.dart` (all new); `bin/run_benchmark.dart` extended with `--terms-json` and `--ground-truth` flags.
 
-Changes to existing files:
-- DB v10 → v11 in `lib/dao/database.dart`. New tables `tb_term_candidates`, `tb_term_candidate_occurrences`, `tb_glossary_term_variants` + 5 indexes.
-- `lib/enums/ai_prompts.dart`: added `candidateFilter` and `candidateMining` cases with default prompts.
-- `lib/service/ai/prompt_generate.dart`: added `generatePromptCandidateFilter` and `generatePromptCandidateMining`.
-- `lib/main.dart`: `FlutterForegroundTask.initCommunicationPort()` at startup.
-- `pubspec.yaml`: `unorm_dart`, `snowball_stemmer`, `flutter_foreground_task` deps; `assets/data/` registered.
-- `android/app/src/main/AndroidManifest.xml`: `FOREGROUND_SERVICE_DATA_SYNC` and `POST_NOTIFICATIONS` permissions.
-- `assets/data/stopwords-iso.json` (~200 KB, 57 languages, MIT) + `STOPWORDS_LICENSE.md`.
+`tasks/term_extraction_fixes.md` and `tasks/stage_a_tuning.md` are the two open iteration docs; the former is historical, the latter is active.
 
-Plan / research the implementation was based on:
-- `C:\Users\Admin\.claude\plans\starry-popping-clock.md` — algorithmic plan and pipeline diagram.
-- `C:\Users\Admin\.claude\plans\starry-popping-clock-agent-ad6be62dd79c96854.md` — research that selected C-value + truncated YAKE + single-pass clustering + Gries DP + Snowball stemmer.
+## What still needs to happen
 
-## Verification done in the previous session
+1. **On-device verification of the Stage A tuning** (this iteration). `flutter run -d <device>`, hot-restart, trigger term extraction on a real book, confirm `tb_term_candidates` row count matches benchmark expectation for that book.
+2. **Wire `minScore` through `TermDiscoveryService`**. Currently the field exists on `DiscoveryInput` but the service forwards only `topN`. On-device pipeline still runs without the score-floor until this is plumbed. See `tasks/stage_a_tuning.md` § "Open ideas" (3).
+3. **Multi-language smoke** of Stage A tuning on a Ukrainian or Russian EPUB — capitalization rules + stopwords path should still light up.
+4. **Commit decision** for `tasks/stage_a_tuning.md` work. Once 1–3 land, the iteration can be committed and the doc archived into `changelog.md`.
+5. **On-device verification of Stage B + Stage C.** Acceptance criteria in `term_extraction_fixes.md`. Still blocked by Iteration 4 (translator) — no production path to fill `tb_target_chapters` for a test book without manual SQL pre-seed.
+6. **Iteration 4 (translator)** per `tasks/migration_plan.md`.
+7. **Changelog entries** for iterations 7-8, the fixes, the benchmark, and Stage A tuning — `tasks/changelog.md` currently stops at 2026-05-10 (Iteration 3.5).
+8. **Standalone Stage B (LLM filter) benchmark** — analogue to `tool/run_discovery_benchmark.dart`. Listed under "Open ideas" in the benchmark doc.
 
-- `dart run build_runner build --delete-conflicting-outputs` — clean (453 outputs).
-- `flutter analyze lib/` — 42 info-level warnings, all pre-existing in unrelated files; **0 errors / 0 warnings in any new or modified file**.
-- **No on-device run yet.** The first realistic test will need a book with translated `tb_target_chapters` filled in. The pipeline is gated by Iteration 4 (single-chapter translate) which is still TODO — so a manual SQL pre-seed will be needed, or wait for Iteration 4 to land first.
+## Known limitations (carried over)
 
-## Known limitations to document later
-
-(Carried over from the previous focus, still applies.)
-
-- **No resumability of partial parses** — chapter parser is idempotent on book level, not chapter level. Closing the reader mid-parse skips remaining chapters.
+- **No resumability of partial parses** — chapter parser is idempotent on book level, not chapter level.
 - **EPUB / FB2 only** for source parsing.
 - **Books parsed before v10** only get `chapter_number` lazily backfilled — sub-chapter merge is not retroactive.
 - **Chinese numeral chapters** (`第一章`) detected as chapters but `chapter_number` stays NULL.
-- **Soft-deleting a book** does not cascade to reference translations, candidates, glossary, variants — same project-wide gap.
+- **Soft-deleting a book** does not cascade to reference translations, candidates, glossary, variants.
 
-## Up next (after term-extraction fixes)
+## Up next (after Stage A iteration plateaus)
 
-- Commit cadence decision for iterations 1-8 (all still uncommitted).
-- Iteration 9: glossary RAG-lite for the translator. The pipeline now produces a clean glossary; the next step is feeding it into Iteration 4's translator prompt as constraint terminology.
-- Unit tests for the Stage A algorithms (separate slice — see `tasks/term_extraction_fixes.md` "Out of scope").
+- **Iteration 4 — translator** (per migration plan). Port `COMPACT_TRANSLATOR_SYSTEM_PROMPT`, build `translator_service.dart`, dev-only debug button. Unblocks end-to-end pipeline run.
+- **Iteration 9 — glossary RAG-lite** for the translator: feed Stage C output into translator prompts as constraint terminology.
+- Sub-agent ground-truth extraction (estimated $1-6 / book in LLM cost) — would give per-translation gt without hand-curation. The 8-volume LLM glossary in this iteration is a manual prototype of this idea. See `term_extraction_benchmark.md` § Open ideas.
 
-### Deferred items (full list in `term_extraction_fixes.md` § "Follow-ups discovered during multi-source review")
+### Stage A — known dead-ends from this iteration (don't redo blindly)
 
-Concurrency cluster — held for a separate session per user instruction:
+Three scoring/extraction tweaks were tried and rolled back. Full detail + `file:line` in `tasks/stage_a_tuning.md` § "Failed experiments":
 
-1. **`CancelableLangchainRunner` re-entrancy** — `lib/service/ai/langchain_runner.dart:10` holds one `_subscription` at module scope, which is why mining `concurrency` had to stay at `1`. Returning `(Stream<String>, Cancelable)` from `stream()` unblocks a ~3-5× wall-clock win on Stage C.
-2. **Real foreground task isolate** — Stage B/C still run on the main isolate. Move them into the `TaskHandler` once item (1) lands so cancel/progress works across the isolate boundary.
-3. **Cross-service `PipelineCancellationToken`** — replaces three ad-hoc `_cancelled` flags.
+1. **`log(1 + freq)` frequency compression** — collapsed main characters into the tail. `Sung Jinwoo` (freq 15 631) lost dominance, 9 wiki canonicals fell out of top-1515.
+2. **Stopword-ratio penalty for capitalized chains** — `stopwords-iso[en]` contains the same `the` / `of` / `in` that the chain assembler uses as connectors. `King of the Dead` got rejected as "≥50% stopwords".
+3. **Bracket pattern `[…]` as quoted-span source** — Yen-Press Korean web-novel format wraps whole System sentences in `[…]`, not just skill names. Added 188 noisy long-phrase candidates for 1 wiki strict-hit.
 
-Non-concurrency leftovers:
+### Deferred (concurrency cluster, full list in `term_extraction_fixes.md`)
 
-4. Stage strings + candidate type strings → enums (~stylistic but kills `default:` fallthroughs that hide typos).
-5. `_DiscoveryCancelledException` and mixed typed/untyped isolate messages — clean up once the cancellation token lands.
-6. Memory peak measurement on a low-end Android for `_emitGroup` × O(C²) before prefilter.
-7. **Battery optimisation request** on Android — call `FlutterForegroundTask.requestIgnoreBatteryOptimization()` so doze-mode doesn't kill long Stage C runs.
-8. **`tb_glossary_term_variants` review UI** — variants are persisted but never surfaced; a "Review alternatives" sheet would let the user override a vote.
-9. **Unit tests for Stage A** — C-value, single-pass cluster, postfilter, JSON parser have no coverage. Split into `tasks/term_extraction_tests.md`.
+1. **`CancelableLangchainRunner` re-entrancy** — `lib/service/ai/langchain_runner.dart:10` holds one `_subscription` at module scope; mining `concurrency` stuck at `1`. Fixing this unlocks a ~3-5× wall-clock win on Stage C.
+2. **Real foreground task isolate** — Stage B/C still on main isolate.
+3. **Cross-service `PipelineCancellationToken`**.
+
+Non-concurrency leftovers: enum migration for stage / candidate-type strings, `_DiscoveryCancelledException` cleanup, memory peak measurement, Android battery-optimisation request, `tb_glossary_term_variants` review UI, Stage A unit tests.
 
 ## Pre-existing notes / things to watch
 
@@ -120,4 +91,4 @@ Non-concurrency leftovers:
 
 ---
 
-For prior iterations (1: GlossaryTerm; 2: chapter tables + `ChapterStatus`; 3: first-open chapter parser; 3.5: reference translations + alignment) see `tasks/changelog.md`.
+For prior iterations (1: GlossaryTerm; 2: chapter tables + `ChapterStatus`; 3: first-open chapter parser; 3.5: reference translations + alignment) see `tasks/changelog.md`. Iterations 7-8 + the benchmark are not yet in the changelog (see § “What still needs to happen” item 3).

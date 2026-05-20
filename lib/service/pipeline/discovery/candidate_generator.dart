@@ -1,5 +1,6 @@
 import 'package:ai_book_reader/service/pipeline/discovery/raw_models.dart';
 import 'package:ai_book_reader/service/pipeline/discovery/term_discovery_constants.dart';
+import 'package:ai_book_reader/service/pipeline/discovery/text_artifacts.dart';
 import 'package:ai_book_reader/service/pipeline/discovery/tokenizer.dart';
 
 /// Stage 1 of discovery — turn a sequence of tokenised chapters into a flat
@@ -202,9 +203,9 @@ class CandidateGenerator {
       normalizedParts.add(tok.normalizedText);
       if (!tok.isAllCaps) allCaps = false;
     }
-    final sourceText = parts.join(' ');
-    final normalized = normalizedParts.join(' ').trim();
-    if (normalized.isEmpty) return;
+    final rawSourceText = parts.join(' ');
+    final rawNormalized = normalizedParts.join(' ').trim();
+    if (rawNormalized.isEmpty) return;
 
     // Boundary trim: never start or end with a stopword / connector / article.
     final firstNorm = normalizedParts.first;
@@ -217,7 +218,14 @@ class CandidateGenerator {
         universalArticles.contains(lastNorm)) {
       return;
     }
-    if (parts.length == 1 && parts.first.length < 3) return;
+
+    // Strip exclamatory artefacts ("Ah!" → "Ah", "AHHH!" → "AHH") so noisy
+    // quoted spans collapse into a single candidate instead of spamming the
+    // map with variants. See text_artifacts.dart.
+    final sourceText = cleanTermArtifacts(rawSourceText);
+    final normalized = cleanTermArtifacts(rawNormalized);
+    if (normalized.isEmpty) return;
+    if (!normalized.contains(' ') && normalized.length < 3) return;
 
     // Content-word count for C-value: connectors (of/the/de/von/…) are not
     // counted, so "Master of Crimson" gets wordCount=2, not 3.
@@ -275,8 +283,10 @@ class CandidateGenerator {
     String normalizedContent,
   ) {
     for (final match in _quotedPattern.allMatches(normalizedContent)) {
-      final raw = match.group(1)?.trim();
-      if (raw == null || raw.isEmpty) continue;
+      final rawMatch = match.group(1)?.trim();
+      if (rawMatch == null || rawMatch.isEmpty) continue;
+      final raw = cleanTermArtifacts(rawMatch);
+      if (raw.isEmpty) continue;
       final normalized = _collapseWhitespace(raw.toLowerCase());
       if (normalized.length < 3) continue;
       if (stopwords.contains(normalized)) continue;
@@ -284,6 +294,20 @@ class CandidateGenerator {
       final words = normalized.split(' ');
       if (words.length > maxCandidateWordCount) continue;
       if (words.any((w) => w.isEmpty)) continue;
+
+      // Reject dialogue-style phrases by leaning on the language's stopword
+      // list: a real proper noun / location / item almost never starts or
+      // ends with a function word, and rarely has more than ~half its tokens
+      // be stopwords. Universal across every language in stopwords-iso.
+      if (words.length > 1) {
+        if (stopwords.contains(words.first)) continue;
+        if (stopwords.contains(words.last)) continue;
+        var stopCount = 0;
+        for (final w in words) {
+          if (stopwords.contains(w)) stopCount++;
+        }
+        if (stopCount * 2 >= words.length) continue;
+      }
 
       final cand = _candidates.putIfAbsent(
         normalized,

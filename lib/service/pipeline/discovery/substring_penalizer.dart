@@ -28,7 +28,15 @@ void applySubstringPenalty(Map<String, RawCandidate> candidates) {
       if (s.nestedFrequency == 0) continue;
       final ratio = s.nestedFrequency / s.frequencyTotal;
       if (ratio >= substringNestedRatio) {
-        s.score = s.score * substringNestedPenalty;
+        // A frequent proper name is still a legitimate standalone term even
+        // when it is often embedded ("Adam White" appears as itself AND
+        // inside "Detective Adam White"). Lighter penalty so it survives the
+        // top-N cut.
+        final penalty =
+            (s.candidateType == 'proper_name' && s.frequencyTotal >= 10)
+                ? 0.6
+                : substringNestedPenalty;
+        s.score = s.score * penalty;
       }
     }
   }

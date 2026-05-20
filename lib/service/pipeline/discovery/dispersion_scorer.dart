@@ -1,5 +1,4 @@
 import 'package:ai_book_reader/service/pipeline/discovery/raw_models.dart';
-import 'package:ai_book_reader/service/pipeline/discovery/term_discovery_constants.dart';
 
 /// Stage 3 — Gries DP dispersion boost for the top-K candidates from Stage 2.
 ///
@@ -18,21 +17,26 @@ class DispersionScorer {
   DispersionScorer({
     required this.chapterTokenCounts,
     required this.totalTokens,
-    int? topK,
-  }) : topK = topK ?? dispersionTopK;
+    required this.earlyChapterIds,
+  });
 
   /// `chapterId` → token count in that chapter.
   final Map<int, int> chapterTokenCounts;
   final int totalTokens;
-  final int topK;
+
+  /// IDs of the chapters that fall in the first ~third of the book. A term
+  /// first introduced inside this window and recurring later is almost
+  /// always a core plot element (main character, location, ability),
+  /// regardless of language.
+  final Set<int> earlyChapterIds;
 
   Map<String, RawCandidate> score(Map<String, RawCandidate> candidates) {
     if (totalTokens == 0) return candidates;
-    final sorted = candidates.values.toList()
-      ..sort((a, b) => b.score.compareTo(a.score));
-    final n = sorted.length < topK ? sorted.length : topK;
-    for (var i = 0; i < n; i++) {
-      final cand = sorted[i];
+    // Dispersion now runs on every candidate, not just the top-K. Evenly
+    // spread terms that sit deep in the list get the same up-to-2× boost
+    // as the head — that's where most of the wiki-recall on the long tail
+    // came from in the analysis.
+    for (final cand in candidates.values) {
       if (cand.chapterFrequencies.isEmpty || cand.frequencyTotal == 0) {
         continue;
       }
@@ -47,7 +51,16 @@ class DispersionScorer {
       dp /= 2.0;
       if (dp < 0) dp = 0;
       if (dp > 1) dp = 1;
-      cand.score = cand.score * (1 + (1 - dp));
+      var multiplier = 1 + (1 - dp);
+
+      final firstChId = cand.firstChapterId;
+      final earlyAppearance =
+          firstChId != null && earlyChapterIds.contains(firstChId);
+      if (earlyAppearance && cand.frequencyTotal >= 5) {
+        multiplier *= 1.2;
+      }
+
+      cand.score = cand.score * multiplier;
     }
     return candidates;
   }
