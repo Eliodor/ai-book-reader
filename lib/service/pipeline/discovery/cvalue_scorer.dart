@@ -68,14 +68,20 @@ class CValueScorer {
 
     // 2. Apply C-value, T_Case, T_DifSentence, type bonus.
     for (final cand in candidates.values) {
-      final logLen = math.log(math.max(2, cand.wordCount)) / math.ln2;
+      // Glossary terms in narrative text are usually 1-3 words (with 2 being
+      // the sweet spot — most named entities). The classic C-value
+      // `log2(wordCount)` boost rewards arbitrarily long phrases, which in
+      // our corpus are dialogue snippets and System sentences, not glossary
+      // entries. Replace with an inverse-U shaped factor that peaks at 2
+      // words and decays from there.
+      final lengthFactor = _lengthFactor(cand.wordCount);
       double cValue;
       if (cand.superCandidateKeys.isEmpty) {
-        cValue = logLen * cand.frequencyTotal.toDouble();
+        cValue = lengthFactor * cand.frequencyTotal.toDouble();
       } else {
         final n = cand.superCandidateKeys.length;
         final avgNested = cand.nestedFrequency / n;
-        cValue = logLen * (cand.frequencyTotal - avgNested);
+        cValue = lengthFactor * (cand.frequencyTotal - avgNested);
         if (cValue < 0) cValue = 0;
       }
 
@@ -109,4 +115,27 @@ class CValueScorer {
     'organization': 1.3,
     'technique': 1.2,
   };
+
+  static double _lengthFactor(int wordCount) {
+    // Glossary terms in narrative text are usually 1-3 words (2 being the
+    // sweet spot — most named entities and short skill names). Phrases of
+    // 4+ words are mostly dialogue or System sentences and should not get
+    // the classic C-value length boost. We accept losing a small number of
+    // long wiki epithets ("King of Monstrous Humanoids") for the bigger win
+    // of clearing long noise out of the top of the list.
+    switch (wordCount) {
+      case 1:
+        return 1.2;
+      case 2:
+        return 1.5;
+      case 3:
+        return 1.2;
+      case 4:
+        return 0.7;
+      case 5:
+        return 0.4;
+      default:
+        return 0.2;
+    }
+  }
 }

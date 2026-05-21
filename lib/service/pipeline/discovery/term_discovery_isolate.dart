@@ -240,6 +240,16 @@ Future<DiscoveryOutput> _runDiscoveryAsync(
   swGen.stop();
   final rawCount = candidates.length;
 
+  // Etap 1.3 — heuristic junk filter. Drops fleeting one-chapter low-frequency
+  // mentions and phrases of 5+ words *before* C-value runs (C-value is O(K²)
+  // over the pool size, so eliminating obvious noise here is the biggest
+  // single performance lever in Stage A). Stage B then sees only candidates
+  // that have at least passed structural checks — saves a large fraction of
+  // its LLM budget. See heuristicJunkSingleChapterMaxFreq /
+  // heuristicJunkLongPhraseWordCount in term_discovery_constants.dart.
+  await yieldCheck();
+  _heuristicJunkFilter(candidates);
+
   // Etap 1.5 — pre-filter low-frequency candidates so the O(K^2) C-value scan
   // doesn't explode on books that yield 50k+ raw candidates. See Fix 3 in
   // term_extraction_fixes.md.
@@ -349,6 +359,34 @@ Future<DiscoveryOutput> _runDiscoveryAsync(
       finalCandidateCount: outCandidates.length,
     ),
   );
+}
+
+/// Drops candidates that are structurally unlikely to be glossary terms:
+///   - **single-word** one-chapter fleeting mentions: `wordCount == 1` AND
+///     `chapter_count == 1` AND
+///     `frequency_total <= heuristicJunkSingleChapterMaxFreq`. Catches
+///     ALL-CAPS abbreviations (`Atm`, `Sos`, `Hp Hp`), onomatopoeia
+///     (`Rrrummble`), and generic words that happened to land sentence-
+///     initial just once (`Friendship`, `Boss`). Multi-word fleeting
+///     candidates are preserved — they're more likely to be real proper
+///     nouns (e.g. `Dungeon Jackals`, `Penalty Zone`) than noise.
+///   - **long phrases**: total word count >= `heuristicJunkLongPhraseWordCount`
+///     (counting connectors, unlike `RawCandidate.wordCount`). Dialogue and
+///     System sentences that slipped through the chain assembler.
+///
+/// Runs *before* C-value because C-value is O(K²) over the pool size; cutting
+/// the noise floor here is the single biggest performance lever in Stage A.
+void _heuristicJunkFilter(Map<String, RawCandidate> candidates) {
+  if (candidates.isEmpty) return;
+  candidates.removeWhere((_, c) {
+    if (c.chapterIds.length == 1 &&
+        c.frequencyTotal <= heuristicJunkSingleChapterMaxFreq) {
+      return true;
+    }
+    final totalWords = c.normalizedSource.split(' ').length;
+    if (totalWords >= heuristicJunkLongPhraseWordCount) return true;
+    return false;
+  });
 }
 
 /// Drops single-word hapax legomena (`wordCount==1 && frequencyTotal<2`) and,

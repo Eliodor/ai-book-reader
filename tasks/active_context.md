@@ -11,7 +11,8 @@ Headline numbers (Solo Leveling Yen Press 8-volume EN):
 | | Pool size | strict vs Wiki | loose vs Wiki | strict vs LLM | loose vs LLM |
 |---|---:|---:|---:|---:|---:|
 | Baseline (pre-tuning, top-N=1515 cap) | 1 515 | 61.2% | 87.4% | 35.6% | 78.7% |
-| **Current (score > 0, no top-N cap)** | **4 592** | **73.2%** | **96.7%** | **57.7%** | **94.0%** |
+| Mid-tuning (no heuristic junk filter) | 4 592 | 73.8% | 96.7% | 57.8% | 94.0% |
+| **Current (incl. heuristic junk filter)** | **2 250** | **68.9%** | **95.6%** | **46.6%** | **88.3%** |
 
 `vs LLM` is against an 873-term LLM-extracted glossary (8 parallel agents, one per Yen Press volume, then deduped via case+hyphen+plural folding). Both glossaries live under `benchmarks/term_extraction/data/solo-leveling/`.
 
@@ -39,6 +40,9 @@ Mapped to commits, oldest → newest:
 - `dispersion_scorer.dart` — drops `topK` cap; runs Gries DP on every candidate; adds `×1.2` recency bonus for first-third-of-book + `freq ≥ 5`.
 - `term_discovery_isolate.dart` — `DiscoveryInput.minScore = 0.0`, score-floor cut after sort. Computes `earlyChapterIds` set for recency bonus. **`topN` remains as safety cap.**
 - `tokenizer.dart` — `Token.normalizedText` strips trailing `['’ʼ]s` (English possessive). `text` keeps original.
+- `cvalue_scorer.dart` (added in second pass) — replaces classic `log2(wordCount)` length boost with an inverse-U table peaking at `wordCount=2` (factors `1.2 / 1.5 / 1.2 / 0.7 / 0.4 / 0.2`). Glossary terms are short; we no longer reward long phrases the way the original C-value formula assumes scientific text does.
+- `term_discovery_constants.dart` + `term_discovery_isolate.dart` (added in third pass) — heuristic junk filter at Etap 1.3 (before C-value). Drops fleeting one-chapter low-frequency mentions and 5+ word phrases. Constants `heuristicJunkSingleChapterMaxFreq = 2` and `heuristicJunkLongPhraseWordCount = 5`. Halves the pool size and shaves 90% off C-value runtime at the cost of ~5 p.p. strict recall vs Wiki.
+- `term_discovery_constants.dart` (fourth pass) — raised `defaultDiscoveryTopN` from 1 500 → 3 000 (the anchor for `adaptiveDiscoveryTopN`) and `maxAdaptiveTopN` from 5 000 → 30 000. Together these promote the score>0 floor to be the primary cutoff; `topN` is now a safety net for pathological corpora. On Solo Leveling the resulting pool is 2 250 (was 1 515 under the old cap); on Sword God projections (2 600 ch) it should be ~12 000 (was clamped at 5 000).
 - Benchmark instrument (`benchmarks/term_extraction/`): `lib/term_normalizer.dart`, `tool/normalize_terms.dart`, `tool/normalize_stage_a.dart`, `tool/merge_volume_terms.dart` (all new); `bin/run_benchmark.dart` extended with `--terms-json` and `--ground-truth` flags.
 
 `tasks/term_extraction_fixes.md` and `tasks/stage_a_tuning.md` are the two open iteration docs; the former is historical, the latter is active.

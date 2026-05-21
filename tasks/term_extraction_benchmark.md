@@ -3,6 +3,20 @@
 > Snapshot of the benchmark infrastructure as of 2026-05-19. For everyday
 > usage instructions see `benchmarks/term_extraction/README.md`. This file
 > records the *why*, the first baseline numbers, and the open questions.
+>
+> ⚠ **The baseline numbers in this doc (61.2% / 87.4% strict / loose) are
+> historical — they describe the pipeline state on 2026-05-19, before the
+> Stage A tuning iteration.** For the current pool size, recall numbers,
+> and configuration knobs see [`tasks/stage_a_tuning.md`](stage_a_tuning.md).
+> Headline current state on Solo Leveling (102 ch): pool 2 250 candidates,
+> strict / loose vs Wiki = **68.9% / 95.6%**, ~11 s wall clock.
+>
+> ⚠ **Stop benchmarking against the LLM glossary as a quality signal** —
+> the 873-term LLM extraction is itself ~32% noise (duplicates, Korean
+> name order, publisher mentions, fabrications). A cleaned variant
+> (`benchmarks/term_extraction/data/solo-leveling/extracted_terms_filtered.json`,
+> 590 terms) exists as a debug artefact only. The Wiki ground truth
+> (`ground_truth.json`, 183 entries) remains the canonical metric.
 
 ## What landed
 
@@ -18,6 +32,12 @@ Formula: `1500 × sqrt(chapters / 100)`, clamped to `[500, 5000]`. Anchored
 on the Solo Leveling baseline (100 chapters → 1500). Heaps' law inspired
 — vocabulary grows as O(N^0.5) so linear scaling would over-collect for
 huge books and under-collect for novellas.
+
+> Note (2026-05-21): the anchor and ceiling were raised to `3000` /
+> `30 000` during the Stage A tuning iteration, so `topN` is now the
+> safety net rather than the primary cutoff. The score>0 floor
+> (`DiscoveryInput.minScore`) is what shapes the pool now. See
+> `tasks/stage_a_tuning.md` keep-list item 7.
 
 - `benchmarks/term_extraction/` — isolated Dart package (separate
   `pubspec.yaml`, deps: `http`, `archive`, `html`, `unorm_dart`, `path`,

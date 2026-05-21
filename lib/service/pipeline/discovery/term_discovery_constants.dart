@@ -38,16 +38,24 @@ const Set<String> universalArticles = {
 /// (the size that produced the original benchmark on Solo Leveling) gets
 /// exactly this many candidates. Smaller and larger books are scaled
 /// sublinearly around this point.
-const int defaultDiscoveryTopN = 1500;
+///
+/// The anchor is set above the typical score>0 pool size (~2 250 on
+/// Solo Leveling) so that the `minScore` floor stays the primary cutoff and
+/// `topN` is a safety net.
+const int defaultDiscoveryTopN = 3000;
 
 /// Lower / upper bounds for [adaptiveDiscoveryTopN].
 /// - 500 floor: even a novella keeps enough candidates to make Stage B's
 ///   batching worthwhile (~5 LLM calls).
-/// - 5000 ceiling: caps Stage B at ~50 LLM calls per book regardless of
-///   how huge the corpus is. Beyond this point we stop getting useful
-///   proper-noun candidates (Heaps' law) and only add Stage B cost.
+/// - 30000 ceiling: `topN` is now a safety net rather than the primary
+///   cutoff. The score-based floor (`DiscoveryInput.minScore = 0.0` in the
+///   isolate) is what shapes the real pool size — anything with `score > 0`
+///   passes. Raising the ceiling lets long web-novels (2 500+ chapters in
+///   Chinese / Korean / Japanese) keep their full positive-score pool
+///   instead of being arbitrarily truncated at 5 000. C-value time stays
+///   bounded by the heuristic junk filter that runs *before* C-value.
 const int minAdaptiveTopN = 500;
-const int maxAdaptiveTopN = 5000;
+const int maxAdaptiveTopN = 30000;
 
 /// Returns the top-N target for a book with [chapterCount] chapters.
 ///
@@ -57,13 +65,15 @@ const int maxAdaptiveTopN = 5000;
 /// novella (too few) and 15000 for a 3000-chapter web serial (too many).
 ///
 /// Examples:
-///   chapters=10   → 500    (floor)
-///   chapters=50   → 1061
-///   chapters=100  → 1500   (anchor, equal to defaultDiscoveryTopN)
-///   chapters=200  → 2121
-///   chapters=500  → 3354
-///   chapters=1000 → 4743
-///   chapters=3000 → 5000   (ceiling)
+///   chapters=10    → 949
+///   chapters=50    → 2121
+///   chapters=100   → 3000   (anchor, equal to defaultDiscoveryTopN)
+///   chapters=200   → 4243
+///   chapters=500   → 6708
+///   chapters=1000  → 9487
+///   chapters=2600  → 15297
+///   chapters=4000  → 18974
+///   chapters=10000 → 30000  (ceiling)
 int adaptiveDiscoveryTopN(int chapterCount) {
   if (chapterCount <= 0) return defaultDiscoveryTopN;
   final raw =
@@ -101,3 +111,26 @@ const int maxOccurrencesPerCandidate = 2;
 
 /// Context snippet length on each side of a candidate occurrence.
 const int occurrenceContextHalfWidth = 60;
+
+/// Heuristic junk pre-filter — applied at the very end of Stage A, before
+/// persistence. Drops candidates that are almost certainly noise so Stage B
+/// doesn't pay LLM money for them. See `term_discovery_isolate.dart` /
+/// `_heuristicJunkFilter`.
+///
+/// For a **single-word** candidate, `<= heuristicJunkSingleChapterMaxFreq`
+/// AND `chapter_count == 1` means it's a fleeting mention. A real single-word
+/// proper noun recurs across the book; a singleton burst in one chapter is
+/// usually onomatopoeia, an ALL-CAPS false positive (`Hp Hp`, `Atm`, `Sos`),
+/// or a sentence-initial common noun that just happened to slip the trust
+/// check (`Friendship`, `Boss`).
+///
+/// Multi-word fleeting candidates do **not** apply this rule — multi-word
+/// rare candidates are more likely to be real proper nouns like
+/// `Dungeon Jackals` or `Penalty Zone`.
+const int heuristicJunkSingleChapterMaxFreq = 2;
+
+/// `>= heuristicJunkLongPhraseWordCount` total words — dialogue / System
+/// sentence. Glossary canonicals in narrative text are 1-4 words; anything
+/// 5+ comes from quoted-span dialogue or `[…]` System messages that slipped
+/// through the chain assembler.
+const int heuristicJunkLongPhraseWordCount = 5;

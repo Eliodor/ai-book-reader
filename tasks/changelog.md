@@ -2,6 +2,51 @@
 
 Milestones in the AI Book Reader port. Format: `## YYYY-MM-DD — what shipped`.
 
+## 2026-05-21 — Stage A tuning iteration (uncommitted)
+
+Builds on the term-extraction pipeline (iterations 7-8 in `migration_plan.md`, still uncommitted) by reshaping how Stage A scores, filters, and caps its candidate pool. Headline numbers on the Solo Leveling 8-volume Yen Press benchmark:
+
+| | Pool size | strict vs Wiki | loose vs Wiki |
+|---|---:|---:|---:|
+| Before tuning (top-N=1515 cap) | 1 515 | 61.2% | 87.4% |
+| **After tuning** | **2 250** (score-driven) | **68.9%** | **95.6%** |
+
+C-value runtime dropped from ~3.0 s to ~0.3 s (−90%); total Stage A from ~27 s to ~11 s.
+
+Single source of truth for the iteration is [`tasks/stage_a_tuning.md`](stage_a_tuning.md) — keep-list of 10 working changes, failed-experiment log (E `log(1+freq)`, F stopword-ratio for chains, B `[…]` bracket pattern — all rolled back), and 7 open ideas.
+
+What landed across `lib/service/pipeline/discovery/`:
+
+- **new** `text_artifacts.dart` — `cleanTermArtifacts`: strips end-of-sentence punctuation (`.,!?;:…` and CJK siblings) and collapses runs of >2 identical chars to 2. `Ah!`, `Ahhh!!`, `Ahhhh……` collapse to `Ahh`.
+- `candidate_generator.dart` — calls `cleanTermArtifacts` in both `_emitSpan` and `_ingestQuotedSpans`. Adds a universal stopword-guard inside `_ingestQuotedSpans`: first/last token can't be a stopword, and `≥50%` of the tokens can't be stopwords either. Cuts dialogue fragments (`Are you Hunter Jinwoo Sung`) regardless of language thanks to the stopwords-iso list already shipping with the app.
+- `cvalue_scorer.dart` — type boost (`proper_name ×1.4`, `title / organization ×1.3`, `technique ×1.2`) re-uses the existing classifier signal. **Inverse-U length factor** replaces classic Frantzi `log2(wordCount)`: factors `1: 1.2, 2: 1.5, 3: 1.2, 4: 0.7, 5: 0.4, 6+: 0.2`. Glossary terms in narrative text are 1-3 words; 5+ word "chains" are almost always dialogue or System messages.
+- `substring_penalizer.dart` — frequent proper-names with `freq ≥ 10` get a softer `0.6×` penalty instead of the default `~0.3×`. Rescues `Adam White`, `Sung Jinwoo`, `Metus` from being pushed out by `Sung Jinwoo's Hunter Guild`-style super-spans.
+- `dispersion_scorer.dart` — Gries DP runs on every candidate (no `topK` cap); evenly-distributed low-frequency terms get the same up-to-2× boost as the head. Adds a `×1.2` recency bonus for candidates first introduced in the first third of the book with `freq ≥ 5` (catches main-cast names regardless of language).
+- `tokenizer.dart` — `Token.normalizedText` strips trailing English possessive `['’ʼ]s`. `Kamish's` → `kamish`. The original `text` keeps the apostrophe for display.
+- `term_discovery_isolate.dart` — adds a **heuristic junk filter** at Etap 1.3 (before C-value, since C-value is O(K²)). Drops candidates where `chapter_count == 1` AND `frequency_total ≤ 2`, plus candidates with `≥ 5` total words. Cuts ~51% of the pool on Solo Leveling (`Skraah Skree`, `Hp Hp`, `Atm`, `Sliced Pork Belly`, `Shadow Extraction has failed`, etc.) at the cost of 9 wiki canonicals (4 direct + 5 indirect through cluster-rep shuffling). Also adds `DiscoveryInput.minScore = 0.0` and a post-sort score-floor cut so the zero-score tail is dropped.
+- `term_discovery_constants.dart` — new constants `heuristicJunkSingleChapterMaxFreq = 2`, `heuristicJunkLongPhraseWordCount = 5`. Anchor for `adaptiveDiscoveryTopN` raised `1 500 → 3 000`; ceiling raised `5 000 → 30 000`. `topN` is now a safety net; the `score > 0` floor is the primary cutoff. On Solo Leveling (102 ch) the resulting pool is 2 250 (score-driven); on Sword God projection (2 600 ch) it should be ~12 000 instead of being clamped at 5 000.
+
+Benchmark instrument additions (`benchmarks/term_extraction/`):
+
+- `bin/run_benchmark.dart` — new flags `--terms-json=<path>` (treat a flat JSON array of strings as the candidate source) and `--ground-truth=<path>` (override the categorised wiki GT with another wiki JSON or a flat array).
+- new `lib/term_normalizer.dart` + `tool/normalize_terms.dart` + `tool/normalize_stage_a.dart` — shared case+hyphen+plural folding used to dedupe LLM glossary output. Stage A internally dedups on lower-case `normalizedSource`, so applying the normaliser to Stage A output is currently a no-op (kept for symmetry).
+- new `tool/merge_volume_terms.dart` — merges 8 per-volume LLM extractions for Solo Leveling into the 873-term `extracted_terms_normalized.json`. The 590-term filtered variant (`extracted_terms_filtered.json`) is a debug artefact, not a benchmark target.
+
+Failed experiments rolled back (recorded in `tasks/stage_a_tuning.md` to prevent rediscovery):
+
+1. `log(1 + freq)` frequency compression — collapsed main characters into the tail; Sung Jinwoo lost dominance, strict recall at top-1515 dropped 64.5 → 48.1.
+2. Stopword-ratio penalty for capitalized chains — stopwords-iso's `the`, `of`, `in` are exactly the connectors the chain assembler uses; `King of the Dead`-style wiki canonicals got rejected.
+3. `[…]` bracket pattern in `_ingestQuotedSpans` — Yen Press translation wraps whole System sentences in brackets, not skill names; added 188 noisy candidates for 1 wiki strict-hit. Re-attempting this needs structural parsing of the bracket content (run `_emitSpan` on the inside), not whole-content ingestion. Recorded as open idea #1.
+
+Verification done: `flutter analyze lib/service/pipeline/discovery/` clean; benchmark prompts re-run against Solo Leveling 8-volume Yen Press corpus; final numbers match the 2 250 / 68.9% / 95.6% snapshot above.
+
+**Not done yet** (queued in `active_context.md` § "What still needs to happen"):
+
+- On-device verification: `flutter run -d <device>`, hot-restart, trigger term extraction on a real book, confirm `tb_term_candidates` row count matches benchmark expectation.
+- Multi-language smoke (Ukrainian / Russian EPUB) to confirm stopwords path and scoring boosts behave correctly outside English.
+- `minScore` parameter on `TermDiscoveryService.discoverIfNeeded` (currently uses `DiscoveryInput.minScore = 0.0` default).
+- Open ideas #1 (bracket-content chain extraction), #2 (lowercase channel for high-frequency plurals), #4 (morphology clusterer picks display form by uppercase/dash, not just frequency).
+
 ## 2026-05-10 — Iteration 3.5: reference translations + chapter-number alignment (uncommitted)
 
 User-attached human translations now live alongside the original book. On the book detail page a new card lets the user drop or pick `.epub` / `.fb2` files (multi-select; desktop drag-and-drop). Each part is parsed into its own table, chapters merged for sub-chapter formats (`1.1 / 1.2 / 1.3 → 1`), and aligned to the original by `chapter_number`.

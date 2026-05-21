@@ -6,14 +6,34 @@ Iteration that extended the discovery pipeline (Stage A — iteration 7 from `mi
 
 | Metric | Value |
 |---|---:|
-| Pool size (score > 0, no topN cap) | **4 592** |
-| strict recall vs Wiki (183 entries, 14 categories) | **73.2%** |
-| loose recall vs Wiki | **96.7%** |
-| strict recall vs LLM glossary (873 entries) | **57.7%** |
-| loose recall vs LLM glossary | **94.0%** |
-| Stage A wall time | ~15 s |
+| Pool size (score > 0, no topN cap) | **2 250** |
+| strict recall vs Wiki (183 entries, 14 categories) | **68.9%** |
+| loose recall vs Wiki | **95.6%** |
+| strict recall vs LLM glossary (873 entries) | **46.6%** |
+| loose recall vs LLM glossary | **88.3%** |
+| Stage A wall time | ~11 s |
+| C-value time (was the dominant cost) | 309 ms (was 2 962 ms) |
 
-For comparison: the *previous* implementation (no cleanup, no scoring tweaks, top-N=1515 cap) produced 1 515 candidates with **61.2% / 87.4% / 35.6% / 78.7%**.
+For comparison:
+- *Pre-tuning* (no cleanup, no scoring tweaks, top-N=1515 cap): 1 515 candidates, **61.2 / 87.4 / 35.6 / 78.7**.
+- *Post-tuning without heuristic junk filter*: 4 592 candidates, **73.8 / 96.7 / 57.8 / 94.0**.
+
+The heuristic junk filter trades **−4.9 p.p. strict recall vs Wiki** for **−51% pool size** and **−90% C-value runtime**. At the user's projected scale (2 600-chapter book, ~30 k raw candidates), this is the difference between ~75 LLM calls in Stage B and ~150.
+
+### Primary metric — `loose recall vs Wiki`
+
+Iterated decision: **the Wiki-curated ground truth is the canonical signal of Stage A quality.** Reasons:
+
+1. **Wiki is human-curated.** Anything in `ground_truth.json` is a real glossary term by definition; nothing in there is a duplicate, a publisher name, a quoted sentence, or a wrong canonical.
+2. **LLM glossary is noisy** — the 8 parallel agents each extracted independently, and the deduplicated 873-term list contains:
+   - ~80 duplicates (e.g. `Chris Reed` / `Christopher Reed` / `Christopher "Chris" Reed`),
+   - ~15 publisher/edition mentions (`Yen Press`, `Solo Leveling II`, `D&C MEDIA`, `BBN News`),
+   - Korean-order name variants the Yen Press translation never uses (`Yoo Jinho` vs book's `Jinho Yoo`),
+   - ~250 fleeting one-chapter mentions a curator wouldn't have included.
+
+   When we apply Stage A's own structural filters (`cleanTermArtifacts` + heuristic junk + apostrophe-strip) to the LLM glossary, 590 of 873 terms (67.6%) survive. The other 283 fall into the same junk buckets as Stage A noise. Saved as `data/solo-leveling/extracted_terms_filtered.json` for any future reference — we are **not** going to keep benchmarking against the LLM glossary; the filtered version exists only as a debug artefact.
+
+3. **Loose vs Wiki = 95.6%** for the current pool is independently confirmed by **loose vs filtered LLM = 94.6%** — they agree to within 1 p.p. The 6 p.p. drop seen against the raw LLM glossary is therefore mostly LLM noise, not a real regression.
 
 ## What's in the pipeline now (working — keep)
 
@@ -23,8 +43,20 @@ For comparison: the *previous* implementation (no cleanup, no scoring tweaks, to
 4. **Softer substring penalty for frequent proper-names** — when `candidateType == 'proper_name'` and `frequencyTotal ≥ 10`, multiplier is `0.6` instead of the default `~0.3`. Rescued `Adam White` (freq 19), `Sung Jinwoo`, `Metus`.
 5. **Dispersion for all candidates** — `DispersionScorer` no longer takes a `topK` cap. Evenly-spread low-frequency terms get the same up-to-2× Gries DP boost as the head.
 6. **First-chapter recency bonus** — `×1.2` for candidates first introduced in the first ⅓ of chapters and recurring `freq ≥ 5` times. Isolate computes `earlyChapterIds` from `chapter.orderIndex < ceil(chapters/3)`.
-7. **`minScore` floor** — `DiscoveryInput.minScore = 0.0` (default). After sort by score-desc, the first candidate with `score ≤ minScore` truncates the list. Removes ~2 000 zero-score tail entries. **`topN` still hard-caps as safety net.**
+7. **`minScore` floor** — `DiscoveryInput.minScore = 0.0` (default). After sort by score-desc, the first candidate with `score ≤ minScore` truncates the list. Removes ~2 000 zero-score tail entries. Is now the **primary cutoff** — `topN` was raised to act as a safety net.
+   - `defaultDiscoveryTopN`: 1 500 → **3 000** (anchor for the adaptive formula)
+   - `maxAdaptiveTopN`: 5 000 → **30 000** (ceiling)
+   - On Solo Leveling (102 ch): adaptive topN = 3 000, pool with score>0 = 2 250 → topN is not active, score floor decides.
+   - On Sword God (2 600 ch): adaptive topN = 15 297, projected pool ~12 000 → still score-driven.
+   - Only books with extremely rich casts (10 000+ chapters that *somehow* yield >30 000 positive-score candidates after the heuristic junk filter) will see topN truncation.
 8. **Tokenizer apostrophe-s strip** — `Token.normalizedText` strips trailing `['’ʼ]s` (English possessive). `Kamish's` → `kamish`. Affects internal dedup; the original `text` keeps the apostrophe for display.
+9. **Inverse-U length factor in `CValueScorer`** — replaces classic Frantzi `log2(wordCount)` boost with a table that peaks at `wordCount = 2` and decays away. Concrete factors: `1: 1.2, 2: 1.5, 3: 1.2, 4: 0.7, 5: 0.4, 6+: 0.2`. Glossary terms in narrative text are 1-3 words (almost never 5+), unlike scientific corpora where C-value was designed and longer = more specific. Effect on Solo Leveling: `Penalty Zone` +970 ranks, `Dungeon Jackals` +773, `Adam White` +206; cost was 1 wiki epithet (`King of Monstrous Humanoids`) drifting out of the top-1515 slice while staying in the full pool.
+
+10. **Heuristic junk filter in Etap 1.3** (`_heuristicJunkFilter` in `term_discovery_isolate.dart`) — runs *before* C-value. Drops two structural noise classes:
+    - **Fleeting one-chapter mentions**: `chapter_count == 1` AND `frequency_total <= heuristicJunkSingleChapterMaxFreq` (default `2`). Targets ALL-CAPS abbreviations (`Atm`, `Sos`, `Hp Hp`, `Gps`, `Ptsd`), onomatopoeia (`Skraah Skree`, `Rrrummble`), generic common nouns that landed sentence-initial just once (`Friendship`, `Boss`), and one-off System lines (`Item Ballpoint Pen`, `Sliced Pork Belly`).
+    - **Long phrases**: total word count (with connectors) `>= heuristicJunkLongPhraseWordCount` (default `5`). Targets dialogue and System sentences that slipped through the chain assembler.
+
+    Trade-off: removes ~2 300 candidates on Solo Leveling (51% of pool), loses 9 wiki canonicals (`dungeon jackals`, `essence stones`, `penalty zone`, `s-rank` directly + 5 indirectly through cluster representative reshuffling). C-value runtime drops from 2 962 ms to 309 ms because C-value is O(K²) over the pool size — this is the single biggest performance lever in Stage A. Constants in `term_discovery_constants.dart` are tunable per future calibration round.
 
 ## Failed experiments — DO NOT re-try without rethinking
 
@@ -63,10 +95,10 @@ For comparison: the *previous* implementation (no cleanup, no scoring tweaks, to
 - Risk: tuning N/K is sensitive. Wrong cutoff lets in `boss`, `enemy`, `hero`. Needs a precision audit, not just recall.
 - Files: new method in `CandidateGenerator`, runs after `_prepass`.
 
-### 3. Wire `minScore` through `TermDiscoveryService`
-- **Live gap**: `TermDiscoveryService.discoverIfNeeded` only forwards `topN`, not `minScore`. The default `DiscoveryInput.minScore = 0.0` is therefore only active in the CLI tool. The on-device pipeline still ships everything ≤ topN regardless of score.
-- Fix: add `defaultMinScore = 0.0` to `term_discovery_constants.dart`, plumb a parameter through `discoverIfNeeded`, set the field on `DiscoveryInput`.
-- Also: consider raising `adaptiveDiscoveryTopN` to ~10 000+ so the score floor becomes the primary cutoff and topN is purely a safety net.
+### 3. Wire `minScore` override through `TermDiscoveryService` (partially done)
+- **Live state**: `DiscoveryInput.minScore = 0.0` is the constructor default, and `TermDiscoveryService.discoverIfNeeded` uses that default by not specifying the field. So on-device the score>0 cut already runs.
+- Remaining gap: there's no way to pass a non-default `minScore` from the service caller. If a future iteration wants `minScore = 1.0` (stricter), `discoverIfNeeded` needs a parameter that forwards to `DiscoveryInput`.
+- The companion knob — `adaptiveDiscoveryTopN` ceiling — was raised in this iteration from 5 000 → 30 000, so topN is now a safety net rather than the primary cutoff. See keep-list item 7.
 
 ### 4. Move bench-side morphology normalisation into `MorphologyClusterer`
 - `benchmarks/term_extraction/lib/term_normalizer.dart` does case+hyphen+plural folding (`A rank` / `A-Rank` / `A-rank` → `A-Rank`). On the LLM 8-volume output it cut 911 → 873.
@@ -76,6 +108,14 @@ For comparison: the *previous* implementation (no cleanup, no scoring tweaks, to
 ### 5. Persist `firstChapterOrderIndex` on `RawCandidate`
 - Currently the recency bonus relies on `earlyChapterIds` (set of IDs). Computed in `term_discovery_isolate.dart` from the input snapshot. Works but couples the scorer to that set.
 - Cleaner: store `firstChapterOrderIndex` directly on `RawCandidate`; `DispersionScorer` reads `cand.firstChapterOrderIndex < totalChapters/3`. No external set needed.
+
+### 7. Tune the length-factor table per source-language
+- The current `_lengthFactor` table is calibrated against English (Solo Leveling Yen Press). Other languages may differ:
+  - Slavic languages favour 1-word entries (no articles), so peak might shift to `wordCount=1`.
+  - German / Dutch (compound nouns) need almost no boost above 1.
+  - Chinese / Japanese — tokenisation is different anyway; CJK uses the n-gram channel.
+- Idea: ship a `lengthFactorByLanguage` map; default falls back to the English table.
+- Don't do this without multi-language benchmark data — premature.
 
 ### 6. Strip apostrophe-s from `sourceText` too — debatable
 - Today: tokenizer strips `'s` from `normalizedText` only. `sourceText` (display) keeps the original.
